@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Table, Divider, Tag} from 'antd';
+
 const columns = [
   {
     title: 'Name',
@@ -22,16 +23,16 @@ const columns = [
     key: 'tags',
     dataIndex: 'tags',
     render: tags => (
-      <span>
-        {tags.map (tag => {
+        <span>
+        {tags.map(tag => {
           let color = tag.length > 5 ? 'geekblue' : 'green';
           if (tag === 'loser') {
             color = 'volcano';
           }
           return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase ()}
-            </Tag>
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
           );
         })}
       </span>
@@ -41,9 +42,9 @@ const columns = [
     title: 'Action',
     key: 'action',
     render: (text, record) => (
-      <span>
+        <span>
         <a href="javascript:;">Invite {record.name}</a>
-        <Divider type="vertical" />
+        <Divider type="vertical"/>
         <a href="javascript:;">Delete</a>
       </span>
     ),
@@ -75,8 +76,9 @@ const data = [
 ];
 
 class Index extends React.Component {
-  render () {
-    return <Table columns={columns} dataSource={data} scroll={{x: 768}} />;
+  render() {
+    return <Table columns={columns} dataSource={data} scroll={{x: 768}}/>;
   }
 }
+
 export default Index;

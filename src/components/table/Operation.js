@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Table, Button } from 'antd';
+import {Table, Button} from 'antd';
+
 const columns = [
   {
     title: 'Name',
@@ -32,7 +33,7 @@ class Index extends React.Component {
   };
 
   start = () => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     // ajax request after empty completing
     setTimeout(() => {
       this.setState({
@@ -44,29 +45,32 @@ class Index extends React.Component {
 
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
-    this.setState({ selectedRowKeys });
+    this.setState({selectedRowKeys});
   };
- 
-   render() {
-    const { loading, selectedRowKeys } = this.state;
+
+  render() {
+    const {loading, selectedRowKeys} = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
     return (
-      <div>
-      <div style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={this.start} disabled={!hasSelected} loading={loading}>
-          Reload
-        </Button>
-        <span style={{ marginLeft: 8 }}>
+        <div>
+          <div style={{marginBottom: 16}}>
+            <Button type="primary" onClick={this.start} disabled={!hasSelected}
+                    loading={loading}>
+              Reload
+            </Button>
+            <span style={{marginLeft: 8}}>
           {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
         </span>
-      </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} scroll={{ x: 768}} />
-    </div>
+          </div>
+          <Table rowSelection={rowSelection} columns={columns} dataSource={data}
+                 scroll={{x: 768}}/>
+        </div>
     );
   }
 }
+
 export default Index;

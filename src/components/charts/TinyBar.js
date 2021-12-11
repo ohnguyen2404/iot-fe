@@ -47,15 +47,16 @@ const data = [
 ];
 
 class Index extends React.Component {
-  render () {
+  render() {
     return (
-      <ResponsiveContainer width="100%" height={135}>
+        <ResponsiveContainer width="100%" height={135}>
 
-        <BarChart width={70} height={40} data={data}>
-          <Bar dataKey="uv" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
+          <BarChart width={70} height={40} data={data}>
+            <Bar dataKey="uv" fill="#8884d8"/>
+          </BarChart>
+        </ResponsiveContainer>
     );
   }
 }
+
 export default Index;

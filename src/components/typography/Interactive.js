@@ -9,22 +9,23 @@ class Interactive extends React.Component {
   };
 
   onChange = str => {
-    console.log ('Content change:', str);
-    this.setState ({str});
+    console.log('Content change:', str);
+    this.setState({str});
   };
 
-  render () {
+  render() {
     return (
-      <div>
-        <Paragraph editable={{onChange: this.onChange}}>
-          {this.state.str}
-        </Paragraph>
-        <Paragraph copyable>This is a copyable text.</Paragraph>
-        <Paragraph copyable={{text: 'Hello, Ant Design!'}}>
-          Replace copy text.
-        </Paragraph>
-      </div>
+        <div>
+          <Paragraph editable={{onChange: this.onChange}}>
+            {this.state.str}
+          </Paragraph>
+          <Paragraph copyable>This is a copyable text.</Paragraph>
+          <Paragraph copyable={{text: 'Hello, Ant Design!'}}>
+            Replace copy text.
+          </Paragraph>
+        </div>
     );
   }
 }
+
 export default Interactive;

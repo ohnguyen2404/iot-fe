@@ -142,8 +142,9 @@ const COLORS = [
   '#E2CF45',
   '#F8C12D',
 ];
+
 class CustomizedContent extends React.Component {
-  render () {
+  render() {
     const {
       root,
       depth,
@@ -159,71 +160,73 @@ class CustomizedContent extends React.Component {
     } = this.props;
 
     return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          style={{
-            fill: depth < 2
-              ? colors[Math.floor (index / root.children.length * 6)]
-              : 'none',
-            stroke: '#fff',
-            strokeWidth: 2 / (depth + 1e-10),
-            strokeOpacity: 1 / (depth + 1e-10),
-          }}
-        />
-        {depth === 1
-          ? <text
-              x={x + width / 2}
-              y={y + height / 2 + 7}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={14}
-            >
-              {name}
-            </text>
-          : null}
-        {depth === 1
-          ? <text
-              x={x + 4}
-              y={y + 18}
-              fill="#fff"
-              fontSize={16}
-              fillOpacity={0.9}
-            >
-              {index + 1}
-            </text>
-          : null}
-      </g>
+        <g>
+          <rect
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              style={{
+                fill: depth < 2
+                    ? colors[Math.floor(index / root.children.length * 6)]
+                    : 'none',
+                stroke: '#fff',
+                strokeWidth: 2 / (depth + 1e-10),
+                strokeOpacity: 1 / (depth + 1e-10),
+              }}
+          />
+          {depth === 1
+              ? <text
+                  x={x + width / 2}
+                  y={y + height / 2 + 7}
+                  textAnchor="middle"
+                  fill="#fff"
+                  fontSize={14}
+              >
+                {name}
+              </text>
+              : null}
+          {depth === 1
+              ? <text
+                  x={x + 4}
+                  y={y + 18}
+                  fill="#fff"
+                  fontSize={16}
+                  fillOpacity={0.9}
+              >
+                {index + 1}
+              </text>
+              : null}
+        </g>
     );
   }
 }
 
 class Index extends React.Component {
   static jsfiddleUrl = '//jsfiddle.net/alidingling/6okmehja/';
-  render () {
+
+  render() {
     return (
-      <div style={{overflow: 'scroll'}}>
-        <div style={{minWidth: '500px'}}>
-          <div style={{width: '100%', height: 300}}>
-            <ResponsiveContainer>
-              <Treemap
-                width={400}
-                height={200}
-                data={data}
-                dataKey="size"
-                ratio={4 / 3}
-                stroke="#fff"
-                fill="#8884d8"
-                content={<CustomizedContent colors={COLORS} />}
-              />
-            </ResponsiveContainer>
+        <div style={{overflow: 'scroll'}}>
+          <div style={{minWidth: '500px'}}>
+            <div style={{width: '100%', height: 300}}>
+              <ResponsiveContainer>
+                <Treemap
+                    width={400}
+                    height={200}
+                    data={data}
+                    dataKey="size"
+                    ratio={4 / 3}
+                    stroke="#fff"
+                    fill="#8884d8"
+                    content={<CustomizedContent colors={COLORS}/>}
+                />
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-      </div>
     );
   }
 }
+
 export default Index;

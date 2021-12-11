@@ -9,63 +9,63 @@ import Mini from '../../components/navigation/pagination/Mini';
 import PreNext from '../../components/navigation/pagination/PreNext';
 
 class Pagination extends React.Component {
-  render () {
+  render() {
     return (
-      <Layouts title="assets" classname="grid">
-        <Row gutter={16}>
-          <Col xs={24} lg={12}>
-            <Card
-              bordered={false}
-              title={<p>Changer Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="custom-pagination"
-            >
-              <Changer />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>Mini Size Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15"
-            >
-              <Mini />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>Prev and Next Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15"
-            >
-              <PreNext />
-            </Card>
-          </Col>
-          <Col xs={24} lg={12}>
-            <Card
-              bordered={false}
-              title={<p>Basic  Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-            >
-              <Basicpagination />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>More Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15 custom-pagination"
-            >
-              <More />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>Jumper Pagination</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15 custom-pagination"
-            >
-              <Jumper />
-            </Card>
-          </Col>
-        </Row>
-      </Layouts>
+        <Layouts title="assets" classname="grid">
+          <Row gutter={16}>
+            <Col xs={24} lg={12}>
+              <Card
+                  bordered={false}
+                  title={<p>Changer Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="custom-pagination"
+              >
+                <Changer/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Mini Size Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15"
+              >
+                <Mini/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Prev and Next Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15"
+              >
+                <PreNext/>
+              </Card>
+            </Col>
+            <Col xs={24} lg={12}>
+              <Card
+                  bordered={false}
+                  title={<p>Basic Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+              >
+                <Basicpagination/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>More Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15 custom-pagination"
+              >
+                <More/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Jumper Pagination</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15 custom-pagination"
+              >
+                <Jumper/>
+              </Card>
+            </Col>
+          </Row>
+        </Layouts>
     );
   }
 }

@@ -22,56 +22,57 @@ const renderCustomizedLabel = ({
   index,
 }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos (-midAngle * RADIAN);
-  const y = cy + radius * Math.sin (-midAngle * RADIAN);
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? 'start' : 'end'}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed (0)}%`}
-    </text>
+      <text
+          x={x}
+          y={y}
+          fill="white"
+          textAnchor={x > cx ? 'start' : 'end'}
+          dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
   );
 };
 
 class Index extends React.Component {
   static jsfiddleUrl = '//jsfiddle.net/alidingling/6okmehja/';
 
-  render () {
+  render() {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: 200,
-          textAlign: 'center',
-          margin: 'auto',
-        }}
-      >
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie
-              data={data}
-              labelLine={false}
-              label={renderCustomizedLabel}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {data.map ((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+        <div
+            style={{
+              width: '100%',
+              height: 200,
+              textAlign: 'center',
+              margin: 'auto',
+            }}
+        >
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                  data={data}
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+              >
+                {data.map((entry, index) => (
+                    <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                    />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
     );
   }
 }
+
 export default Index;

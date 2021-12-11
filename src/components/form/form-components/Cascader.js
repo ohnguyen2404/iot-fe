@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Cascader} from 'antd';
+
 const options = [
   {
     value: 'zhejiang',
@@ -35,18 +36,18 @@ const options = [
   },
 ];
 
-function onChange (value) {
-  console.log (value);
+function onChange(value) {
+  console.log(value);
 }
 
 class Cascadercomponent extends React.Component {
-  render () {
+  render() {
     return (
-      <Cascader
-        options={options}
-        onChange={onChange}
-        placeholder="Please select"
-      />
+        <Cascader
+            options={options}
+            onChange={onChange}
+            placeholder="Please select"
+        />
     );
   }
 }

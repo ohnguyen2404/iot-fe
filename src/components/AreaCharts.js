@@ -65,26 +65,27 @@ const data = [
 ];
 
 class AreaCharts extends React.Component {
-  render () {
+  render() {
     return (
-      <AreaChart
-        width={200}
-        height={60}
-        data={data}
-        syncId="anyId"
-        margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
+        <AreaChart
+            width={200}
+            height={60}
+            data={data}
+            syncId="anyId"
+            margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+        >
+          <CartesianGrid strokeDasharray="3 3"/>
 
-        <Tooltip />
-        <Area type="monotone" dataKey="pv" stroke="#82ca9d" fill="#82ca9d" />
-      </AreaChart>
+          <Tooltip/>
+          <Area type="monotone" dataKey="pv" stroke="#82ca9d" fill="#82ca9d"/>
+        </AreaChart>
     );
   }
 }
+
 export default AreaCharts;

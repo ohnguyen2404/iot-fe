@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Form, Input, Select, Button } from 'antd';
-const { Option } = Select;
+import {Form, Input, Select, Button} from 'antd';
+
+const {Option} = Select;
 
 class PriceInput extends React.Component {
   static getDerivedStateFromProps(nextProps) {
@@ -29,16 +30,16 @@ class PriceInput extends React.Component {
       return;
     }
     if (!('value' in this.props)) {
-      this.setState({ number });
+      this.setState({number});
     }
-    this.triggerChange({ number });
+    this.triggerChange({number});
   };
 
   handleCurrencyChange = currency => {
     if (!('value' in this.props)) {
-      this.setState({ currency });
+      this.setState({currency});
     }
-    this.triggerChange({ currency });
+    this.triggerChange({currency});
   };
 
   triggerChange = changedValue => {
@@ -49,25 +50,24 @@ class PriceInput extends React.Component {
     }
   };
 
-
   render() {
-    
-    const { size } = this.props;
+
+    const {size} = this.props;
     const state = this.state;
-      return (
+    return (
         <span>
         <Input
-          type="text"
-          size={size}
-          value={state.number}
-          onChange={this.handleNumberChange}
-          style={{ width: '65%', marginRight: '3%' }}
+            type="text"
+            size={size}
+            value={state.number}
+            onChange={this.handleNumberChange}
+            style={{width: '65%', marginRight: '3%'}}
         />
         <Select
-          value={state.currency}
-          size={size}
-          style={{ width: '32%' }}
-          onChange={this.handleCurrencyChange}
+            value={state.currency}
+            size={size}
+            style={{width: '32%'}}
+            onChange={this.handleCurrencyChange}
         >
           <Option value="rmb">RMB</Option>
           <Option value="dollar">Dollar</Option>
@@ -77,6 +77,7 @@ class PriceInput extends React.Component {
     );
   }
 }
+
 class CustomizedFormControls extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
@@ -96,24 +97,25 @@ class CustomizedFormControls extends React.Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {getFieldDecorator} = this.props.form;
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
-        <Form.Item label="Price">
-          {getFieldDecorator('price', {
-            initialValue: { number: 0, currency: 'rmb' },
-            rules: [{ validator: this.checkPrice }],
-          })(<PriceInput />)}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+        <Form layout="inline" onSubmit={this.handleSubmit}>
+          <Form.Item label="Price">
+            {getFieldDecorator('price', {
+              initialValue: {number: 0, currency: 'rmb'},
+              rules: [{validator: this.checkPrice}],
+            })(<PriceInput/>)}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
     );
   }
 }
+
 export default CustomizedFormControls;
 
 

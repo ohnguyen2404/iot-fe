@@ -7,18 +7,19 @@ const data = [
 ];
 
 class SimpleList extends React.Component {
-  render () {
+  render() {
     return (
-      <div>
-        <List
-          header={<div>Header</div>}
-          footer={<div>Footer</div>}
-          bordered
-          dataSource={data}
-          renderItem={item => <List.Item>{item}</List.Item>}
-        />
-      </div>
+        <div>
+          <List
+              header={<div>Header</div>}
+              footer={<div>Footer</div>}
+              bordered
+              dataSource={data}
+              renderItem={item => <List.Item>{item}</List.Item>}
+          />
+        </div>
     );
   }
 }
+
 export default SimpleList;

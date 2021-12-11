@@ -2,9 +2,9 @@ import * as React from 'react';
 import Layouts from '../../components/Layouts';
 import {Badge, Card, Calendar} from 'antd';
 
-function getListData (value) {
+function getListData(value) {
   let listData;
-  switch (value.date ()) {
+  switch (value.date()) {
     case 8:
       listData = [
         {type: 'warning', content: 'This is warning event.'},
@@ -33,51 +33,51 @@ function getListData (value) {
   return listData || [];
 }
 
-function dateCellRender (value) {
-  const listData = getListData (value);
+function dateCellRender(value) {
+  const listData = getListData(value);
   return (
-    <ul className="events">
-      {listData.map (item => (
-        <li key={item.content}>
-          <Badge status={item.type} text={item.content} />
-        </li>
-      ))}
-    </ul>
+      <ul className="events">
+        {listData.map(item => (
+            <li key={item.content}>
+              <Badge status={item.type} text={item.content}/>
+            </li>
+        ))}
+      </ul>
   );
 }
 
-function getMonthData (value) {
-  if (value.month () === 8) {
+function getMonthData(value) {
+  if (value.month() === 8) {
     return 1394;
   }
 }
 
-function monthCellRender (value) {
-  const num = getMonthData (value);
+function monthCellRender(value) {
+  const num = getMonthData(value);
   return num
-    ? <div className="notes-month">
+      ? <div className="notes-month">
         <section>{num}</section>
         <span>Backlog number</span>
       </div>
-    : null;
+      : null;
 }
 
 class NoticeCalender extends React.Component {
-  render () {
+  render() {
     return (
-      <Layouts title="assets" classname="calendar">
-        <Card
-          bordered={false}
-          bodyStyle={{padding: '20px'}}
-          style={{overflow: 'scroll'}}
-        >
-          <Calendar
-            dateCellRender={dateCellRender}
-            monthCellRender={monthCellRender}
-          />
-        </Card>
+        <Layouts title="assets" classname="calendar">
+          <Card
+              bordered={false}
+              bodyStyle={{padding: '20px'}}
+              style={{overflow: 'scroll'}}
+          >
+            <Calendar
+                dateCellRender={dateCellRender}
+                monthCellRender={monthCellRender}
+            />
+          </Card>
 
-      </Layouts>
+        </Layouts>
     );
   }
 }

@@ -5,44 +5,45 @@ import moment from 'moment';
 
 class SelectedCalender extends React.Component {
   state = {
-    value: moment ('2017-01-25'),
-    selectedValue: moment ('2017-01-25'),
+    value: moment('2017-01-25'),
+    selectedValue: moment('2017-01-25'),
   };
 
   onSelect = value => {
-    this.setState ({
+    this.setState({
       value,
       selectedValue: value,
     });
   };
 
   onPanelChange = value => {
-    this.setState ({value});
+    this.setState({value});
   };
 
-  render () {
+  render() {
     const {value, selectedValue} = this.state;
 
     return (
-      <Layouts title="assets" classname="calendar">
-        <Card
-          bordered={false}
-          bodyStyle={{padding: '20px'}}
-          style={{overflow: 'scroll'}}
-        >
-          <div>
-            <Alert
-              message={`You selected date: ${selectedValue && selectedValue.format ('YYYY-MM-DD')}`}
-            />
-            <Calendar
-              value={value}
-              onSelect={this.onSelect}
-              onPanelChange={this.onPanelChange}
-            />
-          </div>
-        </Card>
+        <Layouts title="assets" classname="calendar">
+          <Card
+              bordered={false}
+              bodyStyle={{padding: '20px'}}
+              style={{overflow: 'scroll'}}
+          >
+            <div>
+              <Alert
+                  message={`You selected date: ${selectedValue
+                  && selectedValue.format('YYYY-MM-DD')}`}
+              />
+              <Calendar
+                  value={value}
+                  onSelect={this.onSelect}
+                  onPanelChange={this.onPanelChange}
+              />
+            </div>
+          </Card>
 
-      </Layouts>
+        </Layouts>
     );
   }
 }

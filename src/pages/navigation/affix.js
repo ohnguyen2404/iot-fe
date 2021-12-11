@@ -9,60 +9,60 @@ import BreadcrumbWithIcon
   from '../../components/navigation/affix/BreadcrumbWithIcon';
 
 class Affix extends React.Component {
-  render () {
+  render() {
     return (
-      <Layouts title="assets" classname="affix">
-        <Row gutter={16}>
-          <Col xs={24} md={8}>
+        <Layouts title="assets" classname="affix">
+          <Row gutter={16}>
+            <Col xs={24} md={8}>
 
-            <Card
-              bordered={false}
-              title={<p>Basic Affix</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-            >
-              <Basic />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>Callback</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15"
-            >
-              <CallBack />
-            </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Basic Affix</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+              >
+                <Basic/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Callback</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15"
+              >
+                <CallBack/>
+              </Card>
 
-            <Card
-              bordered={false}
-              title={<p>Breadcrumb with Icons</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15"
-            >
-              <BreadcrumbWithIcon />
-            </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Breadcrumb with Icons</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15"
+              >
+                <BreadcrumbWithIcon/>
+              </Card>
 
-          </Col>
+            </Col>
 
-          <Col xs={24} md={16}>
-            <Card
-              bordered={false}
-              title={<p>Container to Scroll</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-            >
-              <Scroll />
-            </Card>
-            <Card
-              bordered={false}
-              title={<p>Basic Breadcrumb</p>}
-              bodyStyle={{padding: '0 20px 20px'}}
-              className="m-t-15"
-            >
-              <BasicBreadcrumb />
-            </Card>
+            <Col xs={24} md={16}>
+              <Card
+                  bordered={false}
+                  title={<p>Container to Scroll</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+              >
+                <Scroll/>
+              </Card>
+              <Card
+                  bordered={false}
+                  title={<p>Basic Breadcrumb</p>}
+                  bodyStyle={{padding: '0 20px 20px'}}
+                  className="m-t-15"
+              >
+                <BasicBreadcrumb/>
+              </Card>
 
-          </Col>
-        </Row>
+            </Col>
+          </Row>
 
-      </Layouts>
+        </Layouts>
     );
   }
 }

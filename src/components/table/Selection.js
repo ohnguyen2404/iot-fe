@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Table} from 'antd';
+
 const columns = [
   {
     title: 'Name',
@@ -45,10 +46,10 @@ const data = [
 // rowSelection object indicates the need for row selection
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
-    console.log (
-      `selectedRowKeys: ${selectedRowKeys}`,
-      'selectedRows: ',
-      selectedRows
+    console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        'selectedRows: ',
+        selectedRows
     );
   },
   getCheckboxProps: record => ({
@@ -56,16 +57,18 @@ const rowSelection = {
     name: record.name,
   }),
 };
+
 class Index extends React.Component {
-  render () {
+  render() {
     return (
-      <Table
-        rowSelection={rowSelection}
-        columns={columns}
-        dataSource={data}
-        scroll={{x: 768}}
-      />
+        <Table
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={data}
+            scroll={{x: 768}}
+        />
     );
   }
 }
+
 export default Index;

@@ -56,38 +56,39 @@ const data = [
 ];
 
 class Index extends React.Component {
-  render () {
+  render() {
     return (
-      <div style={{overflow: 'scroll'}}>
-        <div style={{minWidth: '500px'}}>
-          <ResponsiveContainer width="100%" height={300}>
+        <div style={{overflow: 'scroll'}}>
+          <div style={{minWidth: '500px'}}>
+            <ResponsiveContainer width="100%" height={300}>
 
-            <LineChart
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="pv"
-                stroke="#8884d8"
-                activeDot={{r: 8}}
-              />
-              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
+              <LineChart
+                  data={data}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+              >
+                <CartesianGrid strokeDasharray="3 3"/>
+                <XAxis dataKey="name"/>
+                <YAxis/>
+                <Tooltip/>
+                <Legend/>
+                <Line
+                    type="monotone"
+                    dataKey="pv"
+                    stroke="#8884d8"
+                    activeDot={{r: 8}}
+                />
+                <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
     );
   }
 }
+
 export default Index;
