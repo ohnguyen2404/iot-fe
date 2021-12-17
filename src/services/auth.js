@@ -22,7 +22,8 @@ const login = (email, password) => {
             }
 
             return response.user;
-        });
+        })
+        .catch(err => err);
 };
 
 const logout = () => {
