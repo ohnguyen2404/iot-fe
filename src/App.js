@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, Col, Row} from 'antd';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Login from './pages/login/Login';
-import Register from './pages/register/register';
+import Register from './pages/register/Register';
 import Dashboard from './pages/dashboard/Dashboard';
 import Grid from './pages/layout/grid';
 import GridLayout from './pages/layout/gridLayout';

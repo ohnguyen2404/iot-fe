@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../../static/images/logo.png';
 import LayoutLogin from '../../components/layout/LayoutLogin';
-import {Button, Form, Icon, Input} from 'antd';
+import {Button, Form, Icon, Input, message} from 'antd';
 import {useDispatch} from "react-redux";
 import {register} from "../../actions/auth";
 
@@ -27,6 +27,9 @@ const Register = (props) => {
                         props.history.push("/")
                         window.location.reload()
                     })
+                    .catch(ex => message.error(ex))
+            } else {
+                message.error(err)
             }
         });
     };

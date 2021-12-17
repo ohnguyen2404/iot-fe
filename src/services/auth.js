@@ -15,11 +15,13 @@ const login = (email, password) => {
         password,
     })
         .then((response) => {
-            if (response.accessToken) {
-                localStorage.setItem("user", JSON.stringify(response));
+            console.log(response);
+            if (response.accessToken && response.refreshToken) {
+                localStorage.setItem("accessToken", JSON.stringify(response.accessToken));
+                localStorage.setItem("refreshToken", JSON.stringify(response.refreshToken));
             }
 
-            return response;
+            return response.user;
         });
 };
 

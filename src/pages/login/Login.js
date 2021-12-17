@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import logo from '../../static/images/logo.png';
 import LayoutLogin from '../../components/layout/LayoutLogin';
-import {Button, Checkbox, Form, Icon, Input} from 'antd';
+import {Button, Checkbox, Form, Icon, Input, message} from 'antd';
 import {useDispatch} from "react-redux";
 import {login} from "../../actions/auth";
 
@@ -18,8 +18,11 @@ const Login = (props) => {
                 dispatch(login(values.email, values.password))
                     .then(() => {
                         props.history.push("/dashboard")
-                        window.location.reload()
+                        // window.location.reload()
                     })
+                    .catch(ex => message.error(ex))
+            } else {
+                message.error(err)
             }
         });
     };
