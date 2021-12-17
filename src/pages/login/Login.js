@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../static/images/logo.png';
-import LayoutLogin from '../components/LayoutLogin';
+import logo from '../../static/images/logo.png';
+import LayoutLogin from '../../components/layout/LayoutLogin';
 import {Button, Checkbox, Form, Icon, Input} from 'antd';
 import {useDispatch} from "react-redux";
-import {login} from "../actions/auth";
+import {login} from "../../actions/auth";
 
 const Login = (props) => {
     const dispatch = useDispatch();
@@ -99,6 +99,4 @@ const Login = (props) => {
     );
 }
 
-const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(Login);
-
-export default WrappedNormalLoginForm;
+export default Form.create({name: 'normal_login'})(Login);

@@ -9,8 +9,7 @@
 
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab {
   height: 40px;
-  margin: 0;
-  margin-right: 2px;
+  margin: 0 2px 0 0;
   padding: 0 16px;
   line-height: 38px;
   background: #fafafa;
@@ -39,7 +38,6 @@
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x {
   width: 16px;
   height: 16px;
-  height: 14px;
   margin-right: -5px;
   margin-left: 3px;
   overflow: hidden;

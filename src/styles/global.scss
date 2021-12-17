@@ -16,16 +16,16 @@
 }
 
 .login {
-  .mainContnet.ant-layout-content.collapsed {
+  .mainContent.ant-layout-content.collapsed {
     margin-left: 0px !important;
   }
 
-  .mainContnet.ant-layout-content {
+  .mainContent.ant-layout-content {
     margin-top: 0px !important;
     margin-left: 0px !important;
   }
 
-  .mainContnet .layout-trigger {
+  .mainContent .layout-trigger {
     display: none;
   }
 }
@@ -160,9 +160,9 @@ header {
     position: fixed !important;
     height: 100vh;
     left: 0;
-    top: 63px;
+    top: 70px;
     transition: all .2s ease-in-out;
-    z-index: 99;
+    //z-index: 99;
 
     .trigger {
       background: #e6f7ff;
@@ -203,7 +203,7 @@ header {
   }
 }
 
-.mainContnet {
+.mainContent {
   &.ant-layout-content {
     margin-top: 65px !important;
     margin-left: 200px !important;
@@ -289,7 +289,7 @@ header {
     }
   }
 
-  .mainContnet.ant-layout-content {
+  .mainContent.ant-layout-content {
     margin-right: 200px !important;
     margin-left: 0 !important;
 
@@ -320,7 +320,7 @@ header {
       width: 100%;
     }
   }
-  .mainContnet.ant-layout-content {
+  .mainContent.ant-layout-content {
     margin-right: -100px !important;
 
     &.collapsed {
@@ -677,7 +677,7 @@ h1 {
 
 .ant-layout-sider-children {
   .ant-menu-root {
-    height: calc(100vh - 100px);
+    height: 100vh;
     overflow: scroll;
   }
 }

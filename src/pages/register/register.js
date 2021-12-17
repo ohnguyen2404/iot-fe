@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from '../static/images/logo.png';
-import LayoutLogin from '../components/LayoutLogin';
+import logo from '../../static/images/logo.png';
+import LayoutLogin from '../../components/layout/LayoutLogin';
 import {Button, Form, Icon, Input} from 'antd';
 import {useDispatch} from "react-redux";
-import {register} from "../actions/auth";
+import {register} from "../../actions/auth";
 
 const Register = (props) => {
     const dispatch = useDispatch()
@@ -127,7 +127,7 @@ const Register = (props) => {
                         <span>
                             Already have an account?
                             <a className="m-l-5" href="/">
-                            Log in
+                                Log in
                             </a>
                         </span>
 
@@ -138,6 +138,4 @@ const Register = (props) => {
     );
 }
 
-const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(Register);
-
-export default WrappedNormalLoginForm;
+export default Form.create({name: 'normal_login'})(Register);
