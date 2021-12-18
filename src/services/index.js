@@ -1,4 +1,9 @@
 import AuthService from "./auth"
-import UserService from "./user"
+import TenantService from "./tenant"
+import CustomerService from "./customer"
 
-export {AuthService, UserService}
+export {
+  AuthService,
+  TenantService,
+  CustomerService
+}
