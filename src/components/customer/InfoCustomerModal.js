@@ -8,24 +8,24 @@ import {
   Tooltip,
   message,
 } from "antd";
-import TenantService from "../../services/tenant";
+import CustomerService from "../../services/customer";
 
 const { Option } = Select;
 
-const InfoTenantModal = (props) => {
-  const { openTenantModal, tenantId, handleOpenModal } = props;
-  const [tenantInfo, setTenantInfo] = useState({});
+const InfoCustomerModal = (props) => {
+  const { openCustomerModal, customerId, handleOpenModal } = props;
+  const [customerInfo, setCustomerInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
   useEffect(() => {
-    const loadTenant = async () => {
-      if (tenantId) {
-        const tenantInfo = await TenantService.getById(tenantId);
-        setTenantInfo(tenantInfo);
+    const loadCustomer = async () => {
+      if (customerId) {
+        const customerInfo = await CustomerService.getById(customerId);
+        setCustomerInfo(customerInfo);
       }
     };
-    loadTenant();
-  }, [tenantId]);
+    loadCustomer();
+  }, [customerId]);
   const { getFieldDecorator } = props.form;
   const { confirm } = Modal;
   const styleButton = {
@@ -42,10 +42,10 @@ const InfoTenantModal = (props) => {
     </Select>
   );
 
-  const handleUpdateTenantSubmit = async (e) => {
+  const handleUpdateCustomerSubmit = async (e) => {
     e.preventDefault();
     confirm({
-      title: "Are you sure to save tenant profile?",
+      title: "Are you sure to save customer profile?",
       centered: true,
 
       okText: "Yes",
@@ -60,12 +60,12 @@ const InfoTenantModal = (props) => {
             if (!err) {
               console.log("Received values of form: ", values);
               try {
-                await TenantService.update(tenantId, values);
+                await CustomerService.update(customerId, values);
               } catch (e) {
-                message.error("Update tenant failed!");
+                message.error("Update customer failed!");
                 return;
               }
-              message.success("Update tenant successfully!");
+              message.success("Update customer successfully!");
               handleOpenModal(false);
             }
           }
@@ -83,12 +83,12 @@ const InfoTenantModal = (props) => {
     const values = props.form.getFieldsValue();
     console.log('values', values);
     if (
-      values.email !== tenantInfo.email ||
-      values.title !== tenantInfo.title ||
-      values.country !== tenantInfo.country ||
-      values.city !== tenantInfo.city ||
-      values.address !== tenantInfo.address ||
-      values.phone !== tenantInfo.phone
+      values.email !== customerInfo.email ||
+      values.title !== customerInfo.title ||
+      values.country !== customerInfo.country ||
+      values.city !== customerInfo.city ||
+      values.address !== customerInfo.address ||
+      values.phone !== customerInfo.phone
     ) {
       setIsInfoChanged(true);
     } else {
@@ -98,9 +98,9 @@ const InfoTenantModal = (props) => {
 
   return (
     <Modal
-      title={<h2>Tenant Information</h2>}
-      visible={openTenantModal}
-      onOk={handleUpdateTenantSubmit}
+      title={<h2>Customer Information</h2>}
+      visible={openCustomerModal}
+      onOk={handleUpdateCustomerSubmit}
       okText={"Save"}
       okButtonProps={styleButton}
       onCancel={() => handleOpenModal(false)}
@@ -109,7 +109,7 @@ const InfoTenantModal = (props) => {
       centered={true}
     >
       <Form
-        className="info_tenant_form"
+        className="info_customer_form"
         layout="vertical"
         onChange={handleInfoChange}
       >
@@ -124,7 +124,7 @@ const InfoTenantModal = (props) => {
                 message: "Please input your E-mail!",
               },
             ],
-            initialValue: tenantInfo.email,
+            initialValue: customerInfo.email,
           })(<Input disabled />)}
         </Form.Item>
         <Form.Item
@@ -144,7 +144,7 @@ const InfoTenantModal = (props) => {
                 whitespace: true,
               },
             ],
-            initialValue: tenantInfo.title,
+            initialValue: customerInfo.title,
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Country">
@@ -154,7 +154,7 @@ const InfoTenantModal = (props) => {
                 message: "Please input your country!",
               },
             ],
-            initialValue: tenantInfo.country,
+            initialValue: customerInfo.country,
           })(<Input />)}
         </Form.Item>
         <Form.Item label="City">
@@ -164,7 +164,7 @@ const InfoTenantModal = (props) => {
                 message: "Please input your city!",
               },
             ],
-            initialValue: tenantInfo.city,
+            initialValue: customerInfo.city,
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Address">
@@ -174,7 +174,7 @@ const InfoTenantModal = (props) => {
                 message: "Please input your address!",
               },
             ],
-            initialValue: tenantInfo.address,
+            initialValue: customerInfo.address,
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Phone Number">
@@ -184,7 +184,7 @@ const InfoTenantModal = (props) => {
                 message: "Please input your phone number!",
               },
             ],
-            initialValue: tenantInfo.phone,
+            initialValue: customerInfo.phone,
           })(<Input addonBefore={prefixSelector} style={{ width: "100%" }} />)}
         </Form.Item>
       </Form>
@@ -192,4 +192,4 @@ const InfoTenantModal = (props) => {
   );
 };
 
-export default Form.create({ name: "info_tenant_form" })(InfoTenantModal);
+export default Form.create({ name: "info_customer_form" })(InfoCustomerModal);

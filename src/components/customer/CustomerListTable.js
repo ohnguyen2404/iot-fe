@@ -1,32 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Divider, Form, Radio, Switch, Table, Tag } from "antd";
-import CustomerService from '../../services/customer'
+import {
+  Divider,
+  Form,
+  Radio,
+  Switch,
+  Table,
+  Button,
+  Popconfirm,
+  message,
+} from "antd";
+import CustomerService from "../../services/customer";
+import InfoCustomerModal from "./InfoCustomerModal";
 
 const FormItem = Form.Item;
-const columns = [
-  {
-    title: "ID",
-    dataIndex: 'id',
-    key: 'id'
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    render: (text) => <a href="javascript:">{text}</a>,
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <span>
-        <a href="javascript:">Edit </a>
-        <Divider type="vertical" />
-        <a href="javascript:">Delete</a>
-      </span>
-    ),
-  },
-];
 
 const _title = () => "Here is title";
 const _showHeader = true;
@@ -34,19 +20,21 @@ const _footer = () => "Here is footer";
 const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
-const CustomerListTable = (props) => {
+const TableSelect = (props) => {
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
   const [size, setSize] = useState("small");
-
   const [title, setTitle] = useState(undefined);
   const [showHeader, setShowHeader] = useState(true);
   const [rowSelection, setRowSelection] = useState({});
   const [footer, setFooter] = useState(_footer);
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
-  const [customers, setCustomers] = useState([])
+
+  const [customers, setCustomers] = useState([]);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
 
   const state = {
     bordered,
@@ -60,20 +48,60 @@ const CustomerListTable = (props) => {
   };
 
   useEffect(() => {
-    const loadTenants = async () => {
-        const customers = await CustomerService.getAll()
-        setCustomers(customers)
-    }
-    loadTenants(customers)
-  }, [])
+    const loadCustomers = async () => {
+      const customers = await CustomerService.getAll();
+      setCustomers(customers);
+    };
+    loadCustomers();
+  }, [openInfoModal]);
 
-  const dataArray = customers.map((tenant, index) => {
+  const dataArray = customers.map((customer, index) => {
     return {
       key: index,
-      id: tenant.id,
-      email: tenant.email
-    }
-  })
+      id: customer.id,
+      email: customer.email,
+    };
+  });
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a href="javascript:">{text}</a>,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (record) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => {
+              setSelectedCustomerId(record.id);
+              handleOpenModal(true);
+            }}
+          >
+            Edit{" "}
+          </Button>
+          <Divider type="vertical" />
+          <Popconfirm
+            title="Are you sure to delete customer?"
+            onConfirm={() => confirmDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="danger">Delete</Button>
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
 
   const handleToggle = (prop) => (enable) => {
     if (prop === "bordered") {
@@ -88,7 +116,6 @@ const CustomerListTable = (props) => {
     setSize(e.target.value);
   };
 
-
   const handleTitleChange = (enable) => {
     setTitle(enable ? _title : undefined);
   };
@@ -98,7 +125,7 @@ const CustomerListTable = (props) => {
   };
 
   const handleFooterChange = (enable) => {
-    setFooter( enable ? _footer : undefined);
+    setFooter(enable ? _footer : undefined);
   };
 
   const handleRowSelectionChange = (enable) => {
@@ -118,8 +145,27 @@ const CustomerListTable = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
+  const handleOpenModal = (value) => {
+    setOpenInfoModal(value);
+  };
+
+  const confirmDelete = async (id) => {
+    try {
+      await CustomerService.remove(id);
+    } catch (e) {
+      message.error("Delete customer failed!");
+      return;
+    }
+    message.success("Delete customer successfully!");
+  };
+
   return (
     <div>
+      <InfoCustomerModal
+        customerId={selectedCustomerId}
+        openCustomerModal={openInfoModal}
+        handleOpenModal={handleOpenModal}
+      />
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
@@ -230,4 +276,4 @@ const CustomerListTable = (props) => {
   );
 };
 
-export default CustomerListTable;
+export default TableSelect;

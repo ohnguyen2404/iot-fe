@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Divider, Form, Radio, Switch, Table, Button } from "antd";
+import {
+  Divider,
+  Form,
+  Radio,
+  Switch,
+  Table,
+  Button,
+  Popconfirm,
+  message,
+} from "antd";
 import TenantService from "../../services/tenant";
 import InfoTenantModal from "./InfoTenantModal";
 
 const FormItem = Form.Item;
-
-//const data = [
-//  {
-//    key: "1",
-//    name: "John Brown",
-//    age: 32,
-//    address: "New York No. 1 Lake Park",
-//    tags: ["nice", "developer"],
-//  },
-//];
 
 const _title = () => "Here is title";
 const _showHeader = true;
@@ -26,16 +25,17 @@ const TableSelect = (props) => {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
   const [size, setSize] = useState("small");
-
   const [title, setTitle] = useState(undefined);
   const [showHeader, setShowHeader] = useState(true);
   const [rowSelection, setRowSelection] = useState({});
   const [footer, setFooter] = useState(_footer);
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
+
   const [tenants, setTenants] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  const [selectedTenantId, setSelectedTenantId] = useState(null)
+  const [selectedTenantId, setSelectedTenantId] = useState(null);
+
   const state = {
     bordered,
     loading,
@@ -53,7 +53,7 @@ const TableSelect = (props) => {
       setTenants(tenants);
     };
     loadTenants();
-  }, []);
+  }, [openInfoModal]);
 
   const dataArray = tenants.map((tenant, index) => {
     return {
@@ -78,15 +78,26 @@ const TableSelect = (props) => {
     {
       title: "Action",
       key: "action",
-      render: (text, record) => (
+      render: (record) => (
         <span>
-          <Button type="primary" onClick={() => {
-            setSelectedTenantId(record.id)
-            handleOpenModel(true)
-          }}
-          >Edit </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setSelectedTenantId(record.id);
+              handleOpenModal(true);
+            }}
+          >
+            Edit{" "}
+          </Button>
           <Divider type="vertical" />
-          <Button type="danger">Delete</Button>
+          <Popconfirm
+            title="Are you sure to delete tenant?"
+            onConfirm={() => confirmDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="danger">Delete</Button>
+          </Popconfirm>
         </span>
       ),
     },
@@ -134,16 +145,27 @@ const TableSelect = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
-  const handleOpenModel = (value) => {
+  const handleOpenModal = (value) => {
     setOpenInfoModal(value);
+  };
+
+  const confirmDelete = async (id) => {
+    try {
+      await TenantService.remove(id);
+    } catch (e) {
+      message.error("Delete tenant failed!");
+      return;
+    }
+    message.success("Delete tenant successfully!");
   };
 
   return (
     <div>
-      <InfoTenantModal 
+      <InfoTenantModal
         tenantId={selectedTenantId}
         openTenantModal={openInfoModal}
-        handleOpenModel={handleOpenModel}/>
+        handleOpenModal={handleOpenModal}
+      />
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
