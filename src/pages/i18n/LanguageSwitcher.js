@@ -167,9 +167,9 @@ class LanguageSwitcher extends React.Component {
 
                     <div>
                         <div className="m-b-30">
-              <span style={{marginRight: 16}}>
-                Change locale of components:{' '}
-              </span>
+                            <span style={{marginRight: 16}}>
+                                Change locale of components:{' '}
+                            </span>
                             <Radio.Group
                                 defaultValue={undefined}
                                 onChange={this.changeLocale}

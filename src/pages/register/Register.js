@@ -48,74 +48,84 @@ const Register = (props) => {
                 </div>
                 <Form onSubmit={handleSubmit} className="register-form">
                     <Form.Item>
-                        {getFieldDecorator('email', {
-                            rules: [{
-                                required: true,
-                                message: 'Please input your email!'
-                            }],
-                        })(
-                            <Input
-                                prefix={
-                                    <Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                }
-                                placeholder="Email"
-                            />
-                        )}
+                        {
+                            getFieldDecorator('email', {
+                                rules: [{
+                                    required: true,
+                                    message: 'Please input your email!'
+                                }],
+                            })(
+                                <Input
+                                    prefix={
+                                        <Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    placeholder="Email"
+                                />
+                            )
+                        }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('firstName', {
-                            rules: [{required: true, message: 'Please input your first name!'}],
-                        })(
-                            <Input
-                                prefix={
-                                    <Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                }
-                                placeholder="First name"
-                            />
-                        )}
+                        {
+                            getFieldDecorator('firstName', {
+                                rules: [{required: true, message: 'Please input your first name!'}],
+                            })(
+                                <Input
+                                    prefix={
+                                        <Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    placeholder="First name"
+                                />
+                            )
+                        }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('lastName', {
-                            rules: [{required: true, message: 'Please input your last name!'}],
-                        })(
-                            <Input
-                                prefix={
-                                    <Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                }
-                                placeholder="Last name"
-                            />
-                        )}
+                        {
+                            getFieldDecorator('lastName', {
+                                rules: [{required: true, message: 'Please input your last name!'}],
+                            })(
+                                <Input
+                                    prefix={
+                                        <Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    placeholder="Last name"
+                                />
+                            )
+                        }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('password', {
-                            rules: [
-                                {required: true, message: 'Please input your password!'},
-                            ],
-                        })(
-                            <Input.Password
-                                prefix={
-                                    <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                }
-                                type="password"
-                                placeholder="Password"
-                            />
-                        )}
+                        {
+                            getFieldDecorator('password', {
+                                rules: [
+                                    {required: true, message: 'Please input your password!'},
+                                ],
+                            })(
+                                <Input.Password
+                                    prefix={
+                                        <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    type="password"
+                                    placeholder="Password"
+                                />
+                            )
+                        }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('confirmPassword', {
-                            rules: [
-                                {required: true, message: 'Please input your confirm password!'},
-                                {validator: compareToFirstPassword,}
-                            ],
-                        })(
-                            <Input.Password
-                                prefix={
-                                    <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                }
-                                type="password"
-                                placeholder="Password"
-                            />
-                        )}
+                        {
+                            getFieldDecorator('confirmPassword', {
+                                rules: [
+                                    {required: true, message: 'Please input your confirm password!'},
+                                    {validator: compareToFirstPassword,}
+                                ],
+                            })(
+                                <Input.Password
+                                    prefix={
+                                        <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    type="password"
+                                    placeholder="Password"
+                                />
+                            )
+                        }
                     </Form.Item>
                     <Form.Item>
                         <Button
