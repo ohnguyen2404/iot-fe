@@ -4,8 +4,8 @@ const getAll = async () => {
     return await TenantApi.getAll() || []
 }
 
-const getById = (id) => {
-    return TenantApi.getById(id)
+const getById = async (id) => {
+    return await TenantApi.getById(id)
 }
 
 const create = (data) => {

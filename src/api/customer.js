@@ -4,10 +4,7 @@ import authHeader from "../helpers/authHeader";
 
 export const CustomerApi = {
   getAll: async () => {
-    const response = AxiosNodeApi.get(
-      `${API_CUSTOMER}s`,
-      {headers: authHeader()}
-    )
+    const response = AxiosNodeApi.get(`${API_CUSTOMER}s`)
     return response
   },
   getById: (id) => AxiosNodeApi.get(`${API_CUSTOMER}s/${id}`),

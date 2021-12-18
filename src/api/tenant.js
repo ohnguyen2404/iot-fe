@@ -4,13 +4,11 @@ import authHeader from "../helpers/authHeader";
 
 export const TenantApi = {
   getAll: async () => {
-    const response = await AxiosNodeApi.get(
-      `${API_TENANT}s`,
-      {headers: authHeader()}
-    )
-    return response
+    return await AxiosNodeApi.get(`${API_TENANT}s`)
   },
-  getById: (id) => AxiosNodeApi.get(`${API_TENANT}s/${id}`),
+  getById: async (id) => {
+    return await AxiosNodeApi.get(`${API_TENANT}s/${id}`)
+  },
   create: (data) => AxiosNodeApi.post(`${API_TENANT}`, data),
   update: (id, data) => AxiosNodeApi.put(`${API_TENANT}s/${id}`, data),
   delete: (id) => AxiosNodeApi.delete(`${API_TENANT}s/${id}`)

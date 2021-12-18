@@ -1,51 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Divider, Form, Radio, Switch, Table, Tag } from "antd";
-import TenantService from '../../services/tenant'
+import { Divider, Form, Radio, Switch, Table, Button } from "antd";
+import TenantService from "../../services/tenant";
+import InfoTenantModal from "./InfoTenantModal";
 
 const FormItem = Form.Item;
-const columns = [
-  {
-    title: "ID",
-    dataIndex: 'id',
-    key: 'id'
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    render: (text) => <a href="javascript:">{text}</a>,
-  },
-  //  title: "Tags",
-  //  key: "tags",
-  //  dataIndex: "tags",
-  //  render: (tags) => (
-  //    <span>
-  //      {tags.map((tag) => {
-  //        let color = tag.length > 5 ? "geekblue" : "green";
-  //        if (tag === "loser") {
-  //          color = "volcano";
-  //        }
-  //        return (
-  //          <Tag color={color} key={tag}>
-  //            {tag.toUpperCase()}
-  //          </Tag>
-  //        );
-  //      })}
-  //    </span>
-  //  ),
-  //},
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <span>
-        <a href="javascript:">Edit </a>
-        <Divider type="vertical" />
-        <a href="javascript:">Delete</a>
-      </span>
-    ),
-  },
-];
 
 //const data = [
 //  {
@@ -54,20 +12,6 @@ const columns = [
 //    age: 32,
 //    address: "New York No. 1 Lake Park",
 //    tags: ["nice", "developer"],
-//  },
-//  {
-//    key: "2",
-//    name: "Jim Green",
-//    age: 42,
-//    address: "London No. 1 Lake Park",
-//    tags: ["loser"],
-//  },
-//  {
-//    key: "3",
-//    name: "Joe Black",
-//    age: 32,
-//    address: "Sidney No. 1 Lake Park",
-//    tags: ["cool", "teacher"],
 //  },
 //];
 
@@ -89,8 +33,9 @@ const TableSelect = (props) => {
   const [footer, setFooter] = useState(_footer);
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
-  const [tenants, setTenants] = useState([])
-
+  const [tenants, setTenants] = useState([]);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [selectedTenantId, setSelectedTenantId] = useState(null)
   const state = {
     bordered,
     loading,
@@ -104,19 +49,48 @@ const TableSelect = (props) => {
 
   useEffect(() => {
     const loadTenants = async () => {
-        const tenants = await TenantService.getAll()
-        setTenants(tenants)
-    }
-    loadTenants(tenants)
-  }, [])
+      const tenants = await TenantService.getAll();
+      setTenants(tenants);
+    };
+    loadTenants();
+  }, []);
 
   const dataArray = tenants.map((tenant, index) => {
     return {
       key: index,
       id: tenant.id,
-      email: tenant.email
-    }
-  })
+      email: tenant.email,
+    };
+  });
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a href="javascript:">{text}</a>,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <span>
+          <Button type="primary" onClick={() => {
+            setSelectedTenantId(record.id)
+            handleOpenModel(true)
+          }}
+          >Edit </Button>
+          <Divider type="vertical" />
+          <Button type="danger">Delete</Button>
+        </span>
+      ),
+    },
+  ];
 
   const handleToggle = (prop) => (enable) => {
     if (prop === "bordered") {
@@ -131,7 +105,6 @@ const TableSelect = (props) => {
     setSize(e.target.value);
   };
 
-
   const handleTitleChange = (enable) => {
     setTitle(enable ? _title : undefined);
   };
@@ -141,7 +114,7 @@ const TableSelect = (props) => {
   };
 
   const handleFooterChange = (enable) => {
-    setFooter( enable ? _footer : undefined);
+    setFooter(enable ? _footer : undefined);
   };
 
   const handleRowSelectionChange = (enable) => {
@@ -161,8 +134,16 @@ const TableSelect = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
+  const handleOpenModel = (value) => {
+    setOpenInfoModal(value);
+  };
+
   return (
     <div>
+      <InfoTenantModal 
+        tenantId={selectedTenantId}
+        openTenantModal={openInfoModal}
+        handleOpenModel={handleOpenModel}/>
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
