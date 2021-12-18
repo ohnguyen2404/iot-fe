@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Layouts from "../../components/layout/Layouts";
 import sale from "../../static/images/icon-sale.png";
 import order from "../../static/images/icon-order.png";
@@ -10,7 +10,8 @@ import Barchart from "../../components/home/Barchart";
 import TodoList from "../../components/home/TodoList";
 import TimeLine from "../../components/home/TimeLine";
 import Testimonial from "../../components/home/Testimonial";
-import TableSelect from "../../components/home/TableSelect";
+import TenantListTable from "../../components/home/TenantListTable";
+import CustomerListTable from "../../components/home/CustomerListTable";
 import { Button, Card, Col, Row } from "antd";
 import user1 from "../../static/images/user1.png";
 import user2 from "../../static/images/user2.png";
@@ -18,19 +19,17 @@ import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
 
 const Dashboard = (props) => {
-  const {user, isLoggedIn} = useSelector((state) => state.auth);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
+  console.log("user", user);
   if (!isLoggedIn) {
-    return <Redirect to="/"/>
+    return <Redirect to="/" />;
   }
-  let isAdmin, isTenant, isCustomer = false
-  const userRoles = user && user.authorities
-  userRoles.forEach((role) => {
-    if (role === 'ADMIN') isAdmin = true
-    if (role === 'TENANT') isTenant = true
-    if (role === 'CUSTOMER') isCustomer = true
-  })
+  const userRoles = user && user.authorities.map((auth) => auth.authority);
+  console.log("userRoles", userRoles);
+  const isAdmin = userRoles.includes("ADMIN");
+  const isTenant = userRoles.includes("TENANT");
+  const isCustomer = userRoles.includes("CUSTOMER");
 
-  console.log("authorities", user.authorities);
   return (
     <Layouts title="assets" classname="dashboard">
       {/* <!--Stats view --> */}
@@ -94,7 +93,7 @@ const Dashboard = (props) => {
         <Col xl={12} lg={16} xl={10}>
           <Card
             bordered={false}
-            title={<p>Progress Report} </p>}
+            title={<p>Progress Report: </p>}
             bodyStyle={{ padding: "0 20px 20px" }}
           >
             <Row>
@@ -165,13 +164,28 @@ const Dashboard = (props) => {
       </Row>
       <Row gutter={16} className="m-t-15">
         <Col span={24}>
-          <Card
-            bordered={false}
-            title={<p>Dynamic Custom Table </p>}
-            bodyStyle={{ padding: "10px 20px" }}
-          >
-            <TableSelect />
-          </Card>
+          {isAdmin && (
+            <Card
+              bordered={false}
+              title={<p>Tenant Table </p>}
+              bodyStyle={{ padding: "10px 20px" }}
+            >
+              <TenantListTable />
+            </Card>
+          )}
+        </Col>
+      </Row>
+      <Row gutter={16} className="m-t-15">
+        <Col span={24}>
+          {isAdmin || isTenant && (
+            <Card
+              bordered={false}
+              title={<p>Customer Table </p>}
+              bodyStyle={{ padding: "10px 20px" }}
+            >
+              <CustomerListTable />
+            </Card>
+          )}
         </Col>
       </Row>
     </Layouts>

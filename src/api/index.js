@@ -1,3 +1,8 @@
 import {AuthApi} from "./auth";
-
-export {AuthApi};
+import { CustomerApi } from "./customer";
+import { TenantApi } from "./tenant";
+export {
+  AuthApi,
+  CustomerApi,
+  TenantApi
+};
