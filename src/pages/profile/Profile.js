@@ -1,17 +1,33 @@
 import * as React from 'react';
 import {useState} from 'react';
 import Layouts from '../../components/layout/Layouts';
-import {Button, Card, Col, Form, Icon, Input, message, Row} from 'antd';
+import {Button, Card, Col, Form, Icon, Input, message, Modal, Row} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import user from '../../static/images/user-profile.jpeg';
 import {useDispatch, useSelector} from "react-redux";
+import {AuthService} from "../../services";
+
 
 const Profile = (props) => {
     const {user: currentUser} = useSelector(state => state.auth);
 
     const [isChanged, setIsChanged] = useState(false);
+    const [changePasswordVisible, setChangePasswordVisible] = useState(false);
 
     const dispatch = useDispatch();
+    const styleButton = {
+        style: {borderRadius: '5px'},
+        size: "large"
+    }
+
+    const compareToFirstPassword = (rule, value, callback) => {
+        const {form} = props;
+        if (value && value !== form.getFieldValue('newPassword')) {
+            callback('Two passwords that you enter is inconsistent!');
+        } else {
+            callback();
+        }
+    };
 
     const handleChange = (e) => {
         const values = props.form.getFieldsValue()
@@ -24,27 +40,135 @@ const Profile = (props) => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleEditProfileSubmit = (e) => {
         e.preventDefault();
-        props.form.validateFields((err, values) => {
+        confirm({
+            title: 'Do you want to save your profile?',
+            centered: true,
+
+            okText: "Yes",
+            okButtonProps: {
+                ...styleButton,
+                icon: 'check'
+            },
+            onOk() {
+                props.form.validateFields(['email', 'firstName', 'lastName', 'phoneNumber'], (err, values) => {
+                    if (!err) {
+                        console.log('Received values of form: ', values);
+
+                    } else {
+                        message.error(err)
+                    }
+                });
+            },
+
+            cancelButtonProps: styleButton,
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+
+    }
+
+    const handleChangePasswordSubmit = async (e) => {
+        e.preventDefault();
+        props.form.validateFields(['currentPassword', 'newPassword', 'confirmPassword'], async (err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
 
-            } else {
-                message.error(err)
+                AuthService.changePassword(values.currentPassword, values.newPassword)
+                    .then((data) => {
+                            return Promise.resolve();
+                        },
+                        (error) => {
+                            return Promise.reject();
+                        }
+                    );
+                setChangePasswordVisible(false)
             }
         });
     }
 
+
     const {getFieldDecorator} = props.form
+    const {confirm} = Modal;
 
     return (
         <Layouts title="profile">
+            <Modal
+                title={<h2>Change Password</h2>}
+                visible={changePasswordVisible}
+
+                onOk={handleChangePasswordSubmit}
+                okText={"Change Password"}
+                okButtonProps={styleButton}
+
+                onCancel={() => setChangePasswordVisible(false)}
+                cancelButtonProps={styleButton}
+
+                centered={true}
+            >
+                <Form onSubmit={handleEditProfileSubmit} className="register-form">
+                    <Form.Item>
+                        {
+                            getFieldDecorator('currentPassword', {
+                                rules: [
+                                    {required: true, message: 'Please input your current password!'},
+                                ],
+                            })(
+                                <Input.Password
+                                    prefix={
+                                        <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    type="password"
+                                    placeholder="Current Password"
+                                />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {
+                            getFieldDecorator('newPassword', {
+                                rules: [
+                                    {required: true, message: 'Please input your new password!'},
+                                ],
+                            })(
+                                <Input.Password
+                                    prefix={
+                                        <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    type="password"
+                                    placeholder="New password"
+                                />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {
+                            getFieldDecorator('confirmPassword', {
+                                rules: [
+                                    {required: true, message: 'Please input your confirm password!'},
+                                    {validator: compareToFirstPassword,}
+                                ],
+                            })(
+                                <Input.Password
+                                    prefix={
+                                        <Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                    }
+                                    type="password"
+                                    placeholder="New password again"
+                                />
+                            )
+                        }
+                    </Form.Item>
+                </Form>
+            </Modal>
+
             <Row>
                 <Col xs={16}>
-                    <Card bordered={false} className="profile-details">
+                    <Card bordered={false} className="profile-details" title={<h2>Profile</h2>}>
                         <Row>
-                            <Col sm={10} md={8} xl={4} style={{padding: '20px'}}>
+                            <Col sm={10} md={8} xl={4} style={{padding: '10px'}}>
                                 <div className="user-image m-b-20">
                                     <img src={user} alt={""}/>
                                 </div>
@@ -60,7 +184,7 @@ const Profile = (props) => {
 
                                         <Form
                                             className="m-t-15 m-b-20"
-                                            onSubmit={handleSubmit}
+                                            onSubmit={handleEditProfileSubmit}
                                             onChange={handleChange}
                                         >
 
@@ -163,10 +287,17 @@ const Profile = (props) => {
                                             <Form.Item
                                                 className="m-t-30 m-b-30 user-buttons"
                                             >
-                                                <Button>
+                                                <Button
+                                                    style={{borderRadius: '5px'}}
+                                                    onClick={() => setChangePasswordVisible(true)}
+                                                >
                                                     <Icon type="lock"/> Change Password
                                                 </Button>
-                                                <Button>Report User</Button>
+                                                <Button
+                                                    style={{borderRadius: '5px'}}
+                                                >
+                                                    Report User
+                                                </Button>
                                                 <Button
                                                     disabled={!isChanged}
                                                     style={{borderRadius: '5px'}}
@@ -182,11 +313,8 @@ const Profile = (props) => {
                             </Col>
                         </Row>
                     </Card>
-
                 </Col>
-
             </Row>
-
         </Layouts>
     );
 }

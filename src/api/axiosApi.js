@@ -19,4 +19,13 @@ AxiosApi.interceptors.response.use(response => {
     throw error;
 });
 
+AxiosApi.interceptors.request.use(config =>{
+    const jwt = localStorage.getItem("accessToken");
+    config.headers = {
+        Authorization: `Bearer ${jwt}`,
+        Accept: 'application/json'
+    }
+    return config;
+})
+
 export default AxiosApi;

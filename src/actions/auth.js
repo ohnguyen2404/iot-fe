@@ -16,7 +16,7 @@ export const register = (email, firstName, lastName, password) => (dispatch) => 
             return Promise.resolve();
         },
         (error) => {
-            const message =
+            const msg =
                 (error.response &&
                     error.response.data &&
                     error.response.data.message) ||
@@ -29,7 +29,7 @@ export const register = (email, firstName, lastName, password) => (dispatch) => 
 
             dispatch({
                 type: SET_MESSAGE,
-                payload: message,
+                payload: msg,
             });
 
             return Promise.reject();
@@ -49,7 +49,7 @@ export const login = (email, password) => (dispatch) => {
                 return Promise.resolve();
             },
             (error) => {
-                const message =
+                const msg =
                     (error.response
                         && error.response.data
                         && error.response.data.message)
@@ -62,7 +62,7 @@ export const login = (email, password) => (dispatch) => {
 
                 dispatch({
                     type: SET_MESSAGE,
-                    payload: message,
+                    payload: msg,
                 });
 
                 return Promise.reject();
