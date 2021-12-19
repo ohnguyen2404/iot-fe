@@ -10,37 +10,18 @@ import Barchart from "../../components/home/Barchart";
 import TodoList from "../../components/home/TodoList";
 import TimeLine from "../../components/home/TimeLine";
 import Testimonial from "../../components/home/Testimonial";
-import TenantListTable from "../../components/tenant/TenantListTable";
-import CustomerListTable from "../../components/customer/CustomerListTable";
 import { Button, Card, Col, Row } from "antd";
-import CreateTenantModal from "../../components/tenant/CreateTenantModal";
-import CreateCustomerModal from "../../components/customer/CreateCustomerModal";
 import user1 from "../../static/images/user1.png";
 import user2 from "../../static/images/user2.png";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
+import TableSelect from "../../components/home/TableSelect";
 
 const Dashboard = (props) => {
-  const [openCreateTenant, setOpenCreateTenant] = useState(false);
-  const [openCreateCustomer, setOpenCreateCustomer] = useState(false);
-
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
     return <Redirect to="/" />;
   }
-  const userRoles = user && user.authorities.map((auth) => auth.authority);
-
-  const isAdmin = userRoles.includes("ADMIN");
-  const isTenant = userRoles.includes("TENANT");
-  const isCustomer = userRoles.includes("CUSTOMER");
-
-  const handleOpenCreateTenant = (value) => {
-    setOpenCreateTenant(value);
-  };
-
-  const handleOpenCreateCustomer = (value) => {
-    setOpenCreateCustomer(value);
-  };
 
   return (
     <Layouts title="assets" classname="dashboard">
@@ -175,55 +156,14 @@ const Dashboard = (props) => {
         </Col>
       </Row>
       <Row gutter={16} className="m-t-15">
-        <CreateTenantModal
-          openCreateTenant={openCreateTenant}
-          handleOpenCreateTenant={handleOpenCreateTenant}
-        />
         <Col span={24}>
-          {isAdmin ||
-            (isTenant && (
-              <Card
-                bordered={false}
-                title={<p>Tenant Table </p>}
-                bodyStyle={{ padding: "10px 20px" }}
-                extra={
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="plus"
-                    onClick={() => handleOpenCreateTenant(true)}
-                  />
-                }
-              >
-                <TenantListTable />
-              </Card>
-            ))}
-        </Col>
-      </Row>
-      <Row gutter={16} className="m-t-15">
-        <CreateCustomerModal
-          openCreateCustomer={openCreateCustomer}
-          handleOpenCreateCustomer={handleOpenCreateCustomer}
-        />
-        <Col span={24}>
-          {isAdmin ||
-            (isTenant && (
-              <Card
-                bordered={false}
-                title={<p>Customer Table </p>}
-                bodyStyle={{ padding: "10px 20px" }}
-                extra={
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="plus"
-                    onClick={() => handleOpenCreateCustomer(true)}
-                  />
-                }
-              >
-                <CustomerListTable />
-              </Card>
-            ))}
+          <Card
+            bordered={false}
+            title={<p>Dynamic Custom Table </p>}
+            bodyStyle={{ padding: "10px 20px" }}
+          >
+            <TableSelect />
+          </Card>
         </Col>
       </Row>
     </Layouts>

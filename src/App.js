@@ -25,6 +25,8 @@ import Tooltip from './pages/data-display/tooltip-popover';
 import Carousel from './pages/data-display/carousel';
 import Charts from './pages/chart/Charts';
 import Profile from './pages/profile/Profile';
+import Tenants from './pages/tenants/Tenants'
+import Customers from './pages/customers/Customers'
 import Table from './pages/table/Table';
 import LanguageSwitcher from './pages/i18n/LanguageSwitcher';
 import Docs from './pages/doc/Docs';
@@ -87,6 +89,8 @@ function App() {
                            component={Tooltip}/>
                     <Route exact path="/data-display/carousel" component={Carousel}/>
                     <Route exact path="/charts" component={Charts}/>
+                    <Route exact path="/tenants" component={Tenants}/>
+                    <Route exact path="/customers" component={Customers}/>
                     <Route exact path="/profile" component={Profile}/>
                     <Route exact path="/table" component={Table}/>
                     <Route exact path="/language-switcher"

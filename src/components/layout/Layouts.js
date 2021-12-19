@@ -170,17 +170,27 @@ class Layouts extends React.Component {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="10">
+                            <Link to="/tenants">
+                                <div><Icon type="apartment"/><span>Tenants</span></div>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="11">
+                            <Link to="/customers">
+                                <div><Icon type="user"/><span>Customers</span></div>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="12">
                             <Link to="/table">
                                 <div><Icon type="table"/><span>Table</span></div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="11">
+                        <Menu.Item key="13">
                             <Link to="/language-switcher">
                                 <div><Icon type="switcher"/><span>Language Switcher</span>
                                 </div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="12">
+                        <Menu.Item key="14">
                             <Link to="/docs">
                                 <div><Icon type="file-text"/><span>Docs </span></div>
                             </Link>

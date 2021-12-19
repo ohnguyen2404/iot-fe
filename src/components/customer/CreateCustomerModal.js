@@ -3,7 +3,7 @@ import { Form, Icon, Input, Modal, Button, Select, Tooltip, message } from "antd
 import { CustomerService } from "../../services";
 const { Option } = Select;
 
-const InfoCustomerModal = (props) => {
+const CreateCustomerModal = (props) => {
   const { openCreateCustomer, handleOpenCreateCustomer } = props;
 
   const { getFieldDecorator } = props.form;
@@ -175,4 +175,4 @@ const InfoCustomerModal = (props) => {
   );
 };
 
-export default Form.create({ name: "create_customer_form" })(InfoCustomerModal);
+export default Form.create({ name: "create_customer_form" })(CreateCustomerModal);
