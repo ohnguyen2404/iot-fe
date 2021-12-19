@@ -25,7 +25,7 @@ const CreateCustomerModal = (props) => {
   const handleCreateCustomerSubmit = async (e) => {
     e.preventDefault();
     props.form.validateFields(
-      ["email", "title", "country", "city", "address", "phone", "firstName", "lastName"],
+      ["email", "firstName", "lastName"],
       async (err, values) => {
         if (!err) {
           values['authorities'] = ['CUSTOMER']
@@ -54,8 +54,9 @@ const CreateCustomerModal = (props) => {
       onCancel={() => handleOpenCreateCustomer(false)}
       cancelButtonProps={styleButton}
       centered={true}
+      bodyStyle={{overflowY: 'scroll', height: '600px'}}
     >
-      <Form className="create_customer_form" layout="vertical">
+      <Form className="create_customer_form" layout="horizontal">
         <Form.Item label="E-mail">
           {getFieldDecorator("email", {
             rules: [
@@ -91,25 +92,6 @@ const CreateCustomerModal = (props) => {
               {
                 required: true,
                 message: "Please input your Lastname!",
-                whitespace: true,
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item
-          label={
-            <span>
-              Title&nbsp;
-              <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-          }
-        >
-          {getFieldDecorator("title", {
-            rules: [
-              {
-                message: "Please input your title!",
                 whitespace: true,
               },
             ],

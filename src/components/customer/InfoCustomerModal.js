@@ -55,7 +55,7 @@ const InfoCustomerModal = (props) => {
       },
       onOk() {
         props.form.validateFields(
-          ["email", "title", "country", "city", "address", "phone"],
+          ["email", "firstName", "lastName"],
           async (err, values) => {
             if (!err) {
               console.log("Received values of form: ", values);
@@ -84,6 +84,8 @@ const InfoCustomerModal = (props) => {
     console.log('values', values);
     if (
       values.email !== customerInfo.email ||
+      values.firstName !== customerInfo.firstName ||
+      values.lastName !== customerInfo.lastName ||
       values.title !== customerInfo.title ||
       values.country !== customerInfo.country ||
       values.city !== customerInfo.city ||
@@ -107,6 +109,7 @@ const InfoCustomerModal = (props) => {
       okButtonProps={{ disabled: !isInfoChanged }}
       cancelButtonProps={styleButton}
       centered={true}
+      bodyStyle={{overflowY: 'scroll', height: '600px'}}
     >
       <Form
         className="info_customer_form"
@@ -126,6 +129,34 @@ const InfoCustomerModal = (props) => {
             ],
             initialValue: customerInfo.email,
           })(<Input disabled />)}
+        </Form.Item>
+        <Form.Item
+          label="Firstname"
+        >
+          {getFieldDecorator("firstName", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your Firstname!",
+                whitespace: true,
+              },
+            ],
+            initialValue: customerInfo.firstName
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item
+          label="Lastname"
+        >
+          {getFieldDecorator("lastName", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your Lastname!",
+                whitespace: true,
+              },
+            ],
+            initialValue: customerInfo.lastName
+          })(<Input />)}
         </Form.Item>
         <Form.Item
           label={

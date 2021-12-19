@@ -55,7 +55,7 @@ const InfoTenantModal = (props) => {
       },
       onOk() {
         props.form.validateFields(
-          ["email", "title", "country", "city", "address", "phone"],
+          ["email", "firstName", "lastName"],
           async (err, values) => {
             if (!err) {
               console.log("Received values of form: ", values);
@@ -84,6 +84,8 @@ const InfoTenantModal = (props) => {
     console.log('values', values);
     if (
       values.email !== tenantInfo.email ||
+      values.firstName !== tenantInfo.firstName ||
+      values.lastName !== tenantInfo.lastName ||
       values.title !== tenantInfo.title ||
       values.country !== tenantInfo.country ||
       values.city !== tenantInfo.city ||
@@ -107,6 +109,7 @@ const InfoTenantModal = (props) => {
       okButtonProps={{ disabled: !isInfoChanged }}
       cancelButtonProps={styleButton}
       centered={true}
+      bodyStyle={{overflowY: 'scroll', height: '600px'}}
     >
       <Form
         className="info_tenant_form"
@@ -126,6 +129,34 @@ const InfoTenantModal = (props) => {
             ],
             initialValue: tenantInfo.email,
           })(<Input disabled />)}
+        </Form.Item>
+        <Form.Item
+          label="Firstname"
+        >
+          {getFieldDecorator("firstName", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your Firstname!",
+                whitespace: true,
+              },
+            ],
+            initialValue: tenantInfo.firstName
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item
+          label="Lastname"
+        >
+          {getFieldDecorator("lastName", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your Lastname!",
+                whitespace: true,
+              },
+            ],
+            initialValue: tenantInfo.lastName
+          })(<Input />)}
         </Form.Item>
         <Form.Item
           label={

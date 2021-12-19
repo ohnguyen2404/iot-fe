@@ -8,6 +8,7 @@ import {
   Button,
   Popconfirm,
   message,
+  Tooltip
 } from "antd";
 import CustomerService from "../../services/customer";
 import InfoCustomerModal from "./InfoCustomerModal";
@@ -80,15 +81,18 @@ const TableSelect = (props) => {
       key: "action",
       render: (record) => (
         <span>
-          <Button
-            type="primary"
-            onClick={() => {
-              setSelectedCustomerId(record.id);
-              handleOpenModal(true);
-            }}
-          >
-            Edit{" "}
-          </Button>
+          <Tooltip title="Edit">
+            <Button
+              onClick={() => {
+                setSelectedCustomerId(record.id);
+                handleOpenModal(true);
+              }}
+              type="primary"
+              shape="circle"
+              icon="edit"
+            />
+          </Tooltip>
+
           <Divider type="vertical" />
           <Popconfirm
             title="Are you sure to delete customer?"
@@ -96,7 +100,9 @@ const TableSelect = (props) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button type="danger">Delete</Button>
+            <Tooltip title="Delete">
+              <Button type="danger" shape="circle" icon="delete"/>
+            </Tooltip>
           </Popconfirm>
         </span>
       ),

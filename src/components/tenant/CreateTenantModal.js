@@ -54,6 +54,7 @@ const CreateTenantModal = (props) => {
       onCancel={() => handleOpenCreateTenant(false)}
       cancelButtonProps={styleButton}
       centered={true}
+      bodyStyle={{overflowY: 'scroll', height: '600px'}}
     >
       <Form className="create_tenant_form" layout="vertical">
         <Form.Item label="E-mail">
@@ -91,25 +92,6 @@ const CreateTenantModal = (props) => {
               {
                 required: true,
                 message: "Please input your Lastname!",
-                whitespace: true,
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item
-          label={
-            <span>
-              Title&nbsp;
-              <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-          }
-        >
-          {getFieldDecorator("title", {
-            rules: [
-              {
-                message: "Please input your title!",
                 whitespace: true,
               },
             ],
