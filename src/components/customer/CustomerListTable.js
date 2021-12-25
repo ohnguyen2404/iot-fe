@@ -159,8 +159,10 @@ const TableSelect = (props) => {
     try {
       await CustomerService.remove(id);
     } catch (e) {
-      message.error("Delete customer failed!");
-      return;
+      if (e.response.data.message) {
+        message.error(e.response.data.message)
+        return;
+      }
     }
     message.success("Delete customer successfully!");
   };

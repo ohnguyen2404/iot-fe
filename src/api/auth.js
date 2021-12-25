@@ -1,8 +1,14 @@
 import AxiosApi from "./axiosApi";
-import {API_AUTH} from "../config/setting";
+import { API_AUTH } from "../config/setting";
 
 export const AuthApi = {
-    register: (data) => AxiosApi.post(`${API_AUTH}/register`, data),
-    login: (data) => AxiosApi.post(`${API_AUTH}/login`, data),
-    changePassword: (data) => AxiosApi.post(`${API_AUTH}/change-password`, data),
-}
+  register: async (data) => {
+    return await AxiosApi.post(`${API_AUTH}/register`, data);
+  },
+  login: async (data) => {
+    return await AxiosApi.post(`${API_AUTH}/login`, data);
+  },
+  changePassword: async (data) => {
+    return await AxiosApi.post(`${API_AUTH}/change-password`, data);
+  },
+};

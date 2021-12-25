@@ -1,79 +1,32 @@
-import {LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, REGISTER_FAIL, REGISTER_SUCCESS, SET_MESSAGE,} from "./types";
-import {AuthService} from "../services";
+import { LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS } from "./types";
+import { AuthService } from "../services";
 
-export const register = (email, firstName, lastName, password) => (dispatch) => {
-    return AuthService.register(email, firstName, lastName, password).then(
-        (response) => {
-            dispatch({
-                type: REGISTER_SUCCESS,
-            });
+export const register =
+  (email, firstName, lastName, password) => async (dispatch) => {
+    const data = await AuthService.register(email, firstName, lastName, password)
+    if (data) {
+      dispatch({
+        type: REGISTER_SUCCESS,
+      })
+    }
+    return data
+  };
 
-            dispatch({
-                type: SET_MESSAGE,
-                payload: response.message,
-            });
-
-            return Promise.resolve();
-        },
-        (error) => {
-            const msg =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            dispatch({
-                type: REGISTER_FAIL,
-            });
-
-            dispatch({
-                type: SET_MESSAGE,
-                payload: msg,
-            });
-
-            return Promise.reject();
-        }
-    );
-};
-
-export const login = (email, password) => (dispatch) => {
-    return AuthService.login(email, password)
-        .then((data) => {
-                console.log(data)
-                dispatch({
-                    type: LOGIN_SUCCESS,
-                    payload: {user: data},
-                });
-
-                return Promise.resolve();
-            },
-            (error) => {
-                const msg =
-                    (error.response
-                        && error.response.data
-                        && error.response.data.message)
-                    || error.message
-                    || error.toString();
-
-                dispatch({
-                    type: LOGIN_FAIL,
-                });
-
-                dispatch({
-                    type: SET_MESSAGE,
-                    payload: msg,
-                });
-
-                return Promise.reject();
-            }
-        );
+export const login = (email, password) => async (dispatch) => {
+  const data = await AuthService.login(email, password);
+  if (data) {
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: { user: data },
+    });
+  }
+  return data;
 };
 
 export const logout = () => (dispatch) => {
-    AuthService.logout();
+  AuthService.logout();
 
-    dispatch({
-        type: LOGOUT,
-    });
+  dispatch({
+    type: LOGOUT,
+  });
 };
