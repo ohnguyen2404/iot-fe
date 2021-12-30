@@ -1,5 +1,14 @@
 import React from "react";
-import { Form, Icon, Input, Modal, Button, Select, Tooltip, message } from "antd";
+import {
+  Form,
+  Icon,
+  Input,
+  Modal,
+  Button,
+  Select,
+  Tooltip,
+  message,
+} from "antd";
 import { CustomerService } from "../../services";
 const { Option } = Select;
 
@@ -28,16 +37,16 @@ const CreateCustomerModal = (props) => {
       ["email", "firstName", "lastName"],
       async (err, values) => {
         if (!err) {
-          values['authorities'] = ['CUSTOMER']
+          values["authorities"] = ["CUSTOMER"]; 
           console.log("Received values of form: ", values);
           try {
-            await CustomerService.create(values)
+            await CustomerService.create(values);
+          } catch (e) {
+            message.error("Create customer failed!");
+            return;
           }
-          catch (e) {
-            message.error("Create customer failed!")
-            return
-          }
-          message.success("Create customer successfully!")
+          message.success("Create customer successfully!");
+          props.form.resetFields();
           handleOpenCreateCustomer(false);
         }
       }
@@ -54,7 +63,7 @@ const CreateCustomerModal = (props) => {
       onCancel={() => handleOpenCreateCustomer(false)}
       cancelButtonProps={styleButton}
       centered={true}
-      bodyStyle={{overflowY: 'scroll', height: '600px'}}
+      bodyStyle={{ overflowY: "scroll", height: "600px" }}
     >
       <Form className="create_customer_form" layout="horizontal">
         <Form.Item label="E-mail">
@@ -71,9 +80,7 @@ const CreateCustomerModal = (props) => {
             ],
           })(<Input />)}
         </Form.Item>
-        <Form.Item
-          label="Firstname"
-        >
+        <Form.Item label="Firstname">
           {getFieldDecorator("firstName", {
             rules: [
               {
@@ -84,9 +91,7 @@ const CreateCustomerModal = (props) => {
             ],
           })(<Input />)}
         </Form.Item>
-        <Form.Item
-          label="Lastname"
-        >
+        <Form.Item label="Lastname">
           {getFieldDecorator("lastName", {
             rules: [
               {
@@ -157,4 +162,6 @@ const CreateCustomerModal = (props) => {
   );
 };
 
-export default Form.create({ name: "create_customer_form" })(CreateCustomerModal);
+export default Form.create({ name: "create_customer_form" })(
+  CreateCustomerModal
+);

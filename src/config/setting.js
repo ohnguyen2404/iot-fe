@@ -11,3 +11,4 @@ export const NODE_API_URL = IS_DEV
 export const API_AUTH = `auth`;
 export const API_TENANT = 'tenant';
 export const API_CUSTOMER = 'customer';
+export const API_DEVICE = 'device'

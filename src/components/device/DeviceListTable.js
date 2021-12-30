@@ -10,8 +10,8 @@ import {
   message,
   Tooltip,
 } from "antd";
-import TenantService from "../../services/tenant";
-import InfoTenantModal from "./InfoTenantModal";
+import DeviceService from "../../services/device";
+import InfoDeviceModal from "./InfoDeviceModal";
 
 const FormItem = Form.Item;
 
@@ -33,9 +33,9 @@ const TableSelect = (props) => {
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
 
-  const [tenants, setTenants] = useState([]);
+  const [devices, setDevices] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  const [selectedTenantId, setSelectedTenantId] = useState(null);
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
 
   const state = {
     bordered,
@@ -49,18 +49,19 @@ const TableSelect = (props) => {
   };
 
   useEffect(() => {
-    const loadTenants = async () => {
-      const tenants = await TenantService.getAll();
-      setTenants(tenants);
+    const loadDevices = async () => {
+      const devices = await DeviceService.getAll();
+      setDevices(devices);
     };
-    loadTenants();
+    loadDevices();
   }, [openInfoModal]);
 
-  const dataArray = tenants.map((tenant, index) => {
+  const dataArray = devices.map((device, index) => {
     return {
       key: index,
-      id: tenant.id,
-      email: tenant.email,
+      id: device.id,
+      name: device.name,
+      label: device.label
     };
   });
 
@@ -71,9 +72,15 @@ const TableSelect = (props) => {
       key: "id",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a href="javascript:">{text}</a>,
+    },
+    {
+      title: "Label",
+      dataIndex: "label",
+      key: "label",
       render: (text) => <a href="javascript:">{text}</a>,
     },
     {
@@ -84,7 +91,7 @@ const TableSelect = (props) => {
           <Tooltip title="Edit">
             <Button
               onClick={() => {
-                setSelectedTenantId(record.id);
+                setSelectedDeviceId(record.id);
                 handleOpenModal(true);
               }}
               type="primary"
@@ -94,7 +101,7 @@ const TableSelect = (props) => {
           </Tooltip>
           <Divider type="vertical" />
           <Popconfirm
-            title="Are you sure to delete tenant?"
+            title="Are you sure to delete device?"
             onConfirm={() => confirmDelete(record.id)}
             okText="Yes"
             cancelText="No"
@@ -156,19 +163,19 @@ const TableSelect = (props) => {
 
   const confirmDelete = async (id) => {
     try {
-      await TenantService.remove(id);
+      await DeviceService.remove(id);
     } catch (e) {
       message.error(e.response.data.message);
       return;
     }
-    message.success("Delete tenant successfully!");
+    message.success("Delete device successfully!");
   };
 
   return (
     <div>
-      <InfoTenantModal
-        tenantId={selectedTenantId}
-        openTenantModal={openInfoModal}
+      <InfoDeviceModal
+        deviceId={selectedDeviceId}
+        openDeviceModal={openInfoModal}
         handleOpenModal={handleOpenModal}
       />
       <div className="m-b-15">

@@ -10,6 +10,7 @@ class Layouts extends React.Component {
 
     rootSubmenuKeys = ['sub1', 'sub2', 'sub4', 'sub5', 'sub3', 'sub6'];
     onOpenChange = openKeys => {
+        console.log('openKeys', openKeys);
         const latestOpenKey = openKeys.find(
             key => this.state.openKeys.indexOf(key) === -1);
         if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -170,27 +171,32 @@ class Layouts extends React.Component {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="10">
+                            <Link to="/devices">
+                                <div><Icon type="sliders"/><span>Devices</span></div>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="11">
                             <Link to="/tenants">
                                 <div><Icon type="apartment"/><span>Tenants</span></div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="11">
+                        <Menu.Item key="12">
                             <Link to="/customers">
                                 <div><Icon type="user"/><span>Customers</span></div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="12">
+                        <Menu.Item key="13">
                             <Link to="/table">
                                 <div><Icon type="table"/><span>Table</span></div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="13">
+                        <Menu.Item key="14">
                             <Link to="/language-switcher">
                                 <div><Icon type="switcher"/><span>Language Switcher</span>
                                 </div>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="14">
+                        <Menu.Item key="15">
                             <Link to="/docs">
                                 <div><Icon type="file-text"/><span>Docs </span></div>
                             </Link>

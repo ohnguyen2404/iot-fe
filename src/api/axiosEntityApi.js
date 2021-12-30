@@ -2,7 +2,7 @@ import axios from "axios";
 import queryString from "query-string";
 import {NODE_API_URL} from "../config/setting";
 
-const AxiosNodeApi = axios.create({
+const AxiosEntityApi = axios.create({
     baseURL: NODE_API_URL,
     headers: {
         'content-type': 'application/json',
@@ -10,7 +10,7 @@ const AxiosNodeApi = axios.create({
     paramsSerializer: params => queryString.stringify(params),
 });
 
-AxiosNodeApi.interceptors.response.use(response => {
+AxiosEntityApi.interceptors.response.use(response => {
     if (response && response.data) {
         return response.data;
     }
@@ -19,7 +19,7 @@ AxiosNodeApi.interceptors.response.use(response => {
     throw error;
 });
 
-AxiosNodeApi.interceptors.request.use(config =>{
+AxiosEntityApi.interceptors.request.use(config =>{
   const jwt = localStorage.getItem("accessToken");
   config.headers = {
       Authorization: `Bearer ${jwt}`,
@@ -29,4 +29,4 @@ AxiosNodeApi.interceptors.request.use(config =>{
 })
 
 
-export default AxiosNodeApi;
+export default AxiosEntityApi;

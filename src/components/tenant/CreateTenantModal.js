@@ -38,6 +38,7 @@ const CreateTenantModal = (props) => {
             return
           }
           message.success("Create tenant successfully!")
+          props.form.resetFields();
           handleOpenCreateTenant(false);
         }
       }
