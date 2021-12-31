@@ -10,5 +10,13 @@ export const DeviceApi = {
   },
   create: (data) => AxiosEntityApi.post(`${API_DEVICE}`, data),
   update: (id, data) => AxiosEntityApi.put(`${API_DEVICE}s/${id}`, data),
-  delete: (id) => AxiosEntityApi.delete(`${API_DEVICE}s/${id}`)
+  delete: (id) => AxiosEntityApi.delete(`${API_DEVICE}s/${id}`),
+
+  getCredentialsById: async (deviceId) => {
+    return await AxiosEntityApi.get(`${API_DEVICE}s/credentials/${deviceId}`)
+  },
+
+  updateCredentials: async (deviceId, data) => {
+    return await AxiosEntityApi.put(`${API_DEVICE}s/credentials/${deviceId}`, data)
+  }
 }

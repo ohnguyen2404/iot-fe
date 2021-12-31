@@ -13,10 +13,8 @@ import {
 } from "antd";
 import constant from "../../helpers/constants";
 import { DeviceService } from "../../services";
-import Password from "antd/lib/input/Password";
+import { get } from "lodash";
 
-const { Option } = Select;
-const { TabPane } = Tabs;
 const { TextArea } = Input;
 
 const credentialsTypes = [
@@ -35,26 +33,38 @@ const credentialsTypes = [
 ];
 
 const ManageCredentialsModal = (props) => {
-  const { openCreateDevice, handleOpenCreateDevice } = props;
+  const { openManageCredentialsModal, handleOpenCredentialsModal, deviceId } =
+    props;
   const { getFieldDecorator } = props.form;
   const [credentialsType, setCredentialsType] = useState(
     constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN
   );
+
+  const [deviceCredentials, setDeviceCredentials] = useState({});
 
   const styleButton = {
     style: { borderRadius: "5px" },
     size: "large",
   };
 
-  const isTypeAccessToken =
-    credentialsType === constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN;
-  const isTypeX509 = credentialsType === constant.DEVICE_CREDENTIALS_TYPE_X_509;
-  const isTypeMqttBasic =
-    credentialsType === constant.DEVICE_CREDENTIALS_TYPE_MQTT_BASIC;
+  useEffect(() => {
+    const loadCredentials = async () => {
+      if (deviceId) {
+        const deviceCredentials = await DeviceService.getCredentialsById(deviceId);
+        setDeviceCredentials(deviceCredentials);
+        const credentialsType = get(
+          deviceCredentials,
+          "deviceCredentials.credentialsType"
+        );
+        setCredentialsType(credentialsType);
+      }
+    };
+    loadCredentials();
+  }, [openManageCredentialsModal]);
 
   const handleCreateDeviceSubmit = async (e) => {
     e.preventDefault();
-    const fields = ["name", "label"];
+    const fields = [];
     if (isTypeAccessToken) {
       fields.push("accessToken");
     }
@@ -91,21 +101,20 @@ const ManageCredentialsModal = (props) => {
           };
         }
 
-        console.log("values", values);
         try {
           const requestBody = {
             credentialsType,
             credentialsValue,
           };
           console.log("requestBody", requestBody);
-          await DeviceService.create(requestBody);
+          await DeviceService.updateCredentials(deviceId, requestBody);
         } catch (e) {
           message.error(e.response.data.message);
           return;
         }
-        message.success("Create device successfully!");
+        message.success("Update device credentials successfully!");
         props.form.resetFields();
-        handleOpenCreateDevice(false);
+        handleOpenCredentialsModal(false);
       }
     });
   };
@@ -114,16 +123,46 @@ const ManageCredentialsModal = (props) => {
     setCredentialsType(type[0]);
   };
 
+  const _credentialsType = get(deviceCredentials, "deviceCredentials.credentialsType");
+  const _credentialsId = get(deviceCredentials, "deviceCredentials.credentialsId");
+  const _credentialsValue = get(
+    deviceCredentials,
+    "deviceCredentials.credentialsValue"
+  );
+
+  let _accessToken, _RSAPublicKey, _clientId, _username, _password;
+  if (_credentialsType === constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN) {
+    _accessToken = _credentialsId;
+  }
+
+  if (_credentialsType === constant.DEVICE_CREDENTIALS_TYPE_X_509) {
+    _RSAPublicKey = _credentialsValue;
+  }
+
+  if (_credentialsType === constant.DEVICE_CREDENTIALS_TYPE_MQTT_BASIC) {
+    const parseValue = JSON.parse(_credentialsValue);
+    _clientId = parseValue.clientId;
+    _username = parseValue.username;
+    _password = parseValue.password;
+  }
+
+  const isTypeAccessToken =
+    credentialsType === constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN;
+  const isTypeX509 = credentialsType === constant.DEVICE_CREDENTIALS_TYPE_X_509;
+  const isTypeMqttBasic =
+    credentialsType === constant.DEVICE_CREDENTIALS_TYPE_MQTT_BASIC;
+
   return (
     <Modal
-      title={<h2>Manage Credentials</h2>}
-      visible={openCreateDevice}
+      title={<h2>Device Credentials</h2>}
+      visible={openManageCredentialsModal}
       onOk={handleCreateDeviceSubmit} //submit form here
-      okText={"Create"}
+      okText={"Save"}
       okButtonProps={styleButton}
-      onCancel={() => handleOpenCreateDevice(false)}
+      onCancel={() => handleOpenCredentialsModal(false)}
       cancelButtonProps={styleButton}
       centered={true}
+      width={300}
     >
       <Form className="manage_credentials_form" layout="vertical">
         <Form.Item label="Credentials Type">
@@ -134,7 +173,7 @@ const ManageCredentialsModal = (props) => {
                 message: "Please select credentials type!",
               },
             ],
-            initialValue: [constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN],
+            initialValue: [_credentialsType],
           })(
             <Cascader
               options={credentialsTypes}
@@ -153,7 +192,9 @@ const ManageCredentialsModal = (props) => {
               </span>
             }
           >
-            {<Input />}
+            {getFieldDecorator("accessToken", {
+              initialValue: _accessToken,
+            })(<Input />)}
           </Form.Item>
         )}
         {isTypeX509 && (
@@ -165,6 +206,7 @@ const ManageCredentialsModal = (props) => {
                   message: "Please input device RSA public key!",
                 },
               ],
+              initialValue: _RSAPublicKey,
             })(<TextArea />)}
           </Form.Item>
         )}
@@ -178,6 +220,7 @@ const ManageCredentialsModal = (props) => {
                     message: "Please input MQTT clientId!",
                   },
                 ],
+                initialValue: _clientId,
               })(<Input />)}
             </Form.Item>
             <Form.Item label="Username">
@@ -188,6 +231,7 @@ const ManageCredentialsModal = (props) => {
                     message: "Please input MQTT Username!",
                   },
                 ],
+                initialValue: _username,
               })(<Input />)}
             </Form.Item>
             <Form.Item label="Password">
@@ -198,6 +242,7 @@ const ManageCredentialsModal = (props) => {
                     message: "Please input MQTT Password!",
                   },
                 ],
+                initialValue: _password,
               })(<Input.Password />)}
             </Form.Item>
           </div>

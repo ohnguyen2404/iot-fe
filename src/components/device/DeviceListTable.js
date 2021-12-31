@@ -12,6 +12,7 @@ import {
 } from "antd";
 import DeviceService from "../../services/device";
 import InfoDeviceModal from "./InfoDeviceModal";
+import ManageCredentials from "../device-credentials/ManageCredentials";
 
 const FormItem = Form.Item;
 
@@ -38,7 +39,9 @@ const TableSelect = (props) => {
   const [devices, setDevices] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
-
+  const [openManageCredentialsModal, setOpenManageCredentialsModal] =
+    useState(false);
+    
   const state = {
     bordered,
     loading,
@@ -90,11 +93,23 @@ const TableSelect = (props) => {
       key: "action",
       render: (record) => (
         <span>
+          <Tooltip title="Manage Credentials">
+            <Button
+              onClick={() => {
+                setSelectedDeviceId(record.id);
+                handleOpenCredentialsModal(true);
+              }}
+              type="primary"
+              shape="circle"
+              icon="safety-certificate"
+            />
+          </Tooltip>
+          <Divider type="vertical" />
           <Tooltip title="Edit">
             <Button
               onClick={() => {
                 setSelectedDeviceId(record.id);
-                handleOpenModal(true);
+                handleOpenInfoModal(true);
               }}
               type="primary"
               shape="circle"
@@ -159,9 +174,13 @@ const TableSelect = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
-  const handleOpenModal = (value) => {
+  const handleOpenInfoModal = (value) => {
     setReloadDevices(!reloadDevices);
     setOpenInfoModal(value);
+  };
+
+  const handleOpenCredentialsModal = (value) => {
+    setOpenManageCredentialsModal(value);
   };
 
   const confirmDelete = async (id) => {
@@ -180,10 +199,17 @@ const TableSelect = (props) => {
       {openInfoModal && (
         <InfoDeviceModal
           deviceId={selectedDeviceId}
-          openDeviceModal={openInfoModal}
-          handleOpenModal={handleOpenModal}
+          openInfoModal={openInfoModal}
+          handleOpenModal={handleOpenInfoModal}
         />
       )}
+      {
+        <ManageCredentials
+          deviceId={selectedDeviceId}
+          openManageCredentialsModal={openManageCredentialsModal}
+          handleOpenCredentialsModal={handleOpenCredentialsModal}
+        />
+      }
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
