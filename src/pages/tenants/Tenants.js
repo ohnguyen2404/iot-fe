@@ -8,7 +8,7 @@ import TenantListTable from "../../components/tenant/TenantListTable";
 
 const Customers = (props) => {
   const [openCreateTenant, setOpenCreateTenant] = useState(false);
-
+  const [reloadTenants, setReloadTenants] = useState(false);
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
     return <Redirect to="/" />;
@@ -19,6 +19,7 @@ const Customers = (props) => {
   const isTenant = userRoles.includes("TENANT");
 
   const handleOpenCreateTenant = (value) => {
+    setReloadTenants(!reloadTenants)
     setOpenCreateTenant(value);
   };
 
@@ -45,7 +46,9 @@ const Customers = (props) => {
                   />
                 }
               >
-                <TenantListTable />
+                <TenantListTable 
+                  reloadTenants={reloadTenants}
+                  setReloadTenants={setReloadTenants}/>
               </Card>
             ))}
         </Col>

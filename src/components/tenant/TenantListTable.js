@@ -21,7 +21,8 @@ const _footer = () => "Here is footer";
 const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
-const TableSelect = (props) => {
+const TenantListTable = (props) => {
+  const {reloadTenants, setReloadTenants} = props
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -54,7 +55,7 @@ const TableSelect = (props) => {
       setTenants(tenants);
     };
     loadTenants();
-  }, [openInfoModal]);
+  }, [reloadTenants]);
 
   const dataArray = tenants.map((tenant, index) => {
     return {
@@ -151,6 +152,7 @@ const TableSelect = (props) => {
   };
 
   const handleOpenModal = (value) => {
+    setReloadTenants(!reloadTenants)
     setOpenInfoModal(value);
   };
 
@@ -161,6 +163,7 @@ const TableSelect = (props) => {
       message.error(e.response.data.message);
       return;
     }
+    setReloadTenants(!reloadTenants)
     message.success("Delete tenant successfully!");
   };
 
@@ -281,4 +284,4 @@ const TableSelect = (props) => {
   );
 };
 
-export default TableSelect;
+export default TenantListTable;

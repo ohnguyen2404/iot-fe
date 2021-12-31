@@ -54,7 +54,7 @@ const CreateDeviceModal = (props) => {
 
   const handleCreateDeviceSubmit = async (e) => {
     e.preventDefault();
-    const fields = ["name"];
+    const fields = ["name", "label"];
     if (isTypeAccessToken) {
       fields.push("accessToken");
     }
@@ -114,7 +114,6 @@ const CreateDeviceModal = (props) => {
   };
 
   const handleSelectCredentialsType = (type) => {
-    console.log("type", type);
     setCredentialsType(type[0]);
   };
 
@@ -176,7 +175,7 @@ const CreateDeviceModal = (props) => {
                   </span>
                 }
               >
-                {<Input />}
+                {getFieldDecorator("accessToken", {})(<Input />)}
               </Form.Item>
             )}
             {isTypeX509 && (

@@ -21,7 +21,8 @@ const _footer = () => "Here is footer";
 const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
-const TableSelect = (props) => {
+const CustomerListTable = (props) => {
+  const {reloadCustomers, setReloadCustomers} = props
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -54,7 +55,7 @@ const TableSelect = (props) => {
       setCustomers(customers);
     };
     loadCustomers();
-  }, [openInfoModal]);
+  }, [reloadCustomers]);
 
   const dataArray = customers.map((customer, index) => {
     return {
@@ -152,6 +153,7 @@ const TableSelect = (props) => {
   };
 
   const handleOpenModal = (value) => {
+    setReloadCustomers(!reloadCustomers)
     setOpenInfoModal(value);
   };
 
@@ -164,6 +166,7 @@ const TableSelect = (props) => {
         return;
       }
     }
+    setReloadCustomers(!reloadCustomers)
     message.success("Delete customer successfully!");
   };
 
@@ -284,4 +287,4 @@ const TableSelect = (props) => {
   );
 };
 
-export default TableSelect;
+export default CustomerListTable;

@@ -22,6 +22,8 @@ const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
 const TableSelect = (props) => {
+  const { reloadDevices, setReloadDevices } = props;
+
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -54,14 +56,14 @@ const TableSelect = (props) => {
       setDevices(devices);
     };
     loadDevices();
-  }, [openInfoModal]);
+  }, [reloadDevices]);
 
   const dataArray = devices.map((device, index) => {
     return {
       key: index,
       id: device.id,
       name: device.name,
-      label: device.label
+      label: device.label,
     };
   });
 
@@ -158,6 +160,7 @@ const TableSelect = (props) => {
   };
 
   const handleOpenModal = (value) => {
+    setReloadDevices(!reloadDevices);
     setOpenInfoModal(value);
   };
 
@@ -168,16 +171,19 @@ const TableSelect = (props) => {
       message.error(e.response.data.message);
       return;
     }
+    setReloadDevices(!reloadDevices);
     message.success("Delete device successfully!");
   };
 
   return (
     <div>
-      <InfoDeviceModal
-        deviceId={selectedDeviceId}
-        openDeviceModal={openInfoModal}
-        handleOpenModal={handleOpenModal}
-      />
+      {openInfoModal && (
+        <InfoDeviceModal
+          deviceId={selectedDeviceId}
+          openDeviceModal={openInfoModal}
+          handleOpenModal={handleOpenModal}
+        />
+      )}
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
