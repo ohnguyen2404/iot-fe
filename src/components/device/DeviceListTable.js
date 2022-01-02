@@ -270,7 +270,6 @@ const TableSelect = (props) => {
           </FormItem>
           <FormItem label="Size">
             <Radio.Group
-              size="default"
               value={size}
               onChange={handleSizeChange}
               size="small"

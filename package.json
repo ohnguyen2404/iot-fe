@@ -66,6 +66,8 @@
     "reqwest": "^2.0.5",
     "resolve": "1.10.0",
     "semver": "6.0.0",
+    "sockjs-client": "^1.5.2",
+    "stompjs": "^2.3.3",
     "terser-webpack-plugin": "1.2.3",
     "ts-pnp": "1.1.2",
     "url-loader": "1.1.2",

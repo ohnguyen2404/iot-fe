@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 import CreateDeviceModal from "../../components/device/CreateDeviceModal";
 import DeviceListTable from "../../components/device/DeviceListTable";
 
-const Customers = (props) => {
+const Devices = (props) => {
   const [openCreateDevice, setOpenCreateDevice] = useState(false);
   const [reloadDevices, setReloadDevices] = useState(false);
   const { user, isLoggedIn } = useSelector((state) => state.auth);
@@ -58,4 +58,4 @@ const Customers = (props) => {
   );
 };
 
-export default Customers;
+export default Devices;

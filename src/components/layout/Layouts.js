@@ -1,227 +1,245 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 import HeaderDiv from '../header/HeaderDiv';
 import {Icon, Layout, Menu} from 'antd';
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import {useSelector} from "react-redux";
 
 const {SubMenu} = Menu;
 const {Header, Sider, Content} = Layout;
 
-class Layouts extends React.Component {
+const Layouts = (props) => {
+    const {user} = useSelector((state) => state.auth);
+    const stompClient = useRef();
+    useEffect(() => {
+        const connect = () => {
+            const url = "http://localhost:8082/ws?token=" + localStorage.getItem("accessToken");
 
-    rootSubmenuKeys = ['sub1', 'sub2', 'sub4', 'sub5', 'sub3', 'sub6'];
-    onOpenChange = openKeys => {
-        console.log('openKeys', openKeys);
-        const latestOpenKey = openKeys.find(
-            key => this.state.openKeys.indexOf(key) === -1);
-        if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-            this.setState({openKeys});
-        } else {
-            this.setState({
-                openKeys: latestOpenKey ? [latestOpenKey] : [],
-            });
+            const socket = new SockJS(url);
+            stompClient.current = Stomp.over(socket)
+            stompClient.current.debug = null;
+            stompClient.current.connect('', '', onConnected, onError);
         }
-    };
 
-    render() {
-        const active = this.props.active;
-        return (
-            <Layout className={`${this.props.classname}`}>
-                <Sider
-                    style={{background: '#fff'}}
-                    className="sidebar-left">
-                    {/*<div className="logo"/>*/}
-                    <Menu theme="light" mode="inline" defaultSelectedKeys={[active]}>
-                        <Menu.Item key="1">
-                            <Link to="/dashboard">
-                                <div>
-                                    <Icon type="dashboard"/>
-                                    <span> Dashboard </span>
-                                </div>
-                            </Link>
-                        </Menu.Item>
-                        <SubMenu key="2"
-                                 title={
-                                     <span>
+        function onConnected() {
+            console.log("Connected!!!")
+
+            // Subscribe to the Public Topic
+            stompClient.current.subscribe(`/topic/telemetry-${user.tenantId}`, onMessageReceived);
+        }
+
+        const onMessageReceived = (payload) => {
+            console.log("HEHEHEHEHHE")
+            const message = JSON.parse(payload.body);
+            console.log(message);
+        }
+
+        const onError = (err) => {
+            console.log(err);
+        }
+
+        connect();
+    }, [user.id]);
+
+    const active = props.active;
+    return (
+        <Layout className={`${props.classname}`}>
+            <Sider
+                style={{background: '#fff'}}
+                className="sidebar-left">
+                {/*<div className="logo"/>*/}
+                <Menu theme="light" mode="inline" defaultSelectedKeys={[active]}>
+                    <Menu.Item key="1">
+                        <Link to="/dashboard">
+                            <div>
+                                <Icon type="dashboard"/>
+                                <span> Dashboard </span>
+                            </div>
+                        </Link>
+                    </Menu.Item>
+                    <SubMenu key="2"
+                             title={
+                                 <span>
                                           <Icon type="layout"/>
                                           <span>Layout</span>
-                                     </span>
-                                 }
-                        >
-                            <Menu.Item key="sub2.1">
-                                <Link to="/layout/grid"><span>Grid</span></Link>
-                            </Menu.Item>
-                            <Menu.Item key="sub2.2">
-                                <Link to="/layout/gridLayout"><span>Layout</span></Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="3"
-                                 title={
-                                     <span>
+                                 </span>
+                             }
+                    >
+                        <Menu.Item key="sub2.1">
+                            <Link to="/layout/grid"><span>Grid</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="sub2.2">
+                            <Link to="/layout/gridLayout"><span>Layout</span></Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu key="3"
+                             title={
+                                 <span>
                                         <Icon type="form"/>
                                         <span>Form</span>
-                                     </span>
-                                 }
-                        >
-                            <Menu.Item key="3.1">
-                                <Link to="/form/form-elements">Form Elements</Link>
-                            </Menu.Item>
-                            <Menu.Item key="3.2">
-                                <Link to="/form/form-components">Form Components</Link>
-                            </Menu.Item>
-                            <Menu.Item key="3.3">
-                                <Link to="/form/form-controls">Form Controls</Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="4"
-                            title={
-                                <span>
+                                 </span>
+                             }
+                    >
+                        <Menu.Item key="3.1">
+                            <Link to="/form/form-elements">Form Elements</Link>
+                        </Menu.Item>
+                        <Menu.Item key="3.2">
+                            <Link to="/form/form-components">Form Components</Link>
+                        </Menu.Item>
+                        <Menu.Item key="3.3">
+                            <Link to="/form/form-controls">Form Controls</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="4"
+                        title={
+                            <span>
                                     <Icon type="menu"/>
                                     <span>Navigation</span>
                                 </span>
-                            }
-                        >
-                            <Menu.Item key="4.1">
-                                <Link to="/navigation/affix">Affix / Breadcrumbs</Link>
-                            </Menu.Item>
-                            <Menu.Item key="4.2">
-                                <Link to="/navigation/dropdown">Dropdown</Link>
-                            </Menu.Item>
-                            <Menu.Item key="4.4">
-                                <Link to="/navigation/menu">Menu</Link>
-                            </Menu.Item>
-                            <Menu.Item key="4.5">
-                                <Link to="/navigation/pagination">Pagination</Link>
-                            </Menu.Item>
-                            <Menu.Item key="4.6">
-                                <Link to="/navigation/pageheader">Pageheader</Link>
-                            </Menu.Item>
-                            <Menu.Item key="4.7">
-                                <Link to="/navigation/steps">Steps</Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="5"
-                            title={
-                                <span>
+                        }
+                    >
+                        <Menu.Item key="4.1">
+                            <Link to="/navigation/affix">Affix / Breadcrumbs</Link>
+                        </Menu.Item>
+                        <Menu.Item key="4.2">
+                            <Link to="/navigation/dropdown">Dropdown</Link>
+                        </Menu.Item>
+                        <Menu.Item key="4.4">
+                            <Link to="/navigation/menu">Menu</Link>
+                        </Menu.Item>
+                        <Menu.Item key="4.5">
+                            <Link to="/navigation/pagination">Pagination</Link>
+                        </Menu.Item>
+                        <Menu.Item key="4.6">
+                            <Link to="/navigation/pageheader">Pageheader</Link>
+                        </Menu.Item>
+                        <Menu.Item key="4.7">
+                            <Link to="/navigation/steps">Steps</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="5"
+                        title={
+                            <span>
                                     <Icon type="appstore"/>
                                     <span>Components</span>
                                 </span>
-                            }
-                        >
-                            <Menu.Item key="5.1">
-                                <Link to="/components/buttons">
-                                    Buttons</Link>
-                            </Menu.Item>
-                            <Menu.Item key="5.2">
-                                <Link to="/components/typography">
-                                    Typography</Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="6"
-                            title={
-                                <span>
+                        }
+                    >
+                        <Menu.Item key="5.1">
+                            <Link to="/components/buttons">
+                                Buttons</Link>
+                        </Menu.Item>
+                        <Menu.Item key="5.2">
+                            <Link to="/components/typography">
+                                Typography</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="6"
+                        title={
+                            <span>
                                     <Icon type="calendar"/>
                                     <span>Calendar</span>
                                 </span>
-                            }
-                        >
-                            <Menu.Item key="6.1">
-                                <Link to="/calendar/basic-calendar">Basic Calendar</Link>
-                            </Menu.Item>
-                            <Menu.Item key="6.2">
-                                <Link to="/calendar/notice-calendar">Notice Calendar</Link>
-                            </Menu.Item>
-                            <Menu.Item key="6.3">
-                                <Link to="/calendar/selectable-calendar">Selectable
-                                    Calendar</Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="7"
-                            title={
-                                <span>
+                        }
+                    >
+                        <Menu.Item key="6.1">
+                            <Link to="/calendar/basic-calendar">Basic Calendar</Link>
+                        </Menu.Item>
+                        <Menu.Item key="6.2">
+                            <Link to="/calendar/notice-calendar">Notice Calendar</Link>
+                        </Menu.Item>
+                        <Menu.Item key="6.3">
+                            <Link to="/calendar/selectable-calendar">Selectable
+                                Calendar</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="7"
+                        title={
+                            <span>
                                     <Icon type="table"/>
                                     <span>Data display </span>
                                 </span>
-                            }
-                        >
-                            <Menu.Item key="7.1">
-                                <Link to="/data-display/list">
-                                    List </Link>
-                            </Menu.Item>
-                            <Menu.Item key="7.2">
-                                <Link to="/data-display/tooltip-popover">
-                                    Tooltips/Popovers </Link>
-                            </Menu.Item>
-                            <Menu.Item key="7.3">
-                                <Link to="/data-display/carousel">
-                                    Carousel</Link>
-                            </Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="8">
-                            <Link to="/charts">
-                                <div><Icon type="line-chart"/><span>Charts</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="9">
-                            <Link to="/profile">
-                                <div><Icon type="profile"/><span>Profile</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="10">
-                            <Link to="/devices">
-                                <div><Icon type="sliders"/><span>Devices</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="11">
-                            <Link to="/tenants">
-                                <div><Icon type="apartment"/><span>Tenants</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="12">
-                            <Link to="/customers">
-                                <div><Icon type="user"/><span>Customers</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="13">
-                            <Link to="/table">
-                                <div><Icon type="table"/><span>Table</span></div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="14">
-                            <Link to="/language-switcher">
-                                <div><Icon type="switcher"/><span>Language Switcher</span>
-                                </div>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="15">
-                            <Link to="/docs">
-                                <div><Icon type="file-text"/><span>Docs </span></div>
-                            </Link>
-                        </Menu.Item>
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Header className="headerTop">
-                        <HeaderDiv/>
-                    </Header>
-                    <Content
-                        style={{
-                            padding: 24,
-                            minHeight: '100vh',
-                        }}
-                        className={"mainContent"}
+                        }
                     >
+                        <Menu.Item key="7.1">
+                            <Link to="/data-display/list">
+                                List </Link>
+                        </Menu.Item>
+                        <Menu.Item key="7.2">
+                            <Link to="/data-display/tooltip-popover">
+                                Tooltips/Popovers </Link>
+                        </Menu.Item>
+                        <Menu.Item key="7.3">
+                            <Link to="/data-display/carousel">
+                                Carousel</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <Menu.Item key="8">
+                        <Link to="/charts">
+                            <div><Icon type="line-chart"/><span>Charts</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="9">
+                        <Link to="/profile">
+                            <div><Icon type="profile"/><span>Profile</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="10">
+                        <Link to="/devices">
+                            <div><Icon type="sliders"/><span>Devices</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="11">
+                        <Link to="/tenants">
+                            <div><Icon type="apartment"/><span>Tenants</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="12">
+                        <Link to="/customers">
+                            <div><Icon type="user"/><span>Customers</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="13">
+                        <Link to="/table">
+                            <div><Icon type="table"/><span>Table</span></div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="14">
+                        <Link to="/language-switcher">
+                            <div><Icon type="switcher"/><span>Language Switcher</span>
+                            </div>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="15">
+                        <Link to="/docs">
+                            <div><Icon type="file-text"/><span>Docs </span></div>
+                        </Link>
+                    </Menu.Item>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Header className="headerTop">
+                    <HeaderDiv/>
+                </Header>
+                <Content
+                    style={{
+                        padding: 24,
+                        minHeight: '100vh',
+                    }}
+                    className={"mainContent"}
+                >
 
-                        {this.props.children}
-                    </Content>
-                </Layout>
+                    {props.children}
+                </Content>
             </Layout>
+        </Layout>
 
-        );
-    }
+    );
 }
 
 export default Layouts;
