@@ -1,5 +1,6 @@
 import React from "react";
 import {Table,} from "antd";
+import moment from "moment";
 
 const LatestTelemetry = (props) => {
     const {tvs} = props
@@ -8,7 +9,7 @@ const LatestTelemetry = (props) => {
             key: index,
             _key: tv.key,
             value: tv.value,
-            ts: tv.ts
+            ts: moment(tv.ts).format("YYYY-MM-DD HH:mm:ss")
         }
     })
 
