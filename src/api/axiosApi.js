@@ -1,9 +1,9 @@
 import axios from "axios";
 import queryString from "query-string";
-import {API_URL} from "../config/setting";
+import {AUTH_API_URL} from "../config/setting";
 
 const AxiosApi = axios.create({
-    baseURL: API_URL,
+    baseURL: AUTH_API_URL,
     headers: {
         'content-type': 'application/json',
     },

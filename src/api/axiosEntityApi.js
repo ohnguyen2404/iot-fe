@@ -1,9 +1,9 @@
 import axios from "axios";
 import queryString from "query-string";
-import {NODE_API_URL} from "../config/setting";
+import {ENTITY_API_URL} from "../config/setting";
 
 const AxiosEntityApi = axios.create({
-    baseURL: NODE_API_URL,
+    baseURL: ENTITY_API_URL,
     headers: {
         'content-type': 'application/json',
     },
