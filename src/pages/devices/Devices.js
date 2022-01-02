@@ -24,8 +24,8 @@ const Customers = (props) => {
   };
 
   return (
-    <Layouts title="devices">
-      <Row gutter={16} className="m-t-15">
+    <>
+      <Row gutter={16}>
         <CreateDeviceModal
           openCreateDevice={openCreateDevice}
           handleOpenCreateDevice={handleOpenCreateDevice}
@@ -54,7 +54,7 @@ const Customers = (props) => {
           </Card>
         </Col>
       </Row>
-    </Layouts>
+    </>
   );
 };
 

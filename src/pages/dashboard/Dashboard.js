@@ -24,8 +24,7 @@ const Dashboard = (props) => {
   }
 
   return (
-    <Layouts title="assets" classname="dashboard">
-      {/* <!--Stats view --> */}
+    <>
       <Row gutter={16}>
         <Col xs={24} sm={12} lg={6} className="custom-statcards">
           <Card
@@ -65,7 +64,6 @@ const Dashboard = (props) => {
         </Col>
       </Row>
 
-      {/* Custom Chart */}
       <Row gutter={16} className="m-t-15">
         <Col lg={16} xs={24}>
           <Card
@@ -166,7 +164,7 @@ const Dashboard = (props) => {
           </Card>
         </Col>
       </Row>
-    </Layouts>
+    </>
   );
 };
 

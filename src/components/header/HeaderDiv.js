@@ -1,64 +1,52 @@
-import * as React from 'react';
-import logo from '../../static/images/logo.png';
-import avatar from '../../static/images/flat-avatar.png';
+import React, {useState} from "react";
+import logo from "../../static/images/logo.png";
+import avatar from "../../static/images/flat-avatar.png";
 
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { logout } from "../../actions/auth";
+import { useDispatch } from "react-redux";
 
-import {Avatar, Input, Menu} from 'antd';
+import { Avatar, Input, Menu } from "antd";
 
 const SubMenu = Menu.SubMenu;
 
 const Search = Input.Search;
 
-class HeaderDiv extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            current: 'search',
-            rtl: true,
-        };
-        this.sidebarToggle = this.sidebarToggle.bind(this);
-    }
+const HeaderDiv = (props) => {
 
-    sidebarToggle() {
-        this.setState({
-            rtl: !this.state.rtl,
-        });
-        var body = document.body;
-        body.classList.toggle('rtl');
-    }
+  const dispatch = useDispatch();
+  const [rtl, setRtl] = useState(true)
 
-    handleClick = e => {
-        console.log('click ', e);
-        this.setState({
-            current: e.key,
-        });
-    };
+  const sidebarToggle = () => {
+    setRtl(!rtl)
+    var body = document.body;
+    body.classList.toggle("rtl");
+  };
 
-    render() {
-        const classBox = `primaryBg box`;
+  const handleLogout = () => {
+    dispatch(logout())
+  }
 
-        return (
-            <Menu
-                mode="horizontal"
-                theme="dark"
-                className="d-flex align-items-center custom-navigation"
-            >
+  return (
+    <Menu
+      mode="horizontal"
+      theme="dark"
+      className="d-flex align-items-center custom-navigation"
+    >
+      <Menu.Item key="brand-logo" className="brand-logo">
+        <Link to="/dashboard">
+          <img src={logo} className="m-r-5" />
+          <span>Ant Dashboard</span>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="search" className="custom-search auto">
+        <Search onSearch={(value) => console.log(value)} />
+      </Menu.Item>
 
-                <Menu.Item key="brand-logo" className="brand-logo">
-                    <Link to="/dashboard">
-                        <img src={logo} className="m-r-5"/>
-                        <span>Ant Dashboard</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="search" className="custom-search auto">
-                    <Search onSearch={value => console.log(value)}/>
-                </Menu.Item>
-
-                <Menu.Item key="sidebar-toggle" onClick={this.sidebarToggle}>
-                    <span>LTR/RTR</span>
-                </Menu.Item>
-                {/* <SubMenu
+      <Menu.Item key="sidebar-toggle" onClick={sidebarToggle}>
+        <span>LTR/RTR</span>
+      </Menu.Item>
+      {/* <SubMenu
           title={
             <span className="submenu-title-wrapper">
               Language{' '}
@@ -72,25 +60,25 @@ class HeaderDiv extends React.Component {
           <Menu.Item key="setting:4">Urdu</Menu.Item>
         </SubMenu> */}
 
-                <SubMenu
-                    key="profile"
-                    title={
-                        <span>
-              <Avatar size={24} src={avatar}/>
-              <span> Profile</span>
-            </span>
-                    }
-                    className=""
-                >
-                    <Menu.Item key="profile-view">
-                        <Link to="/profile">Profile</Link>
-                    </Menu.Item>
-                    <Menu.Item key="logout"><Link to="/">Logout</Link></Menu.Item>
-                </SubMenu>
-
-            </Menu>
-        );
-    }
-}
+      <SubMenu
+        key="profile"
+        title={
+          <span>
+            <Avatar size={24} src={avatar} />
+            <span> Profile</span>
+          </span>
+        }
+        className=""
+      >
+        <Menu.Item key="profile-view">
+          <Link to="/profile">Profile</Link>
+        </Menu.Item>
+        <Menu.Item key="logout" onClick={handleLogout}>
+          <Link to="/login">Logout</Link>
+        </Menu.Item>
+      </SubMenu>
+    </Menu>
+  );
+};
 
 export default HeaderDiv;

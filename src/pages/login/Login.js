@@ -20,7 +20,7 @@ const Login = (props) => {
             message.error("Login failed");
             return;
           }
-          props.history.push("/dashboard");
+          props.history.push("/");
         } catch (e) {
           e.response.data.message && message.error(e.response.data.message);
         }

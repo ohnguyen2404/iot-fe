@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row, } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import Layouts from "../../components/layout/Layouts";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
@@ -19,13 +19,13 @@ const Customers = (props) => {
   const isTenant = userRoles.includes("TENANT");
 
   const handleOpenCreateTenant = (value) => {
-    setReloadTenants(!reloadTenants)
+    setReloadTenants(!reloadTenants);
     setOpenCreateTenant(value);
   };
 
   return (
-    <Layouts title="tenants">
-            <Row gutter={16} className="m-t-15">
+    <>
+      <Row gutter={16}>
         <CreateTenantModal
           openCreateTenant={openCreateTenant}
           handleOpenCreateTenant={handleOpenCreateTenant}
@@ -46,15 +46,16 @@ const Customers = (props) => {
                   />
                 }
               >
-                <TenantListTable 
+                <TenantListTable
                   reloadTenants={reloadTenants}
-                  setReloadTenants={setReloadTenants}/>
+                  setReloadTenants={setReloadTenants}
+                />
               </Card>
             ))}
         </Col>
       </Row>
-    </Layouts>
-  )
+    </>
+  );
 };
 
 export default Customers;
