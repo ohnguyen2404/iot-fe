@@ -24,8 +24,8 @@ const Customers = (props) => {
     setOpenCreateCustomer(value);
   };
   return (
-    <Layouts title="customers">
-      <Row gutter={16} className="m-t-15">
+    <>
+      <Row gutter={16}>
         <CreateCustomerModal
           openCreateCustomer={openCreateCustomer}
           handleOpenCreateCustomer={handleOpenCreateCustomer}
@@ -53,7 +53,7 @@ const Customers = (props) => {
             ))}
         </Col>
       </Row>
-    </Layouts>
+    </>
   )
 };
 

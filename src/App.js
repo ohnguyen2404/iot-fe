@@ -31,6 +31,7 @@ import Devices from './pages/devices/Devices'
 import Table from './pages/table/Table';
 import LanguageSwitcher from './pages/i18n/LanguageSwitcher';
 import Docs from './pages/doc/Docs';
+import Home from './pages/home/Home'
 import '../src/styles/global.scss';
 
 function App() {
@@ -56,10 +57,10 @@ function App() {
         <div className="App">
             <Router>
                 <Switch>
-                    <Route exact path="/" component={Login}/>
+                    <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    <Route exact path="/dashboard" component={Dashboard}/>
-                    <Route exact path="/layout/grid" component={Grid}/>
+                    <Route exact path="/" component={Home}/>
+                    {/*<Route exact path="/layout/grid" component={Grid}/>
                     <Route exact path="/layout/gridLayout" component={GridLayout}/>
                     <Route exact path="/form/form-elements" component={FormElements}/>
                     <Route exact path="/form/form-controls" component={FormControls}/>
@@ -97,7 +98,7 @@ function App() {
                     <Route exact path="/table" component={Table}/>
                     <Route exact path="/language-switcher"
                            component={LanguageSwitcher}/>
-                    <Route exact path="/docs" component={Docs}/>
+                    <Route exact path="/docs" component={Docs}/>*/}
                     <Route path="*" component={NoMatchPage}/>
                 </Switch>
             </Router>

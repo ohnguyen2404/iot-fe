@@ -9,7 +9,7 @@ export const ENTITY_API_URL = IS_DEV
     : process.env.REACT_APP_PROD_API_URL;
 
 export const TRANSPORT_API_URL = IS_DEV
-    ? process.env.REACT_APP_TRANSPORT_API_URL
+    ? process.env.REACT_APP_DEV_TRANSPORT_API_URL
     : process.env.REACT_APP_PROD_API_URL;
 
 export const API_AUTH = `auth`;

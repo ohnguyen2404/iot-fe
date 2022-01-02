@@ -1,47 +1,12 @@
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import HeaderDiv from '../header/HeaderDiv';
 import {Icon, Layout, Menu} from 'antd';
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
-import {useSelector} from "react-redux";
-import {TRANSPORT_API_URL} from "../../config/setting";
 
 const {SubMenu} = Menu;
 const {Header, Sider, Content} = Layout;
 
 const Layouts = (props) => {
-    const {user} = useSelector((state) => state.auth);
-    const stompClient = useRef();
-    useEffect(() => {
-        const connect = () => {
-            const url = `${TRANSPORT_API_URL}/ws?token=${localStorage.getItem("accessToken")}`;
-
-            const socket = new SockJS(url);
-            stompClient.current = Stomp.over(socket)
-            stompClient.current.debug = null;
-            stompClient.current.connect('', '', onConnected, onError);
-        }
-
-        function onConnected() {
-            console.log("Connected to WebSocket")
-
-            // Subscribe to the Public Topic
-            stompClient.current.subscribe(`/topic/telemetry-${user.tenantId}`, onMessageReceived);
-        }
-
-        const onMessageReceived = (payload) => {
-            const message = JSON.parse(payload.body);
-            console.log(message);
-        }
-
-        const onError = (err) => {
-            console.log(err);
-        }
-
-        connect();
-    }, [user.id]);
-
     const active = props.active;
     return (
         <Layout className={`${props.classname}`}>

@@ -94,7 +94,7 @@ const Profile = (props) => {
     const {confirm} = Modal;
 
     return (
-        <Layouts title="profile">
+        <>
             <Modal
                 title={<h2>Change Password</h2>}
                 visible={changePasswordVisible}
@@ -315,7 +315,7 @@ const Profile = (props) => {
                     </Card>
                 </Col>
             </Row>
-        </Layouts>
+        </>
     );
 }
 

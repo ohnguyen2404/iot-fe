@@ -1,11 +1,8 @@
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
-
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 
-export const SET_MESSAGE = "SET_MESSAGE";
-export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
-
-export const FETCH_DEVICE_TELEMETRY = "FETCH_DEVICE_TELEMETRY";
+// devices
+export const LOAD_DEVICES = "LOAD_DEVICES";

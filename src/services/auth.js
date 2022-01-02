@@ -34,7 +34,7 @@ const changePassword = (currentPassword, newPassword) => {
 };
 
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.clear();
 };
 
 export default {
