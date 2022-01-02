@@ -1,11 +1,11 @@
 import {combineReducers} from "redux";
 import auth from "./auth";
-import message from "./message";
+import devices from "./devices"
 import { LOGOUT } from "../actions/types";
 
 const appReducer = combineReducers({
   auth,
-  message
+  devices
 })
 
 const rootReducer = (state, action) => {

@@ -13,6 +13,8 @@ import {
 import DeviceService from "../../services/device";
 import InfoDeviceModal from "./InfoDeviceModal";
 import ManageCredentials from "../device-credentials/ManageCredentials";
+import { useDispatch } from "react-redux";
+import { loadDevices } from "../../actions/devices";
 
 const FormItem = Form.Item;
 
@@ -24,7 +26,6 @@ const _pagination = { position: "bottom" };
 
 const TableSelect = (props) => {
   const { reloadDevices, setReloadDevices } = props;
-
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -41,6 +42,7 @@ const TableSelect = (props) => {
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
   const [openManageCredentialsModal, setOpenManageCredentialsModal] =
     useState(false);
+  const dispatch = useDispatch()
     
   const state = {
     bordered,
@@ -54,11 +56,11 @@ const TableSelect = (props) => {
   };
 
   useEffect(() => {
-    const loadDevices = async () => {
-      const devices = await DeviceService.getAll();
+    const initDevices = async () => {
+      const devices = await dispatch(loadDevices())
       setDevices(devices);
     };
-    loadDevices();
+    initDevices();
   }, [reloadDevices]);
 
   const dataArray = devices.map((device, index) => {

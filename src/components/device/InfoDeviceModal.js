@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
   Form,
-  Icon,
   Input,
   Modal,
   Button,
-  Select,
-  Tooltip,
   message,
   Tabs,
-  Cascader,
-  Row,
-  Col,
 } from "antd";
+
 import constant from "../../helpers/constants";
 import Clipboard from "../clipboard/clipboard";
+import LatestTelemetry from "./LatestTelemetry"
 import { DeviceService } from "../../services";
 import { get } from "lodash";
 import ManageCredentials from "../device-credentials/ManageCredentials";
@@ -114,6 +110,7 @@ const InfoDeviceModal = (props) => {
         onCancel={() => handleOpenModal(false)}
         cancelButtonProps={styleButton}
         centered={true}
+        width={800}
       >
         <div>
           <Button
@@ -158,6 +155,9 @@ const InfoDeviceModal = (props) => {
                   initialValue: _deviceLabel,
                 })(<Input />)}
               </Form.Item>
+            </TabPane>
+            <TabPane tab="Latest telemetry" key="2">
+                <LatestTelemetry/>
             </TabPane>
           </Tabs>
         </Form>
