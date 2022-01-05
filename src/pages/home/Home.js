@@ -7,19 +7,17 @@ import Tenants from "../../pages/tenants/Tenants"
 import Customers from "../../pages/customers/Customers"
 import Devices from "../../pages/devices/Devices"
 import {useDispatch, useSelector} from "react-redux";
-import {Redirect} from "react-router";
 import {TRANSPORT_API_URL} from "../../config/setting";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import {updateDeviceTelemetry} from "../../actions/devices";
+import {updateTelemetries} from "../../actions/telemetry"
 
 const {Header, Sider, Content} = Layout;
 
 const Home = (props) => {
     const [currentTab, setCurrentTab] = useState(1);
 
-    const {user, isLoggedIn} = useSelector((state) => state.auth);
-    const {devices} = useSelector(state => state.devices);
+    const {user} = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
 
@@ -42,15 +40,15 @@ const Home = (props) => {
 
         const onMessageReceived = (payload) => {
             const message = JSON.parse(payload.body);
-            console.log(message);
+            console.log('message', message);
 
-            const updatedDevice = devices.find(device => device.id === message.deviceId);
-            const updatedDevices = devices.filter(device => device.id !== message.deviceId);
-
-            updatedDevice.tvs = [...message.kvs]
-            updatedDevices.push(updatedDevice);
-
-            dispatch(updateDeviceTelemetry(updatedDevices));
+            const newTelemetries = message.kvs.map((kv) => {
+              return {
+                entityId: message.entityId,
+                ...kv
+              }
+            })
+            dispatch(updateTelemetries(newTelemetries));
         }
 
         const onError = (err) => {
@@ -59,10 +57,6 @@ const Home = (props) => {
 
         connect();
     }, [user.id]);
-
-    if (!isLoggedIn) {
-        return <Redirect to="/login"/>;
-    }
 
     const renderTab = () => {
         switch (Number(currentTab)) {

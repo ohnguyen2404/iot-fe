@@ -1,6 +1,6 @@
 import axios from "axios";
 import queryString from "query-string";
-import {ENTITY_API_URL} from "../config/setting";
+import {ENTITY_API_URL} from "../../config/setting";
 
 const AxiosEntityApi = axios.create({
     baseURL: ENTITY_API_URL,

@@ -6,3 +6,8 @@ export const LOGOUT = "LOGOUT";
 
 // devices
 export const LOAD_DEVICES = "LOAD_DEVICES";
+
+
+// telemetries
+export const LOAD_TELEMETRIES = "LOAD_TELEMETRIES";
+export const UPDATE_TELEMETRIES = "UPDATE_TELEMETRIES";

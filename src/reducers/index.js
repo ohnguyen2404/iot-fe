@@ -1,11 +1,13 @@
 import {combineReducers} from "redux";
 import auth from "./auth";
 import devices from "./devices"
+import telemetries from "./telemetries";
 import { LOGOUT } from "../actions/types";
 
 const appReducer = combineReducers({
   auth,
-  devices
+  devices,
+  telemetries
 })
 
 const rootReducer = (state, action) => {

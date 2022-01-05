@@ -33,8 +33,12 @@ import LanguageSwitcher from './pages/i18n/LanguageSwitcher';
 import Docs from './pages/doc/Docs';
 import Home from './pages/home/Home'
 import '../src/styles/global.scss';
+import {useSelector} from 'react-redux'
+import {Redirect} from 'react-router'
 
 function App() {
+  const {isLoggedIn} = useSelector((state) => state.auth)
+
     const NoMatchPage = () => {
         return (
             <Row style={{marginTop: '20%'}}>
@@ -53,13 +57,16 @@ function App() {
             </Row>
         );
     };
+
     return (
         <div className="App">
             <Router>
                 <Switch>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/" render={() => (
+                      !isLoggedIn ? (<Redirect to= "/login"/>) : (<Home/>)
+                    )}/>
                     {/*<Route exact path="/layout/grid" component={Grid}/>
                     <Route exact path="/layout/gridLayout" component={GridLayout}/>
                     <Route exact path="/form/form-elements" component={FormElements}/>

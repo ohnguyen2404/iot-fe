@@ -1,8 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
-import {AUTH_API_URL} from "../config/setting";
+import {AUTH_API_URL} from "../../config/setting";
 
-const AxiosApi = axios.create({
+const AxiosAuthApi = axios.create({
     baseURL: AUTH_API_URL,
     headers: {
         'content-type': 'application/json',
@@ -10,7 +10,7 @@ const AxiosApi = axios.create({
     paramsSerializer: params => queryString.stringify(params),
 });
 
-AxiosApi.interceptors.response.use(response => {
+AxiosAuthApi.interceptors.response.use(response => {
     if (response && response.data) {
         return response.data;
     }
@@ -19,7 +19,7 @@ AxiosApi.interceptors.response.use(response => {
     throw error;
 });
 
-AxiosApi.interceptors.request.use(config =>{
+AxiosAuthApi.interceptors.request.use(config =>{
     const jwt = localStorage.getItem("accessToken");
     config.headers = {
         Authorization: `Bearer ${jwt}`,
@@ -28,4 +28,4 @@ AxiosApi.interceptors.request.use(config =>{
     return config;
 })
 
-export default AxiosApi;
+export default AxiosAuthApi;

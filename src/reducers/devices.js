@@ -1,8 +1,7 @@
 import {UPDATE_DEVICE_TELEMETRY, LOAD_DEVICES} from "../actions/types";
 
 const initialState = {
-  devices: [],
-  test: "test"
+  devices: []
 }
 
 export default function (state = initialState, action) {

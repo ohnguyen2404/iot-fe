@@ -1,5 +1,5 @@
 import {DeviceService} from "../services";
-import {LOAD_DEVICES, UPDATE_DEVICE_TELEMETRY} from "./types";
+import {LOAD_DEVICES} from "./types";
 
 export const loadDevices = () => async (dispatch) => {
     const data = await DeviceService.getAll()

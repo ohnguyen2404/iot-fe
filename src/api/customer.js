@@ -1,4 +1,4 @@
-import AxiosEntityApi from "./axiosEntityApi";
+import AxiosEntityApi from "./axios/axiosEntityApi";
 import {API_CUSTOMER} from "../config/setting";
 
 export const CustomerApi = {
