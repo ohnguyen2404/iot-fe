@@ -13,7 +13,7 @@ const LatestTelemetry = (props) => {
       key: index,
       _key: tv.key,
       value: tv.value,
-      ts: moment(tv.ts).format("YYYY-MM-DD HH:mm:ss"),
+      ts: tv.ts
     };
   });
 
@@ -21,15 +21,20 @@ const LatestTelemetry = (props) => {
     {
       title: "Last update time",
       dataIndex: "ts",
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.ts - b.ts,
+      render: text => moment(text).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       title: "Key",
       dataIndex: "_key",
+      sorter: (a, b) => a.key - b.key
     },
     {
       title: "Value",
       dataIndex: "value",
     },
+    
   ];
 
   return (
