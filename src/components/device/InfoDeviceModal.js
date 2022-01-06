@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Input, message, Modal, Tabs } from "antd";
 
 import constant from "../../helpers/constants";
-import Clipboard from "../clipboard/clipboard";
-import LatestTelemetry from "./LatestTelemetry";
 import { DeviceService } from "../../services";
-import { get } from "lodash";
-import ManageCredentials from "../device-credentials/ManageCredentials";
+import { get, find } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import { find } from "lodash";
-
 import { loadTelemetryByDeviceId } from "../../actions/telemetry";
+
+import Clipboard from "../clipboard/clipboard";
+import ManageCredentials from "../device-credentials/ManageCredentials";
+import LatestTelemetry from "./LatestTelemetry";
+import DeviceLineChart from "../device-charts/DeviceLineChart";
+import DeviceBarChart from "../device-charts/DeviceBarChart";
 
 const { TabPane } = Tabs;
 
@@ -113,7 +114,8 @@ const InfoDeviceModal = (props) => {
         onCancel={() => handleOpenModal(false)}
         cancelButtonProps={styleButton}
         centered={true}
-        width={800}
+        width={1000}
+        destroyOnClose={true}
       >
         <div>
           <Button
@@ -162,7 +164,13 @@ const InfoDeviceModal = (props) => {
                                     .filter(device => device.id === deviceId)
                                     .map(device => <LatestTelemetry tvs={device.tvs ? device.tvs : []}/>)
                             }*/}
-              {deviceId && <LatestTelemetry/>}
+              {deviceId && <LatestTelemetry />}
+            </TabPane>
+            <TabPane tab="Line Chart" key="3">
+              {deviceId && <DeviceLineChart />}
+            </TabPane>
+            <TabPane tab="Bar Chart" key="4">
+              {deviceId && <DeviceBarChart />}
             </TabPane>
           </Tabs>
         </Form>
