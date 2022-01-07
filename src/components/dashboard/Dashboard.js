@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
-import Layouts from "../../components/layout/Layouts";
+import React from "react";
 import sale from "../../static/images/icon-sale.png";
 import order from "../../static/images/icon-order.png";
 import visitor from "../../static/images/icon-visitor.png";
-import Stats from "../../components/home/Stats";
-import ProgressBar from "../../components/home/ProgressBar";
-import GradientProgess from "../../components/home/GradientProgess";
-import Barchart from "../../components/home/Barchart";
-import TodoList from "../../components/home/TodoList";
-import TimeLine from "../../components/home/TimeLine";
-import Testimonial from "../../components/home/Testimonial";
-import { Button, Card, Col, Row } from "antd";
+import Stats from "../home/Stats";
+import ProgressBar from "../home/ProgressBar";
+import GradientProgess from "../home/GradientProgess";
+import Barchart from "../home/Barchart";
+import TodoList from "../home/TodoList";
+import TimeLine from "../home/TimeLine";
+import Testimonial from "../home/Testimonial";
+import {Button, Card, Col, Row} from "antd";
 import user1 from "../../static/images/user1.png";
 import user2 from "../../static/images/user2.png";
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
-import TableSelect from "../../components/home/TableSelect";
+import {useSelector} from "react-redux";
+import {Redirect} from "react-router";
+import TableSelect from "../home/TableSelect";
 
 const Dashboard = (props) => {
   const { user, isLoggedIn } = useSelector((state) => state.auth);

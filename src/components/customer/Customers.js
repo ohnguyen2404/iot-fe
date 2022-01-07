@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "antd";
-import Layouts from "../../components/layout/Layouts";
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
-import CreateCustomerModal from "../../components/customer/CreateCustomerModal";
-import CustomerListTable from "../../components/customer/CustomerListTable";
+import React, {useState} from "react";
+import {Button, Card, Col, Row} from "antd";
+import {useSelector} from "react-redux";
+import {Redirect} from "react-router";
+import CreateCustomerModal from "./CreateCustomerModal";
+import CustomerListTable from "./CustomerListTable";
 
 const Customers = (props) => {
   const [openCreateCustomer, setOpenCreateCustomer] = useState(false);

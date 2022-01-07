@@ -1,6 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 import {ENTITY_API_URL} from "../../config/setting";
+import {getItem} from "../../local-storage";
 
 const AxiosEntityApi = axios.create({
     baseURL: ENTITY_API_URL,
@@ -20,7 +21,7 @@ AxiosEntityApi.interceptors.response.use(response => {
 });
 
 AxiosEntityApi.interceptors.request.use(config =>{
-  const jwt = localStorage.getItem("accessToken");
+  const jwt = getItem("accessToken");
   config.headers = {
       Authorization: `Bearer ${jwt}`,
       Accept: 'application/json'

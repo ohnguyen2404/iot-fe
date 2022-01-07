@@ -1,5 +1,5 @@
-import { LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS } from "./types";
-import { AuthService } from "../services";
+import {LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS} from "./types";
+import {AuthService} from "../services";
 
 export const register =
   (email, firstName, lastName, password) => async (dispatch) => {

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Input, message, Modal, Tabs } from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Form, Input, message, Modal, Tabs} from "antd";
 
 import constant from "../../helpers/constants";
-import { DeviceService } from "../../services";
-import { get, find } from "lodash";
-import { useSelector, useDispatch } from "react-redux";
-import { loadTelemetryByDeviceId, loadLatestTelemetryByDeviceId } from "../../actions/telemetry";
+import {DeviceService} from "../../services";
+import {find, get} from "lodash";
+import {useDispatch, useSelector} from "react-redux";
+import {loadLatestTelemetryByDeviceId, loadTelemetryByDeviceId} from "../../actions/telemetry";
 
 import Clipboard from "../clipboard/clipboard";
 import ManageCredentials from "../device-credentials/ManageCredentials";
 import LatestTelemetry from "./LatestTelemetry";
 import DeviceLineChart from "../device-charts/DeviceLineChart";
 import DeviceBarChart from "../device-charts/DeviceBarChart";
+import GaugesTelemetry from "../device-charts/GaugesTelemetry";
 
 const { TabPane } = Tabs;
 
@@ -24,6 +25,7 @@ const InfoDeviceModal = (props) => {
   const { getFieldDecorator } = props.form;
 
   const [deviceInfo, setDeviceInfo] = useState({});
+  const [hideFooter, setHideFooter] = useState(false);
 
   const [openManageCredentialsModal, setOpenManageCredentialsModal] =
     useState(false);
@@ -35,6 +37,7 @@ const InfoDeviceModal = (props) => {
   const styleButton = {
     style: { borderRadius: "5px" },
     size: "large",
+    disabled: hideFooter
   };
 
   useEffect(() => {
@@ -60,7 +63,6 @@ const InfoDeviceModal = (props) => {
             name,
             label,
           };
-          console.log("requestBody", requestBody);
           await DeviceService.update(deviceId, requestBody);
         } catch (e) {
           message.error(e.response.data.message);
@@ -139,7 +141,7 @@ const InfoDeviceModal = (props) => {
           )}
         </div>
         <Form className="edit_device_form" layout="vertical">
-          <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1" onChange={(activeKey => setHideFooter( activeKey !== "1" ))}>
             <TabPane tab="Device Details" key="1">
               <Form.Item label="Name">
                 {getFieldDecorator("name", {
@@ -160,11 +162,6 @@ const InfoDeviceModal = (props) => {
               </Form.Item>
             </TabPane>
             <TabPane tab="Latest telemetry" key="2">
-              {/*{
-                                devices
-                                    .filter(device => device.id === deviceId)
-                                    .map(device => <LatestTelemetry tvs={device.tvs ? device.tvs : []}/>)
-                            }*/}
               {deviceId && <LatestTelemetry />}
             </TabPane>
             <TabPane tab="Line Chart" key="3">
@@ -172,6 +169,9 @@ const InfoDeviceModal = (props) => {
             </TabPane>
             <TabPane tab="Bar Chart" key="4">
               {deviceId && <DeviceBarChart />}
+            </TabPane>
+            <TabPane tab="Gauges" key="5">
+              {deviceId && <GaugesTelemetry />}
             </TabPane>
           </Tabs>
         </Form>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 import {AUTH_API_URL} from "../../config/setting";
+import {getItem} from "../../local-storage";
 
 const AxiosAuthApi = axios.create({
     baseURL: AUTH_API_URL,
@@ -20,7 +21,7 @@ AxiosAuthApi.interceptors.response.use(response => {
 });
 
 AxiosAuthApi.interceptors.request.use(config =>{
-    const jwt = localStorage.getItem("accessToken");
+    const jwt = getItem("accessToken");
     config.headers = {
         Authorization: `Bearer ${jwt}`,
         Accept: 'application/json'

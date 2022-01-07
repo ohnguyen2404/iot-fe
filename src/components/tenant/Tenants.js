@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "antd";
-import Layouts from "../../components/layout/Layouts";
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
-import CreateTenantModal from "../../components/tenant/CreateTenantModal";
-import TenantListTable from "../../components/tenant/TenantListTable";
+import React, {useState} from "react";
+import {Button, Card, Col, Row} from "antd";
+import {useSelector} from "react-redux";
+import {Redirect} from "react-router";
+import CreateTenantModal from "./CreateTenantModal";
+import TenantListTable from "./TenantListTable";
 
 const Customers = (props) => {
   const [openCreateTenant, setOpenCreateTenant] = useState(false);

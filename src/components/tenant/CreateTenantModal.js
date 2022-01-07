@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Form, Icon, Input, Modal, Button, Select, Tooltip, message } from "antd";
-import { TenantService } from "../../services";
+import React from "react";
+import {Form, Icon, Input, message, Modal, Select, Tooltip} from "antd";
+import {TenantService} from "../../services";
+
 const { Option } = Select;
 
 const CreateTenantModal = (props) => {

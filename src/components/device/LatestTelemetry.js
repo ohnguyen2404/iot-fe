@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { Table } from "antd";
+import React from "react";
+import {Table} from "antd";
 import moment from "moment";
-import { useSelector } from "react-redux";
-import { uniqBy, sortBy } from "lodash";
+import {useSelector} from "react-redux";
+import {uniqBy} from "lodash";
 
 const LatestTelemetry = (props) => {
-  const { latest_telemetries } = useSelector((state) => state.telemetries);
-  const unique_kvs = uniqBy(latest_telemetries, "key");
+  const { latestTelemetries } = useSelector((state) => state.telemetries);
+  const unique_kvs = uniqBy(latestTelemetries, "key");
   let dataArray = [];
   dataArray = unique_kvs.map((tv, index) => {
     return {

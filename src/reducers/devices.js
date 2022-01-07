@@ -1,4 +1,4 @@
-import {UPDATE_DEVICE_TELEMETRY, LOAD_DEVICES} from "../actions/types";
+import {LOAD_DEVICES} from "../actions/types";
 
 const initialState = {
   devices: []

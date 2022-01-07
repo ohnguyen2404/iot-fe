@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Icon,
-  Input,
-  Modal,
-  Button,
-  Select,
-  Tooltip,
-  message,
-  Tabs,
-  Cascader,
-} from "antd";
+import React, {useEffect, useState} from "react";
+import {Cascader, Form, Icon, Input, message, Modal, Tooltip,} from "antd";
 import constant from "../../helpers/constants";
-import { DeviceService } from "../../services";
-import { get } from "lodash";
+import {DeviceService} from "../../services";
+import {get} from "lodash";
 
 const { TextArea } = Input;
 

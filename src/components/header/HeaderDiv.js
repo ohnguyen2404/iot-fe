@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import logo from "../../static/images/logo.png";
 import avatar from "../../static/images/flat-avatar.png";
 
-import { Link } from "react-router-dom";
-import { logout } from "../../actions/auth";
-import { useDispatch } from "react-redux";
+import {Link} from "react-router-dom";
+import {logout} from "../../actions/auth";
+import {useDispatch} from "react-redux";
 
-import { Avatar, Input, Menu } from "antd";
+import {Avatar, Input, Menu} from "antd";
 
 const SubMenu = Menu.SubMenu;
 

@@ -1,9 +1,9 @@
-import { applyMiddleware, createStore } from "redux";
-import { logger } from "redux-logger";
-import { composeWithDevTools } from "redux-devtools-extension";
+import {applyMiddleware, createStore} from "redux";
+import {logger} from "redux-logger";
+import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import rootReducer from "../reducers";
-import { persistStore, persistReducer } from "redux-persist";
+import {persistReducer, persistStore} from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 const persistConfig = {

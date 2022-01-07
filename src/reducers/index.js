@@ -2,7 +2,7 @@ import {combineReducers} from "redux";
 import auth from "./auth";
 import devices from "./devices"
 import telemetries from "./telemetries";
-import { LOGOUT } from "../actions/types";
+import {LOGOUT} from "../actions/types";
 
 const appReducer = combineReducers({
   auth,

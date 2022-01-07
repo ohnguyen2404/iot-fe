@@ -1,15 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Divider,
-  Form,
-  Radio,
-  Switch,
-  Table,
-  Button,
-  Popconfirm,
-  message,
-  Tooltip
-} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Divider, Form, message, Popconfirm, Radio, Switch, Table, Tooltip} from "antd";
 import CustomerService from "../../services/customer";
 import InfoCustomerModal from "./InfoCustomerModal";
 

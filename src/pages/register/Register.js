@@ -1,9 +1,9 @@
 import React from "react";
 import logo from "../../static/images/logo.png";
 import LayoutLogin from "../../components/layout/LayoutLogin";
-import { Button, Form, Icon, Input, message } from "antd";
-import { useDispatch } from "react-redux";
-import { register } from "../../actions/auth";
+import {Button, Form, Icon, Input, message} from "antd";
+import {useDispatch} from "react-redux";
+import {register} from "../../actions/auth";
 
 const Register = (props) => {
   const dispatch = useDispatch();

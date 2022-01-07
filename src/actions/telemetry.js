@@ -1,5 +1,5 @@
 import {TelemetryService} from "../services";
-import {LOAD_TELEMETRIES, UPDATE_TELEMETRIES, LOAD_LATEST_TELEMETRIES} from "./types";
+import {LOAD_LATEST_TELEMETRIES, LOAD_TELEMETRIES, UPDATE_TELEMETRIES} from "./types";
 
 export const loadTelemetryByDeviceId = (deviceId) => async (dispatch) => {
     const data = await TelemetryService.getByDeviceId(deviceId)
@@ -21,7 +21,6 @@ export const updateTelemetries = (updatedTelemetries) => async (dispatch) => {
 
 export const loadLatestTelemetryByDeviceId = (deviceId) => async (dispatch) => {
   const data = await TelemetryService.getLatestByDeviceId(deviceId)
-  console.log('data', data);
   if (data) {
       dispatch({
           type: LOAD_LATEST_TELEMETRIES,

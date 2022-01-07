@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {useState} from 'react';
-import Layouts from '../../components/layout/Layouts';
 import {Button, Card, Col, Form, Icon, Input, message, Modal, Row} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import user from '../../static/images/user-profile.jpeg';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AuthService} from "../../services";
 
 
@@ -14,7 +13,6 @@ const Profile = (props) => {
     const [isChanged, setIsChanged] = useState(false);
     const [changePasswordVisible, setChangePasswordVisible] = useState(false);
 
-    const dispatch = useDispatch();
     const styleButton = {
         style: {borderRadius: '5px'},
         size: "large"
@@ -74,8 +72,6 @@ const Profile = (props) => {
         e.preventDefault();
         props.form.validateFields(['currentPassword', 'newPassword', 'confirmPassword'], async (err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
-
                 AuthService.changePassword(values.currentPassword, values.newPassword)
                     .then((data) => {
                             return Promise.resolve();

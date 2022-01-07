@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Divider, Form, Radio, Switch, Table, Tag } from "antd";
+import {Divider, Form, Radio, Switch, Table, Tag} from "antd";
 
 const FormItem = Form.Item;
 const columns = [

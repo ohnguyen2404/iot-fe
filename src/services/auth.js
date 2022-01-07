@@ -1,4 +1,5 @@
-import { AuthApi } from "../api";
+import {AuthApi} from "../api";
+import {setItem} from "../local-storage";
 
 const register = (email, firstName, lastName, password) => {
   return AuthApi.register({
@@ -15,8 +16,8 @@ const login = async (email, password) => {
     password,
   });
   if (response.accessToken && response.refreshToken) {
-    localStorage.setItem("accessToken", response.accessToken);
-    localStorage.setItem("refreshToken", response.refreshToken);
+    setItem("accessToken", response.accessToken);
+    setItem("refreshToken", response.refreshToken);
   }
   return response.user;
 };

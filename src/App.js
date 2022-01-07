@@ -3,34 +3,6 @@ import {Card, Col, Row} from 'antd';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
-import Dashboard from './pages/dashboard/Dashboard';
-import Grid from './pages/layout/grid';
-import GridLayout from './pages/layout/gridLayout';
-import FormElements from './pages/form/form-elements';
-import FormControls from './pages/form/form-controls';
-import FormComponents from './pages/form/form-components';
-import Affix from './pages/navigation/affix';
-import Dropdown from './pages/navigation/dropdown';
-import Menu from './pages/navigation/menu';
-import Pagination from './pages/navigation/pagination';
-import PageHeader from './pages/navigation/pageheader';
-import Steps from './pages/navigation/steps';
-import Buttons from './pages/components/buttons';
-import Typography from './pages/components/typography';
-import BasicCalendar from './pages/calendar/basic-calendar';
-import NoticeCalendar from './pages/calendar/notice-calendar';
-import SelectableCalendar from './pages/calendar/selectable-calendar';
-import List from './pages/data-display/list';
-import Tooltip from './pages/data-display/tooltip-popover';
-import Carousel from './pages/data-display/carousel';
-import Charts from './pages/chart/Charts';
-import Profile from './pages/profile/Profile';
-import Tenants from './pages/tenants/Tenants'
-import Customers from './pages/customers/Customers'
-import Devices from './pages/devices/Devices'
-import Table from './pages/table/Table';
-import LanguageSwitcher from './pages/i18n/LanguageSwitcher';
-import Docs from './pages/doc/Docs';
 import Home from './pages/home/Home'
 import '../src/styles/global.scss';
 import {useSelector} from 'react-redux'

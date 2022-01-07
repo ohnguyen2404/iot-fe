@@ -1,17 +1,8 @@
 import * as React from "react";
-import {
-  CartesianGrid,
-  Legend,
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { useSelector } from "react-redux";
+import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
+import {useSelector} from "react-redux";
 import moment from "moment";
-import { uniqBy, groupBy, sortBy } from "lodash";
+import {groupBy, sortBy, uniqBy} from "lodash";
 
 const randomColor = () => {
   return Math.floor(Math.random() * 16777215).toString(16);

@@ -1,16 +1,17 @@
 import React, {useEffect, useRef, useState} from "react";
 import HeaderDiv from "../../components/header/HeaderDiv";
 import {Icon, Layout, Menu} from "antd";
-import Dashboard from "../../pages/dashboard/Dashboard";
-import Profile from "../../pages/profile/Profile"
-import Tenants from "../../pages/tenants/Tenants"
-import Customers from "../../pages/customers/Customers"
-import Devices from "../../pages/devices/Devices"
+import Dashboard from "../../components/dashboard/Dashboard";
+import Profile from "../../components/profile/Profile"
+import Tenants from "../../components/tenant/Tenants"
+import Customers from "../../components/customer/Customers"
+import Devices from "../../components/device/Devices"
 import {useDispatch, useSelector} from "react-redux";
 import {TRANSPORT_API_URL} from "../../config/setting";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import {updateTelemetries} from "../../actions/telemetry"
+import {getItem} from "../../local-storage";
 
 const {Header, Sider, Content} = Layout;
 
@@ -24,7 +25,7 @@ const Home = (props) => {
     const stompClient = useRef();
     useEffect(() => {
         const connect = () => {
-            const url = `${TRANSPORT_API_URL}/ws?token=${localStorage.getItem("accessToken")}`;
+            const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
 
             const socket = new SockJS(url);
             stompClient.current = Stomp.over(socket)
@@ -33,7 +34,6 @@ const Home = (props) => {
         }
 
         function onConnected() {
-            console.log("Connected to WebSocket")
             // Subscribe to the Public Topic
             stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onMessageReceived);
             stompClient.current.reconnect_relay = 10000
@@ -41,13 +41,11 @@ const Home = (props) => {
 
         const onMessageReceived = (payload) => {
             const message = JSON.parse(payload.body);
-            console.log('message', message);
-
             const newTelemetries = message.kvs.map((kv) => {
-              return {
-                entityId: message.entityId,
-                ...kv
-              }
+                return {
+                    entityId: message.entityId,
+                    ...kv
+                }
             })
             dispatch(updateTelemetries(newTelemetries));
         }

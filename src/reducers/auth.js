@@ -1,6 +1,7 @@
 import {LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, REGISTER_FAIL, REGISTER_SUCCESS,} from "../actions/types";
+import {getItem} from "../local-storage";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(getItem("user"));
 
 const initialState = user
     ? {isLoggedIn: true, user}

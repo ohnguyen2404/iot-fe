@@ -1,6 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 import {TELEMETRY_API_URL} from "../../config/setting";
+import {getItem} from "../../local-storage";
 
 const AxiosTelemetryApi = axios.create({
     baseURL: TELEMETRY_API_URL,
@@ -19,8 +20,8 @@ AxiosTelemetryApi.interceptors.response.use(response => {
     throw error;
 });
 
-AxiosTelemetryApi.interceptors.request.use(config =>{
-    const jwt = localStorage.getItem("accessToken");
+AxiosTelemetryApi.interceptors.request.use(config => {
+    const jwt = getItem("accessToken");
     config.headers = {
         Authorization: `Bearer ${jwt}`,
         Accept: 'application/json'

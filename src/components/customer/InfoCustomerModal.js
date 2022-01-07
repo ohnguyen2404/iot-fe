@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Icon,
-  Input,
-  Modal,
-  Select,
-  Tooltip,
-  message,
-} from "antd";
+import React, {useEffect, useState} from "react";
+import {Form, Icon, Input, message, Modal, Select, Tooltip,} from "antd";
 import CustomerService from "../../services/customer";
 
 const { Option } = Select;

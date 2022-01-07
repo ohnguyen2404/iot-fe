@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import copy from 'copy-to-clipboard'
-import {
-  Button,
-  message,
-} from "antd";
+import {Button, message,} from "antd";
 
 const Clipboard = (props) => {
   const {label, copyText, ...restProps} = props

@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import logo from "../../static/images/logo.png";
 import LayoutLogin from "../../components/layout/LayoutLogin";
-import { Button, Checkbox, Form, Icon, Input, message } from "antd";
-import { useDispatch } from "react-redux";
-import { login } from "../../actions/auth";
+import {Button, Checkbox, Form, Icon, Input, message} from "antd";
+import {useDispatch} from "react-redux";
+import {login} from "../../actions/auth";
 
 const Login = (props) => {
   const dispatch = useDispatch();

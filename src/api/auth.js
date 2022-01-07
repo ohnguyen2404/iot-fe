@@ -1,5 +1,5 @@
 import AxiosAuthApi from "./axios/axiosAuthApi";
-import { API_AUTH } from "../config/setting";
+import {API_AUTH} from "../config/setting";
 
 export const AuthApi = {
   register: async (data) => {
