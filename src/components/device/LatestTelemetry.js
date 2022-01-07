@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { uniqBy, sortBy } from "lodash";
 
 const LatestTelemetry = (props) => {
-  const { telemetries } = useSelector((state) => state.telemetries);
-  const unique_kvs = uniqBy(telemetries, "key");
+  const { latest_telemetries } = useSelector((state) => state.telemetries);
+  const unique_kvs = uniqBy(latest_telemetries, "key");
   let dataArray = [];
   dataArray = unique_kvs.map((tv, index) => {
     return {

@@ -36,6 +36,7 @@ const Home = (props) => {
             console.log("Connected to WebSocket")
             // Subscribe to the Public Topic
             stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onMessageReceived);
+            stompClient.current.reconnect_relay = 10000
         }
 
         const onMessageReceived = (payload) => {

@@ -34,7 +34,7 @@ const CreateTenantModal = (props) => {
             await TenantService.create(values)
           }
           catch (e) {
-            message.error("Create tenant failed!")
+            message.error(e.response.data.message)
             return
           }
           message.success("Create tenant successfully!")

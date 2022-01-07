@@ -5,7 +5,7 @@ import constant from "../../helpers/constants";
 import { DeviceService } from "../../services";
 import { get, find } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import { loadTelemetryByDeviceId } from "../../actions/telemetry";
+import { loadTelemetryByDeviceId, loadLatestTelemetryByDeviceId } from "../../actions/telemetry";
 
 import Clipboard from "../clipboard/clipboard";
 import ManageCredentials from "../device-credentials/ManageCredentials";
@@ -43,6 +43,7 @@ const InfoDeviceModal = (props) => {
         const device = find(devices, { id: deviceId });
         setDeviceInfo(device);
         await dispatch(loadTelemetryByDeviceId(deviceId));
+        await dispatch(loadLatestTelemetryByDeviceId(deviceId))
       }
     };
     loadDevice();

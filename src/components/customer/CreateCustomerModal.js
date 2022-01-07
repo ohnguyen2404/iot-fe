@@ -42,7 +42,7 @@ const CreateCustomerModal = (props) => {
           try {
             await CustomerService.create(values);
           } catch (e) {
-            message.error("Create customer failed!");
+            message.error(e.response.data.message);
             return;
           }
           message.success("Create customer successfully!");

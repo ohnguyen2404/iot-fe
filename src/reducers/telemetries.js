@@ -1,7 +1,8 @@
-import {LOAD_TELEMETRIES, UPDATE_TELEMETRIES} from "../actions/types";
+import {LOAD_TELEMETRIES, UPDATE_TELEMETRIES, LOAD_LATEST_TELEMETRIES} from "../actions/types";
 
 const initialState = {
-  telemetries: []
+  telemetries: [],
+  latest_telemetries: []
 }
 
 export default function (state = initialState, action) {
@@ -13,12 +14,22 @@ export default function (state = initialState, action) {
         ...state,
         telemetries: payload
       }
+
     case UPDATE_TELEMETRIES:
       const updatedTelemetries = [...payload, ...state.telemetries]
+      const updatedLatestTelemetries = [...payload, ...state.latest_telemetries]
       return {
         ...state,
-        telemetries: updatedTelemetries
+        telemetries: updatedTelemetries,
+        latest_telemetries: updatedLatestTelemetries
       }
+    
+    case LOAD_LATEST_TELEMETRIES:
+      return {
+        ...state,
+        latest_telemetries: payload
+      }
+
     default:
       return state
   }
