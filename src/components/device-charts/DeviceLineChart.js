@@ -8,6 +8,8 @@ const randomColor = () => {
     return Math.floor(Math.random() * 16777215).toString(16);
 };
 
+const data = []
+const avg = {}
 const DeviceLineChart = (props) => {
     const {telemetries} = useSelector((state) => state.telemetries);
     const uniqueKeys = uniqBy(telemetries, "key").map(({key}) => key);
@@ -16,39 +18,36 @@ const DeviceLineChart = (props) => {
         "ts"
     );
 
-    const dataArray = []
-    const avgData = {}
     uniqueKeys.forEach((key) => {
-        avgData[key] = 0
+        avg[key] = 0
     })
     for (const [key, value] of Object.entries(groupedTsArray)) {
-        const data = {
+        const kv = {
             ts: moment(parseInt(key)).format("HH:mm:ss"),
         };
         value.forEach((v) => {
             if (uniqueKeys.includes(v.key)) {
-                data[v.key] = v.value;
-                avgData[v.key] += parseInt(v.value)
+                kv[v.key] = v.value;
+                avg[v.key] += parseInt(v.value)
             }
         });
-        dataArray.push(data);
+        data.push(kv);
+        if (data.length > telemetries.length) {
+            data.shift()
+        }
     }
 
     const renderColorfulLegendText = (value, entry) => {
         const {color} = entry;
 
-        return (
-            <>
-                <span style={{color}}>{value} (Avg: {(avgData[value] / dataArray.length).toFixed(1)})</span>
-            </>
-        );
+        return <span style={{color}}>{value} (Avg: {(avg[value] / data.length).toFixed(1)})</span>
     };
 
     return (
         <div style={{overflow: "scroll"}}>
             <div style={{minWidth: "500px"}}>
                 <ResponsiveContainer width="100%" height={400}>
-                    <LineChart data={dataArray}>
+                    <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="ts" minTickGap={100}/>
                         <YAxis/>

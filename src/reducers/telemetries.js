@@ -1,4 +1,5 @@
 import {LOAD_LATEST_TELEMETRIES, LOAD_TELEMETRIES, UPDATE_TELEMETRIES} from "../actions/types";
+import {dropRight} from "lodash";
 
 const initialState = {
   telemetries: [],
@@ -16,7 +17,7 @@ export default function (state = initialState, action) {
       }
 
     case UPDATE_TELEMETRIES:
-      const updatedTelemetries = [...payload, ...state.telemetries]
+      const updatedTelemetries = [...payload, ...dropRight(state.telemetries, payload.length)]
       const updatedLatestTelemetries = [...payload, ...state.latestTelemetries]
       return {
         ...state,
