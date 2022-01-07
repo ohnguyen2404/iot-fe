@@ -9,10 +9,9 @@ const GaugesTelemetry = (props) => {
     const {latestTelemetries} = useSelector((state) => state.telemetries);
     const latestTelemetry = head(latestTelemetries)
 
-    const [gauge, setGauge] = useState(null)
+    const [linearGauge, setLinearGauge] = useState(null)
 
     useEffect(() => {
-        console.log(latestTelemetry)
         const initGauge = new LinearGauge({
             renderTo: 'canvas-id',
             title: latestTelemetry.key.charAt(0).toUpperCase() + latestTelemetry.key.slice(1),
@@ -24,15 +23,14 @@ const GaugesTelemetry = (props) => {
             valueBoxBorderRadius: 0,
             valueTextShadow: false,
             borders: 0,
-            barStrokeWidth: 5,
             minValue: -60,
             maxValue: 100,
             minorTicks: 20,
             majorTicks: [-60, -40, -20, 0, 20, 40, 60, 80, 100],
             units: "°C",
             colorUnits: "#f00",
-            animationRule: "bounce",
-            animationDuration: 750,
+            animationRule: "linear",
+            animationDuration: 700,
             highlights: [
                 {from: -60, to: -40, color: "#87C6FB"},
                 {from: -40, to: -20, color: "#B1DAFC"},
@@ -45,14 +43,14 @@ const GaugesTelemetry = (props) => {
             ],
 
         }).draw();
-        setGauge(initGauge);
+        setLinearGauge(initGauge);
     }, [])
 
     useEffect(() => {
-        if (gauge !== null) {
-            gauge.title = latestTelemetry.title
-            gauge.value = latestTelemetry.value
-            setGauge(gauge)
+        if (linearGauge !== null) {
+            linearGauge.title = latestTelemetry.title
+            linearGauge.value = latestTelemetry.value
+            setLinearGauge(linearGauge)
         }
     }, [latestTelemetry])
 

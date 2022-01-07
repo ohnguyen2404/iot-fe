@@ -24,10 +24,23 @@ const Home = (props) => {
 
     const stompClient = useRef();
     useEffect(() => {
+
+        let socket = null;
+        let recInterval = null;
+
         const connect = () => {
             const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
 
-            const socket = new SockJS(url);
+            socket = new SockJS(url);
+
+            socket.onopen = () => {
+                clearInterval(recInterval)
+            }
+            socket.onclose = () => {
+                recInterval = setInterval(() => {
+                    connect()
+                }, 2000)
+            }
             stompClient.current = Stomp.over(socket)
             stompClient.current.debug = null;
             stompClient.current.connect('', '', onConnected, onError);
@@ -35,6 +48,7 @@ const Home = (props) => {
 
         function onConnected() {
             // Subscribe to the Public Topic
+            console.log("Connected to WebSocket")
             stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onMessageReceived);
             stompClient.current.reconnect_relay = 10000
         }

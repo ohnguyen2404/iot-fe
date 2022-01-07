@@ -16,7 +16,7 @@ const DeviceLineChart = (props) => {
         "ts"
     );
 
-    const dataArray = [];
+    const dataArray = []
     const avgData = {}
     uniqueKeys.forEach((key) => {
         avgData[key] = 0
@@ -50,7 +50,7 @@ const DeviceLineChart = (props) => {
                 <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={dataArray}>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="ts"/>
+                        <XAxis dataKey="ts" minTickGap={100}/>
                         <YAxis/>
                         <Tooltip/>
                         <Legend formatter={renderColorfulLegendText}/>
@@ -58,7 +58,7 @@ const DeviceLineChart = (props) => {
                             <Line
                                 type="monotone"
                                 dataKey={k}
-                                stroke={`#${randomColor()}`}
+                                stroke={`#82ca9d`}
                                 activeDot={{r: 6}}
                             />
                         ))}
