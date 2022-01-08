@@ -50,7 +50,7 @@ const DeviceLineChart = (props) => {
                 <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="ts" minTickGap={100}/>
+                        <XAxis dataKey="ts" minTickGap={50} tickLine={false}/>
                         <YAxis/>
                         <Tooltip/>
                         <Legend formatter={renderColorfulLegendText}/>
