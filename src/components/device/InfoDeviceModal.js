@@ -5,6 +5,7 @@ import constant from "../../helpers/constants";
 import {DeviceService} from "../../services";
 import {find, get} from "lodash";
 import {useDispatch, useSelector} from "react-redux";
+import { updateDevice } from "../../actions/devices";
 import {loadLatestTelemetryByDeviceId, loadTelemetryByDeviceId} from "../../actions/telemetry";
 
 import Clipboard from "../clipboard/clipboard";
@@ -45,8 +46,8 @@ const InfoDeviceModal = (props) => {
       if (deviceId) {
         const device = find(devices, { id: deviceId });
         setDeviceInfo(device);
-        await dispatch(loadTelemetryByDeviceId(deviceId));
-        await dispatch(loadLatestTelemetryByDeviceId(deviceId))
+        dispatch(loadTelemetryByDeviceId(deviceId));
+        dispatch(loadLatestTelemetryByDeviceId(deviceId))
       }
     };
     loadDevice();
@@ -63,7 +64,9 @@ const InfoDeviceModal = (props) => {
             name,
             label,
           };
-          await DeviceService.update(deviceId, requestBody);
+          const updatedDevice = await DeviceService.update(deviceId, requestBody);
+          console.log('updatedDevice', updatedDevice);
+          dispatch(updateDevice(updatedDevice))
         } catch (e) {
           message.error(e.response.data.message);
           return;

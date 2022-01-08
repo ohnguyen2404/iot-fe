@@ -4,7 +4,7 @@ import DeviceService from "../../services/device";
 import InfoDeviceModal from "./InfoDeviceModal";
 import ManageCredentials from "../device-credentials/ManageCredentials";
 import {useDispatch, useSelector} from "react-redux";
-import {loadDevices} from "../../actions/devices";
+import {removeDevice} from "../../actions/devices";
 
 const FormItem = Form.Item;
 
@@ -17,7 +17,6 @@ const _pagination = {position: "bottom"};
 const DeviceListTable = (props) => {
     const {devices} = useSelector(state => state.devices);
 
-    const {reloadDevices, setReloadDevices} = props;
     const [bordered, setBordered] = useState(false);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState(_pagination);
@@ -45,10 +44,6 @@ const DeviceListTable = (props) => {
         scroll,
         hasData,
     };
-
-    useEffect(() => {
-        dispatch(loadDevices())
-    }, [reloadDevices]);
 
     const dataArray = devices.map((device, index) => {
         return {
@@ -164,7 +159,6 @@ const DeviceListTable = (props) => {
     };
 
     const handleOpenInfoModal = (value) => {
-        setReloadDevices(!reloadDevices);
         setOpenInfoModal(value);
     };
 
@@ -175,11 +169,11 @@ const DeviceListTable = (props) => {
     const confirmDelete = async (id) => {
         try {
             await DeviceService.remove(id);
+            dispatch(removeDevice(id))
         } catch (e) {
             message.error(e.response.data.message);
             return;
         }
-        setReloadDevices(!reloadDevices);
         message.success("Delete device successfully!");
     };
 

@@ -8,12 +8,12 @@ const getById = async (id) => {
   return await DeviceApi.getById(id)
 }
 
-const create = (data) => {
-  return DeviceApi.create(data)
+const create = async (data) => {
+  return await DeviceApi.create(data)
 }
 
-const update = (id, data) => {
-  return DeviceApi.update(id, data)
+const update = async (id, data) => {
+  return await DeviceApi.update(id, data)
 }
 
 const remove = (id) => {

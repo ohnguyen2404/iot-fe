@@ -11,6 +11,7 @@ import {TRANSPORT_API_URL} from "../../config/setting";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import {updateTelemetries} from "../../actions/telemetry"
+import { loadDevices } from "../../actions/devices";
 import {getItem} from "../../local-storage";
 
 const {Header, Sider, Content} = Layout;
@@ -24,7 +25,7 @@ const Home = (props) => {
 
     const stompClient = useRef();
     useEffect(() => {
-
+        dispatch(loadDevices())
         let socket = null;
         let recInterval = null;
 
@@ -65,7 +66,7 @@ const Home = (props) => {
         }
 
         connect();
-    }, [user.id]);
+      }, [user.id]);
 
     const renderTab = () => {
         switch (Number(currentTab)) {

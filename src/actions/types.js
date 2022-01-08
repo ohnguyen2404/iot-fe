@@ -6,6 +6,9 @@ export const LOGOUT = "LOGOUT";
 
 // devices
 export const LOAD_DEVICES = "LOAD_DEVICES";
+export const ADD_DEVICE = "ADD_DEVICE"
+export const UPDATE_DEVICE = "UPDATE_DEVICE"
+export const REMOVE_DEVICE = "REMOVE_DEVICE"
 
 
 // telemetries

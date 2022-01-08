@@ -7,7 +7,6 @@ import DeviceListTable from "./DeviceListTable";
 
 const Devices = (props) => {
     const [openCreateDevice, setOpenCreateDevice] = useState(false);
-    const [reloadDevices, setReloadDevices] = useState(false);
     const {user, isLoggedIn} = useSelector((state) => state.auth);
     if (!isLoggedIn) {
         return <Redirect to="/"/>;
@@ -18,7 +17,6 @@ const Devices = (props) => {
     const isTenant = userRoles.includes("TENANT");
 
     const handleOpenCreateDevice = (value) => {
-        setReloadDevices(!reloadDevices);
         setOpenCreateDevice(value);
     };
 
@@ -47,8 +45,6 @@ const Devices = (props) => {
                         }
                     >
                         <DeviceListTable
-                            reloadDevices={reloadDevices}
-                            setReloadDevices={setReloadDevices}
                         />
                     </Card>
                 </Col>

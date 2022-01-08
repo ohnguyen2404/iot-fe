@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import {Cascader, Form, Icon, Input, message, Modal, Select, Tabs, Tooltip,} from "antd";
 import constant from "../../helpers/constants";
 import {DeviceService} from "../../services";
+import {useDispatch} from "react-redux";
+import { createDevice } from "../../actions/devices";
 
-const {Option} = Select;
 const {TabPane} = Tabs;
 const {TextArea} = Input;
 
@@ -28,6 +29,7 @@ const CreateDeviceModal = (props) => {
     const [credentialsType, setCredentialsType] = useState(
         constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN
     );
+    const dispatch = useDispatch()
 
     const styleButton = {
         style: {borderRadius: "5px"},
@@ -89,7 +91,8 @@ const CreateDeviceModal = (props) => {
                         credentialsValue,
                     };
                     console.log("requestBody", requestBody);
-                    await DeviceService.create(requestBody);
+                    const newDevice = await DeviceService.create(requestBody);
+                    dispatch(createDevice(newDevice))
                 } catch (e) {
                     message.error(e.response.data.message);
                     return;
