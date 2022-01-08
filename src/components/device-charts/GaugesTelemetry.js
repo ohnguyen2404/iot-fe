@@ -14,9 +14,9 @@ const GaugesTelemetry = (props) => {
     useEffect(() => {
         const initGauge = new LinearGauge({
             renderTo: 'canvas-id',
-            title: latestTelemetry.key.charAt(0).toUpperCase() + latestTelemetry.key.slice(1),
+            title: latestTelemetry ? latestTelemetry.key.charAt(0).toUpperCase() + latestTelemetry.key.slice(1) : "",
             colorTitle: "#000000",
-            value: latestTelemetry.value,
+            value: latestTelemetry ? latestTelemetry.value : 0,
             width: 800,
             height: 160,
             borderRadius: 20,
