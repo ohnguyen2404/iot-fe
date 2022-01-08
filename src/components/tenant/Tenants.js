@@ -1,13 +1,12 @@
-import React, {useState} from "react";
-import {Button, Card, Col, Row} from "antd";
-import {useSelector} from "react-redux";
-import {Redirect} from "react-router";
+import React, { useState } from "react";
+import { Button, Card, Col, Row } from "antd";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router";
 import CreateTenantModal from "./CreateTenantModal";
 import TenantListTable from "./TenantListTable";
 
 const Customers = (props) => {
   const [openCreateTenant, setOpenCreateTenant] = useState(false);
-  const [reloadTenants, setReloadTenants] = useState(false);
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
     return <Redirect to="/" />;
@@ -18,7 +17,6 @@ const Customers = (props) => {
   const isTenant = userRoles.includes("TENANT");
 
   const handleOpenCreateTenant = (value) => {
-    setReloadTenants(!reloadTenants);
     setOpenCreateTenant(value);
   };
 
@@ -45,10 +43,7 @@ const Customers = (props) => {
                   />
                 }
               >
-                <TenantListTable
-                  reloadTenants={reloadTenants}
-                  setReloadTenants={setReloadTenants}
-                />
+                <TenantListTable />
               </Card>
             ))}
         </Col>

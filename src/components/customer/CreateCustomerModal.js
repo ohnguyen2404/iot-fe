@@ -1,12 +1,15 @@
 import React from "react";
 import {Form, Icon, Input, message, Modal, Select, Tooltip,} from "antd";
 import {CustomerService} from "../../services";
+import { createCustomer } from "../../actions/customers";
+import {useDispatch} from "react-redux";
 
 const { Option } = Select;
 
 const CreateCustomerModal = (props) => {
+  const dispatch = useDispatch();
   const { openCreateCustomer, handleOpenCreateCustomer } = props;
-
+  
   const { getFieldDecorator } = props.form;
 
   const styleButton = {
@@ -26,13 +29,14 @@ const CreateCustomerModal = (props) => {
   const handleCreateCustomerSubmit = async (e) => {
     e.preventDefault();
     props.form.validateFields(
-      ["email", "firstName", "lastName"],
+      ["email", "firstName", "lastName", "title", "country", "city", "address", "phone"],
       async (err, values) => {
         if (!err) {
           values["authorities"] = ["CUSTOMER"]; 
           console.log("Received values of form: ", values);
           try {
-            await CustomerService.create(values);
+            const newCustomer = await CustomerService.create(values);
+            dispatch(createCustomer(newCustomer))
           } catch (e) {
             message.error(e.response.data.message);
             return;

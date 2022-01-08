@@ -1,7 +1,19 @@
-import React, {useEffect, useState} from "react";
-import {Button, Divider, Form, message, Popconfirm, Radio, Switch, Table, Tooltip} from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Divider,
+  Form,
+  message,
+  Popconfirm,
+  Radio,
+  Switch,
+  Table,
+  Tooltip,
+} from "antd";
 import CustomerService from "../../services/customer";
 import InfoCustomerModal from "./InfoCustomerModal";
+import { removeCustomer } from "../../actions/customers";
+import { useDispatch, useSelector } from "react-redux";
 
 const FormItem = Form.Item;
 
@@ -12,7 +24,8 @@ const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
 const CustomerListTable = (props) => {
-  const {reloadCustomers, setReloadCustomers} = props
+  const { customers } = useSelector((state) => state.customers);
+
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -24,9 +37,10 @@ const CustomerListTable = (props) => {
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
 
-  const [customers, setCustomers] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  
+  const dispatch = useDispatch();
 
   const state = {
     bordered,
@@ -38,14 +52,6 @@ const CustomerListTable = (props) => {
     scroll,
     hasData,
   };
-
-  useEffect(() => {
-    const loadCustomers = async () => {
-      const customers = await CustomerService.getAll();
-      setCustomers(customers);
-    };
-    loadCustomers();
-  }, [reloadCustomers]);
 
   const dataArray = customers.map((customer, index) => {
     return {
@@ -92,7 +98,7 @@ const CustomerListTable = (props) => {
             cancelText="No"
           >
             <Tooltip title="Delete">
-              <Button type="danger" shape="circle" icon="delete"/>
+              <Button type="danger" shape="circle" icon="delete" />
             </Tooltip>
           </Popconfirm>
         </span>
@@ -143,30 +149,31 @@ const CustomerListTable = (props) => {
   };
 
   const handleOpenModal = (value) => {
-    setReloadCustomers(!reloadCustomers)
     setOpenInfoModal(value);
   };
 
   const confirmDelete = async (id) => {
     try {
       await CustomerService.remove(id);
+      dispatch(removeCustomer(id));
     } catch (e) {
       if (e.response.data.message) {
-        message.error(e.response.data.message)
+        message.error(e.response.data.message);
         return;
       }
     }
-    setReloadCustomers(!reloadCustomers)
     message.success("Delete customer successfully!");
   };
 
   return (
     <div>
-      <InfoCustomerModal
-        customerId={selectedCustomerId}
-        openCustomerModal={openInfoModal}
-        handleOpenModal={handleOpenModal}
-      />
+      {openInfoModal && (
+        <InfoCustomerModal
+          customerId={selectedCustomerId}
+          openCustomerModal={openInfoModal}
+          handleOpenModal={handleOpenModal}
+        />
+      )}
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
@@ -226,11 +233,7 @@ const CustomerListTable = (props) => {
             />
           </FormItem>
           <FormItem label="Size">
-            <Radio.Group
-              value={size}
-              onChange={handleSizeChange}
-              size="small"
-            >
+            <Radio.Group value={size} onChange={handleSizeChange} size="small">
               <Radio.Button value="default" size="small">
                 Default
               </Radio.Button>

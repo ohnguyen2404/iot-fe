@@ -1,7 +1,19 @@
-import React, {useEffect, useState} from "react";
-import {Button, Divider, Form, message, Popconfirm, Radio, Switch, Table, Tooltip,} from "antd";
+import React, { useState } from "react";
+import {
+  Button,
+  Divider,
+  Form,
+  message,
+  Popconfirm,
+  Radio,
+  Switch,
+  Table,
+  Tooltip,
+} from "antd";
 import TenantService from "../../services/tenant";
 import InfoTenantModal from "./InfoTenantModal";
+import { removeTenant } from "../../actions/tenants";
+import { useDispatch, useSelector } from "react-redux";
 
 const FormItem = Form.Item;
 
@@ -12,7 +24,8 @@ const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
 const TenantListTable = (props) => {
-  const {reloadTenants, setReloadTenants} = props
+  const { tenants } = useSelector((state) => state.tenants);
+
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState(_pagination);
@@ -24,9 +37,10 @@ const TenantListTable = (props) => {
   const [scroll, setScroll] = useState(undefined);
   const [hasData, setHasData] = useState(true);
 
-  const [tenants, setTenants] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedTenantId, setSelectedTenantId] = useState(null);
+
+  const dispatch = useDispatch();
 
   const state = {
     bordered,
@@ -38,14 +52,6 @@ const TenantListTable = (props) => {
     scroll,
     hasData,
   };
-
-  useEffect(() => {
-    const loadTenants = async () => {
-      const tenants = await TenantService.getAll();
-      setTenants(tenants);
-    };
-    loadTenants();
-  }, [reloadTenants]);
 
   const dataArray = tenants.map((tenant, index) => {
     return {
@@ -142,28 +148,29 @@ const TenantListTable = (props) => {
   };
 
   const handleOpenModal = (value) => {
-    setReloadTenants(!reloadTenants)
     setOpenInfoModal(value);
   };
 
   const confirmDelete = async (id) => {
     try {
       await TenantService.remove(id);
+      dispatch(removeTenant(id))
     } catch (e) {
       message.error(e.response.data.message);
       return;
     }
-    setReloadTenants(!reloadTenants)
     message.success("Delete tenant successfully!");
   };
 
   return (
     <div>
-      <InfoTenantModal
-        tenantId={selectedTenantId}
-        openTenantModal={openInfoModal}
-        handleOpenModal={handleOpenModal}
-      />
+      {openInfoModal && (
+        <InfoTenantModal
+          tenantId={selectedTenantId}
+          openTenantModal={openInfoModal}
+          handleOpenModal={handleOpenModal}
+        />
+      )}
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
@@ -223,11 +230,7 @@ const TenantListTable = (props) => {
             />
           </FormItem>
           <FormItem label="Size">
-            <Radio.Group
-              value={size}
-              onChange={handleSizeChange}
-              size="small"
-            >
+            <Radio.Group value={size} onChange={handleSizeChange} size="small">
               <Radio.Button value="default" size="small">
                 Default
               </Radio.Button>

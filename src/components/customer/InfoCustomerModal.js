@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Form, Icon, Input, message, Modal, Select, Tooltip,} from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Icon, Input, message, Modal, Select, Tooltip } from "antd";
 import CustomerService from "../../services/customer";
-
+import { find } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCustomer } from "../../actions/customers";
 const { Option } = Select;
 
 const InfoCustomerModal = (props) => {
@@ -9,15 +11,18 @@ const InfoCustomerModal = (props) => {
   const [customerInfo, setCustomerInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
+  const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers);
+
   useEffect(() => {
     const loadCustomer = async () => {
       if (customerId) {
-        const customerInfo = await CustomerService.getById(customerId);
-        setCustomerInfo(customerInfo);
+        const customer = find(customers, { id: customerId });
+        setCustomerInfo(customer);
       }
     };
     loadCustomer();
-  }, [customerId]);
+  }, []);
   const { getFieldDecorator } = props.form;
   const { confirm } = Modal;
   const styleButton = {
@@ -47,12 +52,25 @@ const InfoCustomerModal = (props) => {
       },
       onOk() {
         props.form.validateFields(
-          ["email", "firstName", "lastName"],
+          [
+            "email",
+            "firstName",
+            "lastName",
+            "title",
+            "country",
+            "city",
+            "address",
+            "phone",
+          ],
           async (err, values) => {
             if (!err) {
               console.log("Received values of form: ", values);
               try {
-                await CustomerService.update(customerId, values);
+                const updatedCustomer = await CustomerService.update(
+                  customerId,
+                  values
+                );
+                dispatch(updateCustomer(updatedCustomer));
               } catch (e) {
                 message.error("Update customer failed!");
                 return;
@@ -66,14 +84,13 @@ const InfoCustomerModal = (props) => {
 
       cancelButtonProps: styleButton,
       onCancel() {
-        console.log("Cancel");
       },
     });
   };
 
   const handleInfoChange = (e) => {
     const values = props.form.getFieldsValue();
-    console.log('values', values);
+    console.log("values", values);
     if (
       values.email !== customerInfo.email ||
       values.firstName !== customerInfo.firstName ||
@@ -101,7 +118,7 @@ const InfoCustomerModal = (props) => {
       okButtonProps={{ disabled: !isInfoChanged }}
       cancelButtonProps={styleButton}
       centered={true}
-      bodyStyle={{overflowY: 'scroll', height: '600px'}}
+      bodyStyle={{ overflowY: "scroll", height: "600px" }}
     >
       <Form
         className="info_customer_form"
@@ -122,9 +139,7 @@ const InfoCustomerModal = (props) => {
             initialValue: customerInfo.email,
           })(<Input disabled />)}
         </Form.Item>
-        <Form.Item
-          label="Firstname"
-        >
+        <Form.Item label="Firstname">
           {getFieldDecorator("firstName", {
             rules: [
               {
@@ -133,12 +148,10 @@ const InfoCustomerModal = (props) => {
                 whitespace: true,
               },
             ],
-            initialValue: customerInfo.firstName
+            initialValue: customerInfo.firstName,
           })(<Input />)}
         </Form.Item>
-        <Form.Item
-          label="Lastname"
-        >
+        <Form.Item label="Lastname">
           {getFieldDecorator("lastName", {
             rules: [
               {
@@ -147,7 +160,7 @@ const InfoCustomerModal = (props) => {
                 whitespace: true,
               },
             ],
-            initialValue: customerInfo.lastName
+            initialValue: customerInfo.lastName,
           })(<Input />)}
         </Form.Item>
         <Form.Item

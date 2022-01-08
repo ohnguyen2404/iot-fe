@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Form, Icon, Input, message, Modal, Select, Tooltip,} from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Icon, Input, message, Modal, Select, Tooltip } from "antd";
 import TenantService from "../../services/tenant";
-
+import { find } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTenant } from "../../actions/tenants";
 const { Option } = Select;
 
 const InfoTenantModal = (props) => {
@@ -9,15 +11,19 @@ const InfoTenantModal = (props) => {
   const [tenantInfo, setTenantInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
+  const dispatch = useDispatch();
+  const { tenants } = useSelector((state) => state.tenants);
+
   useEffect(() => {
     const loadTenant = async () => {
       if (tenantId) {
-        const tenantInfo = await TenantService.getById(tenantId);
-        setTenantInfo(tenantInfo);
+        const tenant = find(tenants, { id: tenantId });
+        setTenantInfo(tenant);
       }
     };
     loadTenant();
-  }, [tenantId]);
+  }, []);
+
   const { getFieldDecorator } = props.form;
   const { confirm } = Modal;
   const styleButton = {
@@ -47,14 +53,27 @@ const InfoTenantModal = (props) => {
       },
       onOk() {
         props.form.validateFields(
-          ["email", "firstName", "lastName"],
+          [
+            "email",
+            "firstName",
+            "lastName",
+            "title",
+            "country",
+            "city",
+            "address",
+            "phone",
+          ],
           async (err, values) => {
             if (!err) {
               console.log("Received values of form: ", values);
               try {
-                await TenantService.update(tenantId, values);
+                const updatedTenant = await TenantService.update(
+                  tenantId,
+                  values
+                );
+                dispatch(updateTenant(updatedTenant));
               } catch (e) {
-                message.error("Update tenant failed!");
+                message.error(e.response.data.message)
                 return;
               }
               message.success("Update tenant successfully!");
@@ -66,14 +85,13 @@ const InfoTenantModal = (props) => {
 
       cancelButtonProps: styleButton,
       onCancel() {
-        console.log("Cancel");
       },
     });
   };
 
   const handleInfoChange = (e) => {
     const values = props.form.getFieldsValue();
-    console.log('values', values);
+    console.log("values", values);
     if (
       values.email !== tenantInfo.email ||
       values.firstName !== tenantInfo.firstName ||
@@ -101,7 +119,7 @@ const InfoTenantModal = (props) => {
       okButtonProps={{ disabled: !isInfoChanged }}
       cancelButtonProps={styleButton}
       centered={true}
-      bodyStyle={{overflowY: 'scroll', height: '600px'}}
+      bodyStyle={{ overflowY: "scroll", height: "600px" }}
     >
       <Form
         className="info_tenant_form"
@@ -122,9 +140,7 @@ const InfoTenantModal = (props) => {
             initialValue: tenantInfo.email,
           })(<Input disabled />)}
         </Form.Item>
-        <Form.Item
-          label="Firstname"
-        >
+        <Form.Item label="Firstname">
           {getFieldDecorator("firstName", {
             rules: [
               {
@@ -133,12 +149,10 @@ const InfoTenantModal = (props) => {
                 whitespace: true,
               },
             ],
-            initialValue: tenantInfo.firstName
+            initialValue: tenantInfo.firstName,
           })(<Input />)}
         </Form.Item>
-        <Form.Item
-          label="Lastname"
-        >
+        <Form.Item label="Lastname">
           {getFieldDecorator("lastName", {
             rules: [
               {
@@ -147,7 +161,7 @@ const InfoTenantModal = (props) => {
                 whitespace: true,
               },
             ],
-            initialValue: tenantInfo.lastName
+            initialValue: tenantInfo.lastName,
           })(<Input />)}
         </Form.Item>
         <Form.Item

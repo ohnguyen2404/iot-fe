@@ -6,12 +6,23 @@ export const LOGOUT = "LOGOUT";
 
 // devices
 export const LOAD_DEVICES = "LOAD_DEVICES";
-export const ADD_DEVICE = "ADD_DEVICE"
-export const UPDATE_DEVICE = "UPDATE_DEVICE"
-export const REMOVE_DEVICE = "REMOVE_DEVICE"
-
+export const CREATE_DEVICE = "CREATE_DEVICE";
+export const UPDATE_DEVICE = "UPDATE_DEVICE";
+export const REMOVE_DEVICE = "REMOVE_DEVICE";
 
 // telemetries
 export const LOAD_TELEMETRIES = "LOAD_TELEMETRIES";
 export const UPDATE_TELEMETRIES = "UPDATE_TELEMETRIES";
 export const LOAD_LATEST_TELEMETRIES = "LOAD_LATEST_TELEMETRIES";
+
+// customers
+export const LOAD_CUSTOMERS = "LOAD_CUSTOMERS";
+export const CREATE_CUSTOMER = "CREATE_CUSTOMER";
+export const UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
+export const REMOVE_CUSTOMER = "REMOVE_CUSTOMER";
+
+// tenants
+export const LOAD_TENANTS = "LOAD_TENANTS";
+export const CREATE_TENANT = "CREATE_TENANT";
+export const UPDATE_TENANT = "UPDATE_TENANT";
+export const REMOVE_TENANT = "REMOVE_TENANT";

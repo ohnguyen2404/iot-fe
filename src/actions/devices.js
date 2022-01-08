@@ -1,5 +1,5 @@
 import { DeviceService } from "../services";
-import { LOAD_DEVICES, ADD_DEVICE, UPDATE_DEVICE, REMOVE_DEVICE } from "./types";
+import { LOAD_DEVICES, CREATE_DEVICE, UPDATE_DEVICE, REMOVE_DEVICE } from "./types";
 
 export const loadDevices = () => async (dispatch) => {
   const data = await DeviceService.getAll();
@@ -14,7 +14,7 @@ export const loadDevices = () => async (dispatch) => {
 
 export const createDevice = (newDevice) => (dispatch) => {
   dispatch({
-    type: ADD_DEVICE,
+    type: CREATE_DEVICE,
     payload: newDevice
   })
 };

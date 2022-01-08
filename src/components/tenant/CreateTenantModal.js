@@ -1,10 +1,13 @@
 import React from "react";
 import {Form, Icon, Input, message, Modal, Select, Tooltip} from "antd";
 import {TenantService} from "../../services";
+import {createTenant} from "../../actions/tenants"
+import {useDispatch} from "react-redux";
 
 const { Option } = Select;
 
 const CreateTenantModal = (props) => {
+  const dispatch = useDispatch();
   const { openCreateTenant, handleOpenCreateTenant } = props;
 
   const { getFieldDecorator } = props.form;
@@ -26,13 +29,14 @@ const CreateTenantModal = (props) => {
   const handleCreateTenantSubmit = async (e) => {
     e.preventDefault();
     props.form.validateFields(
-      ["email", "title", "country", "city", "address", "phone", "firstName", "lastName"],
+      ["email", "firstName", "lastName", "title", "country", "city", "address", "phone"],
       async (err, values) => {
         if (!err) {
           values['authorities'] = ['TENANT']
           console.log("Received values of form: ", values);
           try {
-            await TenantService.create(values)
+            const newTenant = await TenantService.create(values)
+            dispatch(createTenant(newTenant))
           }
           catch (e) {
             message.error(e.response.data.message)

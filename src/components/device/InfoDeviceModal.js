@@ -65,7 +65,6 @@ const InfoDeviceModal = (props) => {
             label,
           };
           const updatedDevice = await DeviceService.update(deviceId, requestBody);
-          console.log('updatedDevice', updatedDevice);
           dispatch(updateDevice(updatedDevice))
         } catch (e) {
           message.error(e.response.data.message);

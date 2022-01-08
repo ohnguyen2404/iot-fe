@@ -1,6 +1,6 @@
 import {
   LOAD_DEVICES,
-  ADD_DEVICE,
+  CREATE_DEVICE,
   UPDATE_DEVICE,
   REMOVE_DEVICE,
 } from "../actions/types";
@@ -19,7 +19,7 @@ export default function (state = initialState, action) {
         devices: payload,
       };
 
-    case ADD_DEVICE:
+    case CREATE_DEVICE:
       return {
         ...state,
         devices: [...state.devices, payload],
