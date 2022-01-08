@@ -25,13 +25,10 @@ const Home = (props) => {
     const stompClient = useRef();
     useEffect(() => {
 
-        let socket = null;
-        let recInterval = null;
-
         const connect = () => {
             const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
 
-            socket = new SockJS(url);
+            const socket = new SockJS(url);
             stompClient.current = Stomp.over(socket)
             stompClient.current.debug = null;
             stompClient.current.connect('', '', onConnected, onError);
@@ -43,7 +40,6 @@ const Home = (props) => {
             stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onMessageReceived);
             stompClient.current.reconnect_relay = 10000
 
-            clearInterval(recInterval)
         }
 
         const onMessageReceived = (payload) => {
@@ -58,10 +54,9 @@ const Home = (props) => {
         }
 
         const onError = (err) => {
-            console.log(err);
-            recInterval = setInterval(() => {
-                connect()
-            }, 2000)
+            console.log('STOMP: ' + err);
+            setTimeout(connect, 10000);
+            console.log('STOMP: Reconnecting in 10 seconds');
         }
 
         connect();
