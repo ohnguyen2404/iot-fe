@@ -10,6 +10,7 @@ const randomColor = () => {
 
 const data = []
 const avg = {}
+const maxSizeChart = 50
 const DeviceLineChart = (props) => {
     const {telemetries} = useSelector((state) => state.telemetries);
     const uniqueKeys = uniqBy(telemetries, "key").map(({key}) => key);
@@ -32,7 +33,7 @@ const DeviceLineChart = (props) => {
             }
         });
         data.push(kv);
-        if (data.length > telemetries.length) {
+        if (data.length > maxSizeChart) {
             data.shift()
         }
     }
@@ -57,7 +58,7 @@ const DeviceLineChart = (props) => {
                             <Line
                                 type="monotone"
                                 dataKey={k}
-                                stroke={`#82ca9d`}
+                                stroke={`#${randomColor()}`}
                                 activeDot={{r: 6}}
                             />
                         ))}
