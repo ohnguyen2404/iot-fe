@@ -9,7 +9,6 @@ const randomColor = () => {
 };
 
 let data = [];
-const maxSizeChart = 10;
 const DeviceBarChart = (props) => {
   const { telemetries } = useSelector((state) => state.telemetries);
   const uniqueKeys = uniqBy(telemetries, "key").map(({ key }) => key);
@@ -25,7 +24,7 @@ const DeviceBarChart = (props) => {
       }
     });
     data.push(kv);
-    if (data.length > maxSizeChart) {
+    if (data.length > telemetries.length) {
       data.shift()
     }
   }
