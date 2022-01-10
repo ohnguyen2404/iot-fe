@@ -4,9 +4,7 @@ import {useSelector} from "react-redux";
 import moment from "moment";
 import {groupBy, sortBy, uniqBy} from "lodash";
 
-const randomColor = () => {
-    return Math.floor(Math.random() * 16777215).toString(16);
-};
+const lineColors = ["blue", "red", "green", "black"];
 
 const data = []
 const avg = {}
@@ -53,11 +51,11 @@ const DeviceLineChart = (props) => {
                         <YAxis/>
                         <Tooltip/>
                         <Legend formatter={renderColorfulLegendText}/>
-                        {uniqueKeys.map((k) => (
+                        {uniqueKeys.map((k, idx) => (
                             <Line
                                 type="monotone"
                                 dataKey={k}
-                                stroke={`#${randomColor()}`}
+                                stroke={lineColors[idx]}
                                 activeDot={{r: 6}}
                             />
                         ))}

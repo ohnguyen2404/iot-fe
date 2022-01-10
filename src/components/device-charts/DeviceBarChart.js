@@ -1,15 +1,22 @@
 import * as React from "react";
-import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
-import {useSelector} from "react-redux";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useSelector } from "react-redux";
 import moment from "moment";
-import {groupBy, sortBy, uniqBy, drop} from "lodash";
+import { groupBy, sortBy, uniqBy } from "lodash";
 
-const randomColor = () => {
-  return Math.floor(Math.random() * 16777215).toString(16);
-};
+const barColors = ["blue", "red", "green", "black"];
 
-let data = [];
 const DeviceBarChart = (props) => {
+  const data = []
   const { telemetries } = useSelector((state) => state.telemetries);
   const uniqueKeys = uniqBy(telemetries, "key").map(({ key }) => key);
   const groupedTsArray = groupBy(sortBy(telemetries, "ts"), "ts");
@@ -43,15 +50,12 @@ const DeviceBarChart = (props) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="ts" minTickGap={100}/>
+            <XAxis dataKey="ts" minTickGap={50} tickLine={false} />
             <YAxis />
             <Tooltip />
             <Legend />
-            {uniqueKeys.map((k) => (
-              <Bar
-                dataKey={k}
-                fill={`#${randomColor()}`}
-              />
+            {uniqueKeys.map((k, idx) => (
+              <Bar dataKey={k} fill={barColors[idx]} />
             ))}
           </BarChart>
         </ResponsiveContainer>
