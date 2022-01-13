@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Button, Form, Input, message, Modal, Tabs} from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input, message, Modal, Tabs } from "antd";
 
 import constant from "../../helpers/constants";
-import {DeviceService} from "../../services";
-import {find, get} from "lodash";
-import {useDispatch, useSelector} from "react-redux";
+import { DeviceService } from "../../services";
+import { find, get } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
 import { updateDevice } from "../../actions/devices";
-import {loadLatestTelemetryByDeviceId, loadTelemetryByDeviceId} from "../../actions/telemetry";
+import {
+  loadLatestTelemetryByDeviceId,
+  loadTelemetryByDeviceId,
+} from "../../actions/telemetry";
 
 import Clipboard from "../clipboard/clipboard";
 import ManageCredentials from "../device-credentials/ManageCredentials";
@@ -26,6 +29,8 @@ const InfoDeviceModal = (props) => {
   const { getFieldDecorator } = props.form;
 
   const [deviceInfo, setDeviceInfo] = useState({});
+  const [isInfoChanged, setIsInfoChanged] = useState(false);
+
   const [hideFooter, setHideFooter] = useState(false);
 
   const [openManageCredentialsModal, setOpenManageCredentialsModal] =
@@ -37,8 +42,7 @@ const InfoDeviceModal = (props) => {
 
   const styleButton = {
     style: { borderRadius: "5px" },
-    size: "large",
-    disabled: hideFooter
+    size: "large"
   };
 
   useEffect(() => {
@@ -47,11 +51,24 @@ const InfoDeviceModal = (props) => {
         const device = find(devices, { id: deviceId });
         setDeviceInfo(device);
         dispatch(loadTelemetryByDeviceId(deviceId));
-        dispatch(loadLatestTelemetryByDeviceId(deviceId))
+        dispatch(loadLatestTelemetryByDeviceId(deviceId));
       }
     };
     loadDevice();
   }, []);
+
+  const handleInfoChange = (e) => {
+    const values = props.form.getFieldsValue();
+    console.log("values", values);
+    if (
+      values.name !== deviceInfo.name ||
+      values.label !== deviceInfo.label
+    ) {
+      setIsInfoChanged(true);
+    } else {
+      setIsInfoChanged(false);
+    }
+  };
 
   const handleCreateDeviceSubmit = async (e) => {
     e.preventDefault();
@@ -64,8 +81,11 @@ const InfoDeviceModal = (props) => {
             name,
             label,
           };
-          const updatedDevice = await DeviceService.update(deviceId, requestBody);
-          dispatch(updateDevice(updatedDevice))
+          const updatedDevice = await DeviceService.update(
+            deviceId,
+            requestBody
+          );
+          dispatch(updateDevice(updatedDevice));
         } catch (e) {
           message.error(e.response.data.message);
           return;
@@ -115,7 +135,7 @@ const InfoDeviceModal = (props) => {
         visible={openInfoModal}
         onOk={handleCreateDeviceSubmit} //submit form here
         okText={"Save"}
-        okButtonProps={styleButton}
+        okButtonProps={{ disabled: !isInfoChanged, ...styleButton}}
         onCancel={() => handleOpenModal(false)}
         cancelButtonProps={styleButton}
         centered={true}
@@ -142,8 +162,15 @@ const InfoDeviceModal = (props) => {
             />
           )}
         </div>
-        <Form className="edit_device_form" layout="vertical">
-          <Tabs defaultActiveKey="1" onChange={(activeKey => setHideFooter( activeKey !== "1" ))}>
+        <Form
+          className="edit_device_form"
+          layout="vertical"
+          onChange={handleInfoChange}
+        >
+          <Tabs
+            defaultActiveKey="1"
+            onChange={(activeKey) => setHideFooter(activeKey !== "1")}
+          >
             <TabPane tab="Device Details" key="1">
               <Form.Item label="Name">
                 {getFieldDecorator("name", {

@@ -4,6 +4,7 @@ import devices from "./devices"
 import telemetries from "./telemetries";
 import customers from "./customers"
 import tenants from "./tenants"
+import widgetsBundles from "./widgetsBundles";
 
 import {LOGOUT} from "../actions/types";
 
@@ -12,7 +13,8 @@ const appReducer = combineReducers({
   devices,
   telemetries,
   customers,
-  tenants
+  tenants,
+  widgetsBundles
 })
 
 const rootReducer = (state, action) => {

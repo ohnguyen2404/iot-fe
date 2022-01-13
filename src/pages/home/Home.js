@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import HeaderDiv from "../../components/header/HeaderDiv";
 import { Icon, Layout, Menu } from "antd";
-import Dashboard from "../../components/dashboard/Dashboard";
+import Main from "../../components/main/Main";
 import Profile from "../../components/profile/Profile";
 import Tenants from "../../components/tenant/Tenants";
 import Customers from "../../components/customer/Customers";
 import Devices from "../../components/device/Devices";
+import WidgetsBundles from "../../components/widgets-bundle/WidgetsBundles";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSPORT_API_URL } from "../../config/setting";
 import SockJS from "sockjs-client";
@@ -14,6 +15,7 @@ import { updateTelemetries } from "../../actions/telemetry";
 import { loadDevices } from "../../actions/devices";
 import { loadCustomers } from "../../actions/customers";
 import { loadTenants } from "../../actions/tenants";
+import { loadWidgetsBundles } from "../../actions/widgetsBundles";
 import { getItem } from "../../local-storage";
 
 const { Header, Sider, Content } = Layout;
@@ -30,53 +32,53 @@ const Home = (props) => {
     dispatch(loadCustomers());
     dispatch(loadTenants());
     dispatch(loadDevices());
+    dispatch(loadWidgetsBundles());
+    //let socket = null;
+    //let recInterval = null;
 
-    let socket = null;
-    let recInterval = null;
+    //const connect = () => {
+    //  const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
 
-    const connect = () => {
-      const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
+    //  const socket = new SockJS(url);
+    //  stompClient.current = Stomp.over(socket);
+    //  stompClient.current.debug = null;
+    //  stompClient.current.connect("", "", onConnected, onError);
+    //};
 
-      const socket = new SockJS(url);
-      stompClient.current = Stomp.over(socket);
-      stompClient.current.debug = null;
-      stompClient.current.connect("", "", onConnected, onError);
-    };
+    //function onConnected() {
+    //  // Subscribe to the Public Topic
+    //  console.log("Connected to WebSocket");
+    //  stompClient.current.subscribe(
+    //    `/topic/telemetry-${user.id}`,
+    //    onMessageReceived
+    //  );
+    //  stompClient.current.reconnect_relay = 10000;
+    //}
 
-    function onConnected() {
-      // Subscribe to the Public Topic
-      console.log("Connected to WebSocket");
-      stompClient.current.subscribe(
-        `/topic/telemetry-${user.id}`,
-        onMessageReceived
-      );
-      stompClient.current.reconnect_relay = 10000;
-    }
+    //const onMessageReceived = (payload) => {
+    //  const message = JSON.parse(payload.body);
+    //  const newTelemetries = message.kvs.map((kv) => {
+    //    return {
+    //      entityId: message.entityId,
+    //      ...kv,
+    //    };
+    //  });
+    //  dispatch(updateTelemetries(newTelemetries));
+    //};
 
-    const onMessageReceived = (payload) => {
-      const message = JSON.parse(payload.body);
-      const newTelemetries = message.kvs.map((kv) => {
-        return {
-          entityId: message.entityId,
-          ...kv,
-        };
-      });
-      dispatch(updateTelemetries(newTelemetries));
-    };
+    //const onError = (err) => {
+    //  console.log("STOMP: " + err);
+    //  setTimeout(connect, 10000);
+    //  console.log("STOMP: Reconnecting in 10 seconds");
+    //};
 
-    const onError = (err) => {
-      console.log("STOMP: " + err);
-      setTimeout(connect, 10000);
-      console.log("STOMP: Reconnecting in 10 seconds");
-    };
-
-    connect();
+    //connect();
   }, [user.id]);
 
   const renderTab = () => {
     switch (Number(currentTab)) {
       case 1:
-        return <Dashboard />;
+        return <Main />;
       case 2:
         return <Profile />;
       case 3:
@@ -85,6 +87,8 @@ const Home = (props) => {
         return <Tenants />;
       case 5:
         return <Customers />;
+      case 6:
+        return <WidgetsBundles />;
     }
   };
 
@@ -103,8 +107,8 @@ const Home = (props) => {
         >
           <Menu.Item key="1">
             <div>
-              <Icon type="dashboard" />
-              <span>Dashboard</span>
+              <Icon type="control" />
+              <span>Main</span>
             </div>
           </Menu.Item>
           <Menu.Item key="2">
@@ -129,6 +133,18 @@ const Home = (props) => {
             <div>
               <Icon type="user" />
               <span>Customers</span>
+            </div>
+          </Menu.Item>
+          <Menu.Item key="6">
+            <div>
+              <Icon type="build" />
+              <span>Widgets Bundle</span>
+            </div>
+          </Menu.Item>
+          <Menu.Item key="7">
+            <div>
+              <Icon type="dashboard" />
+              <span>Dashboards</span>
             </div>
           </Menu.Item>
         </Menu>

@@ -80,7 +80,7 @@ const Dashboard = (props) => {
       </Row>
 
       <Row gutter={16} className="m-t-15">
-        <Col xl={12} lg={16} xl={10}>
+        <Col xl={12} lg={16}>
           <Card
             bordered={false}
             title={<p>Progress Report: </p>}
@@ -102,7 +102,7 @@ const Dashboard = (props) => {
             <GradientProgess />
           </Card>
         </Col>
-        <Col xl={6} lg={8} xl={8} className="custom-timeline">
+        <Col xl={6} lg={8} className="custom-timeline">
           <Card
             bordered={false}
             title={<p>Timeline </p>}

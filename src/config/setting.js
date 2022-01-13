@@ -21,3 +21,5 @@ export const API_TENANT = "tenant";
 export const API_CUSTOMER = "customer";
 export const API_DEVICE = "device";
 export const API_TELEMETRY = "telemetry";
+export const API_WIDGETS_BUNDLE = "widgets-bundle"
+export const API_WIDGET_TYPE = "widget-type"
