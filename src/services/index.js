@@ -5,13 +5,15 @@ import DeviceService from "./device"
 import TelemetryService from "./telemetry"
 import WidgetsBundleService from "./widgetsBundle"
 import WidgetTypeService from "./widgetType"
+import RuleChainService from "./ruleChain"
 
 export {
-  AuthService,
-  TenantService,
-  CustomerService,
-  DeviceService,
-  TelemetryService,
-  WidgetsBundleService,
-  WidgetTypeService
+    AuthService,
+    TenantService,
+    CustomerService,
+    DeviceService,
+    TelemetryService,
+    WidgetsBundleService,
+    WidgetTypeService,
+    RuleChainService
 }
