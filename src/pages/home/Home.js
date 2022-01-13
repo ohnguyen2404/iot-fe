@@ -149,7 +149,6 @@ const Home = (props) => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout>
         <Header className="headerTop">
           <HeaderDiv />
         </Header>
@@ -162,7 +161,6 @@ const Home = (props) => {
         >
           <Layout>{renderTab()}</Layout>
         </Content>
-      </Layout>
     </Layout>
   );
 };

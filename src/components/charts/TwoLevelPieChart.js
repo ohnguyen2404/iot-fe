@@ -14,7 +14,7 @@ class TwolevelPiechart extends React.Component {
 
     render() {
         return (
-            <div style={{width: '100%', height: 200}}>
+            <div style={{width: '100%', height: 300}}>
                 <ResponsiveContainer>
                     <PieChart>
                         <Pie dataKey="value" data={data} fill="#8884d8" label/>

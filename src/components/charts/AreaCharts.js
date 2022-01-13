@@ -69,7 +69,7 @@ class AreaCharts extends React.Component {
         return (
             <AreaChart
                 width={200}
-                height={60}
+                height={300}
                 data={data}
                 syncId="anyId"
                 margin={{

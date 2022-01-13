@@ -46,7 +46,7 @@ class Index extends React.Component {
             <div
                 style={{
                     width: '100%',
-                    height: 200,
+                    height: 300,
                     textAlign: 'center',
                     margin: 'auto',
                 }}

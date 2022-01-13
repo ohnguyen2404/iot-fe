@@ -12,6 +12,7 @@ import {
 } from "antd";
 import WidgetsBundleService from "../../services/widgetsBundle";
 import InfoWidgetsBundleModal from "./InfoWidgetsBundleModal";
+import WidgetTypesGrid from "../widget-type/WidgetTypesGrid";
 import { removeWidgetsBundle } from "../../actions/widgetsBundles";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -38,8 +39,9 @@ const WidgetsBundleListTable = (props) => {
   const [hasData, setHasData] = useState(true);
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  const [selectedWidgetsBundleId, setSelectedWidgetsBundleId] = useState(null);
-  
+  const [openWidgetTypesGrid, setOpenWidgetTypesGrid] = useState(false);
+  const [selectedWidgetsBundle, setSelectedWidgetsBundle] = useState(null);
+
   const dispatch = useDispatch();
 
   const state = {
@@ -58,6 +60,7 @@ const WidgetsBundleListTable = (props) => {
       key: index,
       id: widgetsBundle.id,
       title: widgetsBundle.title,
+      alias: widgetsBundle.alias
     };
   });
 
@@ -71,10 +74,16 @@ const WidgetsBundleListTable = (props) => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      render: (text, record) => <a onClick={() => {
-        setSelectedWidgetsBundleId(record.id);
-        handleOpenModal(true);
-      }}>{text}</a>,
+      render: (text, record) => (
+        <a
+          onClick={() => {
+            setSelectedWidgetsBundle(record);
+            handleOpenModal(true);
+          }}
+        >
+          {text}
+        </a>
+      ),
     },
     {
       title: "Action",
@@ -82,15 +91,10 @@ const WidgetsBundleListTable = (props) => {
       render: (record) => (
         <span>
           <Tooltip title="Open widgets bundle">
-            <Button
-              onClick={() => {
-                setSelectedWidgetsBundleId(record.id);
-                handleOpenModal(true);
-              }}
-              type="primary"
-              shape="circle"
-              icon="build"
-            />
+              <Button type="primary" shape="circle" icon="build" onClick={() => {
+                setSelectedWidgetsBundle(record)
+                setOpenWidgetTypesGrid(true)
+              }} />
           </Tooltip>
 
           <Divider type="vertical" />
@@ -167,16 +171,24 @@ const WidgetsBundleListTable = (props) => {
     }
     message.success("Delete widgetsBundle successfully!");
   };
-
   return (
     <div>
-      {openInfoModal && (
+      {openInfoModal && selectedWidgetsBundle && (
         <InfoWidgetsBundleModal
-          widgetsBundleId={selectedWidgetsBundleId}
+          widgetsBundleId={selectedWidgetsBundle.id}
           openWidgetsBundleModal={openInfoModal}
           handleOpenModal={handleOpenModal}
         />
       )}
+      {
+        openWidgetTypesGrid && selectedWidgetsBundle && (
+          <WidgetTypesGrid
+            widgetType={selectedWidgetsBundle.alias}
+            openWidgetTypesGrid={openWidgetTypesGrid}
+            setOpenWidgetTypesGrid={setOpenWidgetTypesGrid}
+          />
+        )
+      }
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
