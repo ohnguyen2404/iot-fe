@@ -60,6 +60,7 @@ const CreateCustomerModal = (props) => {
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{ overflowY: "scroll", height: "600px" }}
+      destroyOnClose={true}
     >
       <Form className="create_customer_form" layout="horizontal">
         <Form.Item label="E-mail">

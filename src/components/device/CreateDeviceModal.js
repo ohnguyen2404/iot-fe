@@ -118,6 +118,7 @@ const CreateDeviceModal = (props) => {
             onCancel={() => handleOpenCreateDevice(false)}
             cancelButtonProps={styleButton}
             centered={true}
+            destroyOnClose={true}
         >
             <Form className="create_device_form" layout="vertical">
                 <Tabs defaultActiveKey="1">

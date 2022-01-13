@@ -61,6 +61,7 @@ const CreateTenantModal = (props) => {
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{overflowY: 'scroll', height: '600px'}}
+      destroyOnClose={true}
     >
       <Form className="create_tenant_form" layout="vertical">
         <Form.Item label="E-mail">

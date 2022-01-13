@@ -42,7 +42,7 @@ const InfoDeviceModal = (props) => {
 
   const styleButton = {
     style: { borderRadius: "5px" },
-    size: "large"
+    size: "large",
   };
 
   useEffect(() => {
@@ -60,10 +60,7 @@ const InfoDeviceModal = (props) => {
   const handleInfoChange = (e) => {
     const values = props.form.getFieldsValue();
     console.log("values", values);
-    if (
-      values.name !== deviceInfo.name ||
-      values.label !== deviceInfo.label
-    ) {
+    if (values.name !== deviceInfo.name || values.label !== deviceInfo.label) {
       setIsInfoChanged(true);
     } else {
       setIsInfoChanged(false);
@@ -135,7 +132,7 @@ const InfoDeviceModal = (props) => {
         visible={openInfoModal}
         onOk={handleCreateDeviceSubmit} //submit form here
         okText={"Save"}
-        okButtonProps={{ disabled: !isInfoChanged, ...styleButton}}
+        okButtonProps={{ disabled: !isInfoChanged, ...styleButton }}
         onCancel={() => handleOpenModal(false)}
         cancelButtonProps={styleButton}
         centered={true}

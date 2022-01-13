@@ -71,14 +71,17 @@ const WidgetsBundleListTable = (props) => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => <a href="javascript:">{text}</a>,
+      render: (text, record) => <a onClick={() => {
+        setSelectedWidgetsBundleId(record.id);
+        handleOpenModal(true);
+      }}>{text}</a>,
     },
     {
       title: "Action",
       key: "action",
       render: (record) => (
         <span>
-          <Tooltip title="Edit">
+          <Tooltip title="Open widgets bundle">
             <Button
               onClick={() => {
                 setSelectedWidgetsBundleId(record.id);
@@ -86,7 +89,7 @@ const WidgetsBundleListTable = (props) => {
               }}
               type="primary"
               shape="circle"
-              icon="edit"
+              icon="build"
             />
           </Tooltip>
 

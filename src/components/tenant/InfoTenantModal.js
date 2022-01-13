@@ -114,12 +114,12 @@ const InfoTenantModal = (props) => {
       visible={openTenantModal}
       onOk={handleUpdateTenantSubmit}
       okText={"Save"}
-      okButtonProps={styleButton}
       onCancel={() => handleOpenModal(false)}
-      okButtonProps={{ disabled: !isInfoChanged }}
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{ overflowY: "scroll", height: "600px" }}
+      okButtonProps={{ disabled: !isInfoChanged, ...styleButton }}
+      destroyOnClose={true}
     >
       <Form
         className="info_tenant_form"
