@@ -47,7 +47,7 @@ const CreateRuleChainModal = (props) => {
             onCancel={() => handleOpenCreateRuleChain(false)}
             cancelButtonProps={styleButton}
             centered={true}
-            bodyStyle={{overflowY: "scroll", height: "600px"}}
+            bodyStyle={{overflowY: "scroll", height: "150px"}}
         >
             <Form className="create_rule_chain_form" layout="horizontal">
                 <Form.Item label="Name">

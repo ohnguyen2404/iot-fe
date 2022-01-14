@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Form, Input, message, Modal} from "antd";
+import {Button, Form, Input, message, Modal} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {find} from "lodash";
+import {openRuleNodes} from "../../actions/ruleChains";
 
 const InfoRuleChainModal = (props) => {
     const {openRuleChainModal, ruleChainId, handleOpenModal} = props;
@@ -27,6 +28,9 @@ const InfoRuleChainModal = (props) => {
         size: "large",
     };
 
+    const handleOpenRuleNodesPage = (e) => {
+        dispatch(openRuleNodes({isOpen: true, ruleChain}))
+    }
 
     const handleUpdateRuleChainSubmit = async (e) => {
         e.preventDefault();
@@ -91,6 +95,14 @@ const InfoRuleChainModal = (props) => {
             okButtonProps={{disabled: !isInfoChanged, ...styleButton}}
             destroyOnClose={true}
         >
+            <Button
+                icon="share-alt"
+                type="primary"
+                onClick={() => handleOpenRuleNodesPage(true)}
+            >
+                Open Rule Chain
+            </Button>
+            <br />
             <Form
                 className="info_rule_chain_form"
                 layout="vertical"

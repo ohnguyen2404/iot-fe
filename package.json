@@ -53,6 +53,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
+    "react-flow-renderer": "^9.6.1",
     "react-highlight": "^0.14.0",
     "react-intl": "^2.9.0",
     "react-redux": "^7.2.6",

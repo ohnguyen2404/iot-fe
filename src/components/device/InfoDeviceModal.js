@@ -31,8 +31,6 @@ const InfoDeviceModal = (props) => {
   const [deviceInfo, setDeviceInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
-  const [hideFooter, setHideFooter] = useState(false);
-
   const [openManageCredentialsModal, setOpenManageCredentialsModal] =
     useState(false);
 
@@ -166,7 +164,6 @@ const InfoDeviceModal = (props) => {
         >
           <Tabs
             defaultActiveKey="1"
-            onChange={(activeKey) => setHideFooter(activeKey !== "1")}
           >
             <TabPane tab="Device Details" key="1">
               <Form.Item label="Name">

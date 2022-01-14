@@ -1,7 +1,11 @@
-import {CREATE_RULE_CHAIN, LOAD_RULE_CHAINS} from "../actions/types";
+import {CREATE_RULE_CHAIN, LOAD_RULE_CHAINS, OPEN_RULE_NODES} from "../actions/types";
 
 const initialState = {
     ruleChains: [],
+    openRuleNodes: {
+        isOpen: false,
+        ruleChain: {}
+    }
 };
 
 export default function (state = initialState, action) {
@@ -17,6 +21,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 ruleChains: [...state.ruleChains, payload],
+            };
+        case OPEN_RULE_NODES:
+            return {
+                ...state,
+                openRuleNodes: payload,
             };
         default:
             return state;
