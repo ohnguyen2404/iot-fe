@@ -6,7 +6,7 @@ export const loadRuleChains = () => async (dispatch) => {
     if (data) {
         dispatch({
             type: LOAD_RULE_CHAINS,
-            payload: data.ruleChains,
+            payload: data,
         });
     }
     return data;

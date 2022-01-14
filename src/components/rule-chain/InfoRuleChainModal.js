@@ -104,7 +104,7 @@ const InfoRuleChainModal = (props) => {
             </Button>
             <br />
             <Form
-                className="info_rule_chain_form"
+                className="m-t-10"
                 layout="vertical"
                 onChange={handleInfoChange}
             >

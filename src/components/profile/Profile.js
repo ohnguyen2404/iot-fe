@@ -272,12 +272,19 @@ const Profile = (props) => {
                                             </Form.Item>
 
                                             <Form.Item label="Address" className="m-b-10 m-t-15">
-                                                <TextArea
-                                                    prefix={
-                                                        <Icon type="address" style={{color: 'rgba(0,0,0,.25)'}}/>
-                                                    }
-                                                    placeholder="Address"
-                                                />
+                                                {
+                                                    getFieldDecorator('address', {
+                                                        initialValue: ""
+                                                    }) (
+                                                        <TextArea
+                                                            prefix={
+                                                                <Icon type="address" style={{color: 'rgba(0,0,0,.25)'}}/>
+                                                            }
+                                                            placeholder="Address"
+                                                        />
+                                                    )
+                                                }
+
                                             </Form.Item>
 
                                             <Form.Item

@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {Redirect} from "react-router";
 import CreateRuleChainModal from "./CreateRuleChainModal";
 import RuleChainListTable from "./RuleChainListTable";
-import OpenRuleNodes from "./OpenRuleNodes";
+import OpenRuleNodes from "../rule-node/OpenRuleNodes";
 
 const RuleChains = (props) => {
     const [openCreateRuleChain, setOpenCreateRuleChain] = useState(false);

@@ -29,7 +29,7 @@ const CreateRuleChainModal = (props) => {
                         message.error(e.response.data.message);
                         return;
                     }
-                    message.success("Create widgets bundle successfully!");
+                    message.success("Create rule chain successfully!");
                     props.form.resetFields();
                     handleOpenCreateRuleChain(false);
                 }

@@ -1,20 +1,28 @@
 import {RuleChainApi} from "../api/ruleChain";
 
 const getAll = async () => {
-    return (await RuleChainApi.getRuleChains()) || [];
+    const data = await RuleChainApi.getRuleChains();
+    return data.ruleChains || [];
 }
 
 const getRuleNodes = async (ruleChainId) => {
-    return (await RuleChainApi.getRuleNodes(ruleChainId)) || [];
+    const {ruleNodes, relations} = await RuleChainApi.getRuleNodes(ruleChainId);
+    return {ruleNodes, relations}
 }
 
 const createRuleChain = async (values) => {
     values.root = false;
-    return RuleChainApi.createRuleChain(values)
+    const data = RuleChainApi.createRuleChain(values)
+    return data.ruleChain || null
+}
+
+const createRuleNodes = async (values) => {
+    return await RuleChainApi.createRuleNodes(values)
 }
 
 export default {
     getAll,
     createRuleChain,
-    getRuleNodes
+    getRuleNodes,
+    createRuleNodes
 };

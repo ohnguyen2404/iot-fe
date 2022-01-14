@@ -20,7 +20,7 @@ import { loadWidgetsBundles } from "../../actions/widgetsBundles";
 import { getItem } from "../../local-storage";
 import RuleChains from "../../components/rule-chain/RuleChains";
 import { loadRuleChains, openRuleNodes } from "../../actions/ruleChains";
-import OpenRuleNodes from "../../components/rule-chain/OpenRuleNodes";
+import OpenRuleNodes from "../../components/rule-node/OpenRuleNodes";
 
 const { Header, Sider, Content } = Layout;
 
@@ -28,6 +28,7 @@ const Home = (props) => {
   const [currentTab, setCurrentTab] = useState(100);
 
   const { user } = useSelector((state) => state.auth);
+  const { ruleChains } = useSelector((state) => state.ruleChains);
 
   const dispatch = useDispatch();
 
@@ -38,7 +39,8 @@ const Home = (props) => {
     dispatch(loadDevices());
     dispatch(loadWidgetsBundles());
     dispatch(loadRuleChains());
-    dispatch(openRuleNodes({ isOpen: false }));
+    // dispatch(openRuleNodes({ isOpen: false }));
+    dispatch(openRuleNodes({ isOpen: true, ruleChain: ruleChains[1] }));
 
     const connect = () => {
       const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
