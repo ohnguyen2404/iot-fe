@@ -29,4 +29,4 @@ export const API_WIDGETS_BUNDLE = "widgets-bundle";
 export const API_WIDGET_TYPE = "widget-type";
 export const API_RULE_CHAIN = "rule-chain";
 export const API_RULE_CHAINS = "rule-chains";
-export const API_RULE_NODE = "rule-node";
+export const API_RULE_NODES = "rule-nodes";
