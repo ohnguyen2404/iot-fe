@@ -35,7 +35,7 @@ const HeaderDiv = (props) => {
     >
       <Menu.Item key="brand-logo" className="brand-logo">
         <Link to="/dashboard">
-          <img src={logo} className="m-r-5" />
+          <img src={logo} className="m-r-5" alt=""/>
           <span>Ant Dashboard</span>
         </Link>
       </Menu.Item>

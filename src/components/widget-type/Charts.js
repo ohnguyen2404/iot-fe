@@ -1,28 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import ExBarChart from "../example-widgets/charts/ExBarChart";
 import ExLineChart from "../example-widgets/charts/ExLineChart";
 import ExPieChart from "../example-widgets/charts/ExPieChart";
-
 import { Col, Row, Card } from "antd";
 
 const Charts = () => {
+  const StyledCard = (props) => (
+    <Card title={props.title} bodyStyle={{ height: "300px" }}>
+      {props.children}
+    </Card>
+  );
   return (
     <>
       <Row gutter={16}>
         <Col span={8}>
-          <Card title="Timeseries Bar Chart">
+          <StyledCard title="Timeseries Bar Chart">
             <ExBarChart />
-          </Card>
+          </StyledCard>
         </Col>
         <Col span={8}>
-          <Card title="Timeserires Line Chart">
+          <StyledCard title="Timeserires Line Chart">
             <ExLineChart />
-          </Card>
+          </StyledCard>
         </Col>
         <Col span={8}>
-          <Card title="Pie Chart">
+          <StyledCard title="Pie Chart">
             <ExPieChart />
-          </Card>
+          </StyledCard>
         </Col>
       </Row>
     </>

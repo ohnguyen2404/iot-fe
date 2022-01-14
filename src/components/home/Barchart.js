@@ -56,7 +56,6 @@ class Barchart extends React.Component {
     static jsfiddleUrl = 'https://jsfiddle.net/alidingling/90v76x08/';
 
     render() {
-        const iconName = `/static/images/icon-${this.props.icon}.png `;
         return (
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart

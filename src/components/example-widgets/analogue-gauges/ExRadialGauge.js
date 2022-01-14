@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import * as CanvasGauges from "canvas-gauges";
 
 const { RadialGauge } = CanvasGauges;

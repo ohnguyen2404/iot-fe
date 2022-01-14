@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Icon, Input, message, Modal, Select, Tooltip } from "antd";
+import { Form, Input, message, Modal } from "antd";
 import { WidgetsBundleService } from "../../services";
 import { createWidgetsBundle } from "../../actions/widgetsBundles";
 import { useDispatch } from "react-redux";

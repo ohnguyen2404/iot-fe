@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Cascader, Form, Icon, Input, message, Modal, Select, Tabs, Tooltip,} from "antd";
+import {Cascader, Form, Icon, Input, message, Modal, Tabs, Tooltip,} from "antd";
 import constant from "../../helpers/constants";
 import {DeviceService} from "../../services";
 import {useDispatch} from "react-redux";

@@ -71,7 +71,7 @@ const TenantListTable = (props) => {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      render: (text) => <a href="javascript:">{text}</a>,
+      render: (text) => text,
     },
     {
       title: "Action",

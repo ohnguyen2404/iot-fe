@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button, Divider, Form, message, Popconfirm, Radio, Switch, Table, Tooltip,} from "antd";
 import DeviceService from "../../services/device";
 import InfoDeviceModal from "./InfoDeviceModal";
@@ -64,13 +64,13 @@ const DeviceListTable = (props) => {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            render: (text) => <a href="javascript:">{text}</a>,
+            render: (text) => text,
         },
         {
             title: "Label",
             dataIndex: "label",
             key: "label",
-            render: (text) => <a href="javascript:">{text}</a>,
+            render: (text) => text,
         },
         {
             title: "Action",

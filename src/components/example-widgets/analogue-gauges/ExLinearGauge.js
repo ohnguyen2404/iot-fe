@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { head } from "lodash";
+import React, { useEffect } from "react";
 import * as CanvasGauges from "canvas-gauges";
 
 const { LinearGauge } = CanvasGauges;
