@@ -6,6 +6,7 @@ import TelemetryService from "./telemetry"
 import WidgetsBundleService from "./widgetsBundle"
 import WidgetTypeService from "./widgetType"
 import RuleChainService from "./ruleChain"
+import DashboardService from "./dashboard"
 
 export {
     AuthService,
@@ -15,5 +16,6 @@ export {
     TelemetryService,
     WidgetsBundleService,
     WidgetTypeService,
-    RuleChainService
+    RuleChainService,
+    DashboardService
 }

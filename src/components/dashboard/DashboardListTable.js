@@ -10,11 +10,11 @@ import {
   Table,
   Tooltip,
 } from "antd";
-import DeviceService from "../../services/device";
-import InfoDeviceModal from "./InfoDeviceModal";
-import ManageCredentials from "../device-credentials/ManageCredentials";
+import DashboardService from "../../services/dashboard";
+import InfoDashboardModal from "./InfoDashboardModal";
+import DesignLayout from "./DesignLayout";
+import { removeDashboard, openDashboard } from "../../actions/dashboards";
 import { useDispatch, useSelector } from "react-redux";
-import { removeDevice } from "../../actions/devices";
 
 const FormItem = Form.Item;
 
@@ -24,8 +24,8 @@ const _footer = () => "Here is footer";
 const _scroll = { y: 240 };
 const _pagination = { position: "bottom" };
 
-const DeviceListTable = (props) => {
-  const { devices } = useSelector((state) => state.devices);
+const DashboardListTable = (props) => {
+  const { dashboards } = useSelector((state) => state.dashboards);
 
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,12 +39,11 @@ const DeviceListTable = (props) => {
   const [hasData, setHasData] = useState(true);
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
-  const [openManageCredentialsModal, setOpenManageCredentialsModal] =
-    useState(false);
+  const [selectedDashboard, setSelectedDashboard] = useState(null);
+
   const dispatch = useDispatch();
 
-  const stateData = {
+  const state = {
     bordered,
     loading,
     pagination,
@@ -55,12 +54,12 @@ const DeviceListTable = (props) => {
     hasData,
   };
 
-  const dataArray = devices.map((device, index) => {
+  const dataArray = dashboards.map((dashboard, index) => {
     return {
       key: index,
-      id: device.id,
-      name: device.name,
-      label: device.label,
+      id: dashboard.id,
+      title: dashboard.title,
+      description: dashboard.description
     };
   });
 
@@ -71,48 +70,35 @@ const DeviceListTable = (props) => {
       key: "id",
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => text,
-    },
-    {
-      title: "Label",
-      dataIndex: "label",
-      key: "label",
-      render: (text) => text,
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (text, record) => (
+        <a
+          onClick={() => {
+            setSelectedDashboard(record);
+            setOpenInfoModal(true);
+          }}
+        >
+          {text}
+        </a>
+      ),
     },
     {
       title: "Action",
       key: "action",
       render: (record) => (
         <span>
-          <Tooltip title="Manage Credentials">
-            <Button
-              onClick={() => {
-                setSelectedDeviceId(record.id);
-                setOpenManageCredentialsModal(true);
-              }}
-              type="primary"
-              shape="circle"
-              icon="safety-certificate"
-            />
+          <Tooltip title="Open dashboard">
+              <Button type="primary" shape="circle" icon="build" onClick={() => {
+                setSelectedDashboard(record)
+                dispatch(openDashboard({isOpen: true, dashboard: record}))
+              }} />
           </Tooltip>
-          <Divider type="vertical" />
-          <Tooltip title="Edit">
-            <Button
-              onClick={() => {
-                setSelectedDeviceId(record.id);
-                setOpenInfoModal(true);
-              }}
-              type="primary"
-              shape="circle"
-              icon="edit"
-            />
-          </Tooltip>
+
           <Divider type="vertical" />
           <Popconfirm
-            title="Are you sure to delete device?"
+            title="Are you sure to delete dashboard?"
             onConfirm={() => confirmDelete(record.id)}
             okText="Yes"
             cancelText="No"
@@ -155,46 +141,40 @@ const DeviceListTable = (props) => {
     setRowSelection(enable ? {} : undefined);
   };
 
-  const handleScrollChange = (enable) => {
+  const handleScollChange = (enable) => {
     setScroll(enable ? _scroll : undefined);
   };
 
-  const handleDataChange = (enable) => {
-    setHasData(enable);
+  const handleDataChange = (hasData) => {
+    setHasData(hasData);
   };
 
   const handlePaginationChange = (e) => {
     const { value } = e.target;
     setPagination(value === "none" ? false : { position: value });
   };
-
+  
   const confirmDelete = async (id) => {
     try {
-      await DeviceService.remove(id);
-      dispatch(removeDevice(id));
+      await DashboardService.remove(id);
+      dispatch(removeDashboard(id));
     } catch (e) {
-      message.error(e.response.data.message);
-      return;
+      if (e.response.data.message) {
+        message.error(e.response.data.message);
+        return;
+      }
     }
-    message.success("Delete device successfully!");
+    message.success("Delete dashboard successfully!");
   };
-
   return (
     <div>
-      {openInfoModal && (
-        <InfoDeviceModal
-          deviceId={selectedDeviceId}
-          openInfoModal={openInfoModal}
+      {openInfoModal && selectedDashboard && (
+        <InfoDashboardModal
+          dashboardId={selectedDashboard.id}
+          openDashboardModal={openInfoModal}
           setOpenInfoModal={setOpenInfoModal}
         />
       )}
-      {
-        <ManageCredentials
-          deviceId={selectedDeviceId}
-          openManageCredentialsModal={openManageCredentialsModal}
-          setOpenManageCredentialsModal={setOpenManageCredentialsModal}
-        />
-      }
       <div className="m-b-15">
         <Form layout="inline">
           <FormItem label="Bordered">
@@ -242,7 +222,7 @@ const DeviceListTable = (props) => {
           <FormItem label="Fixed Header">
             <Switch
               checked={!!scroll}
-              onChange={handleScrollChange}
+              onChange={handleScollChange}
               size="small"
             />
           </FormItem>
@@ -290,7 +270,7 @@ const DeviceListTable = (props) => {
       </div>
       <div className="custom-table">
         <Table
-          {...stateData}
+          {...state}
           columns={columns}
           dataSource={hasData ? dataArray : null}
           scroll={{ x: 768 }}
@@ -300,4 +280,4 @@ const DeviceListTable = (props) => {
   );
 };
 
-export default DeviceListTable;
+export default DashboardListTable;

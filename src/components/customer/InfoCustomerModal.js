@@ -7,7 +7,7 @@ import { updateCustomer } from "../../actions/customers";
 const { Option } = Select;
 
 const InfoCustomerModal = (props) => {
-  const { openCustomerModal, customerId, handleOpenModal } = props;
+  const { openInfoModal, customerId, setOpenInfoModal } = props;
   const [customerInfo, setCustomerInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
@@ -76,15 +76,14 @@ const InfoCustomerModal = (props) => {
                 return;
               }
               message.success("Update customer successfully!");
-              handleOpenModal(false);
+              setOpenInfoModal(false);
             }
           }
         );
       },
 
       cancelButtonProps: styleButton,
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
 
@@ -110,10 +109,10 @@ const InfoCustomerModal = (props) => {
   return (
     <Modal
       title={<h2>Customer Information</h2>}
-      visible={openCustomerModal}
+      visible={openInfoModal}
       onOk={handleUpdateCustomerSubmit}
       okText={"Save"}
-      onCancel={() => handleOpenModal(false)}
+      onCancel={() => setOpenInfoModal(false)}
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{ overflowY: "scroll", height: "600px" }}

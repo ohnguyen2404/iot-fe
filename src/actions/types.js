@@ -4,7 +4,7 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 
-// devices
+// device
 export const LOAD_DEVICES = "LOAD_DEVICES";
 export const CREATE_DEVICE = "CREATE_DEVICE";
 export const UPDATE_DEVICE = "UPDATE_DEVICE";
@@ -15,13 +15,13 @@ export const LOAD_TELEMETRIES = "LOAD_TELEMETRIES";
 export const UPDATE_TELEMETRIES = "UPDATE_TELEMETRIES";
 export const LOAD_LATEST_TELEMETRIES = "LOAD_LATEST_TELEMETRIES";
 
-// customers
+// customer
 export const LOAD_CUSTOMERS = "LOAD_CUSTOMERS";
 export const CREATE_CUSTOMER = "CREATE_CUSTOMER";
 export const UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
 export const REMOVE_CUSTOMER = "REMOVE_CUSTOMER";
 
-// tenants
+// tenant
 export const LOAD_TENANTS = "LOAD_TENANTS";
 export const CREATE_TENANT = "CREATE_TENANT";
 export const UPDATE_TENANT = "UPDATE_TENANT";
@@ -37,3 +37,10 @@ export const REMOVE_WIDGETS_BUNDLE = "REMOVE_WIDGETS_BUNDLE";
 export const LOAD_RULE_CHAINS = "LOAD_RULE_CHAINS";
 export const CREATE_RULE_CHAIN = "CREATE_RULE_CHAIN";
 export const OPEN_RULE_NODES = "OPEN_RULE_NODES";
+
+// dashboard
+export const LOAD_DASHBOARDS = "LOAD_DASHBOARDS";
+export const CREATE_DASHBOARD = "CREATE_DASHBOARD";
+export const UPDATE_DASHBOARD = "UPDATE_DASHBOARD";
+export const REMOVE_DASHBOARD = "REMOVE_DASHBOARD";
+export const OPEN_DASHBOARD = "OPEN_DASHBOARD"

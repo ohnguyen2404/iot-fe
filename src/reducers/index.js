@@ -6,6 +6,7 @@ import customers from "./customers"
 import tenants from "./tenants"
 import widgetsBundles from "./widgetsBundles";
 import ruleChains from "./ruleChains";
+import dashboards from "./dashboards";
 
 import {LOGOUT} from "../actions/types";
 
@@ -16,7 +17,8 @@ const appReducer = combineReducers({
     customers,
     tenants,
     widgetsBundles,
-    ruleChains
+    ruleChains,
+    dashboards
 })
 
 const rootReducer = (state, action) => {

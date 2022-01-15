@@ -25,7 +25,7 @@ const InfoDeviceModal = (props) => {
 
   const dispatch = useDispatch();
 
-  const { openInfoModal, handleOpenModal, deviceId } = props;
+  const { openInfoModal, setOpenInfoModal, deviceId } = props;
   const { getFieldDecorator } = props.form;
 
   const [deviceInfo, setDeviceInfo] = useState({});
@@ -87,7 +87,7 @@ const InfoDeviceModal = (props) => {
         }
         message.success("Update device successfully!");
         props.form.resetFields();
-        handleOpenModal(false);
+        setOpenInfoModal(false);
       }
     });
   };
@@ -131,7 +131,7 @@ const InfoDeviceModal = (props) => {
         onOk={handleCreateDeviceSubmit} //submit form here
         okText={"Save"}
         okButtonProps={{ disabled: !isInfoChanged, ...styleButton }}
-        onCancel={() => handleOpenModal(false)}
+        onCancel={() => setOpenInfoModal(false)}
         cancelButtonProps={styleButton}
         centered={true}
         width={1000}

@@ -39,7 +39,7 @@ const CustomerListTable = (props) => {
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  
+
   const dispatch = useDispatch();
 
   const state = {
@@ -82,7 +82,7 @@ const CustomerListTable = (props) => {
             <Button
               onClick={() => {
                 setSelectedCustomerId(record.id);
-                handleOpenModal(true);
+                setOpenInfoModal(true);
               }}
               type="primary"
               shape="circle"
@@ -148,10 +148,6 @@ const CustomerListTable = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
-  const handleOpenModal = (value) => {
-    setOpenInfoModal(value);
-  };
-
   const confirmDelete = async (id) => {
     try {
       await CustomerService.remove(id);
@@ -170,8 +166,8 @@ const CustomerListTable = (props) => {
       {openInfoModal && (
         <InfoCustomerModal
           customerId={selectedCustomerId}
-          openCustomerModal={openInfoModal}
-          handleOpenModal={handleOpenModal}
+          openInfoModal={openInfoModal}
+          setOpenInfoModal={setOpenInfoModal}
         />
       )}
       <div className="m-b-15">

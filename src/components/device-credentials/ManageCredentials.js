@@ -22,7 +22,7 @@ const credentialsTypes = [
 ];
 
 const ManageCredentialsModal = (props) => {
-  const { openManageCredentialsModal, handleOpenCredentialsModal, deviceId } =
+  const { openManageCredentialsModal, setOpenManageCredentialsModal, deviceId } =
     props;
   const { getFieldDecorator } = props.form;
   const [credentialsType, setCredentialsType] = useState(
@@ -103,7 +103,7 @@ const ManageCredentialsModal = (props) => {
         }
         message.success("Update device credentials successfully!");
         props.form.resetFields();
-        handleOpenCredentialsModal(false);
+        setOpenManageCredentialsModal(false);
       }
     });
   };
@@ -148,7 +148,7 @@ const ManageCredentialsModal = (props) => {
       onOk={handleCreateDeviceSubmit} //submit form here
       okText={"Save"}
       okButtonProps={styleButton}
-      onCancel={() => handleOpenCredentialsModal(false)}
+      onCancel={() => setOpenManageCredentialsModal(false)}
       cancelButtonProps={styleButton}
       centered={true}
       width={300}

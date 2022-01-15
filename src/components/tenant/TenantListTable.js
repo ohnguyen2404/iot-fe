@@ -82,7 +82,7 @@ const TenantListTable = (props) => {
             <Button
               onClick={() => {
                 setSelectedTenantId(record.id);
-                handleOpenModal(true);
+                setOpenInfoModal(true);
               }}
               type="primary"
               shape="circle"
@@ -147,10 +147,6 @@ const TenantListTable = (props) => {
     setPagination(value === "none" ? false : { position: value });
   };
 
-  const handleOpenModal = (value) => {
-    setOpenInfoModal(value);
-  };
-
   const confirmDelete = async (id) => {
     try {
       await TenantService.remove(id);
@@ -168,7 +164,7 @@ const TenantListTable = (props) => {
         <InfoTenantModal
           tenantId={selectedTenantId}
           openTenantModal={openInfoModal}
-          handleOpenModal={handleOpenModal}
+          setOpenInfoModal={setOpenInfoModal}
         />
       )}
       <div className="m-b-15">

@@ -18,5 +18,18 @@ export default {
   DEFAULT_WIDGETS_BUNDLE: {
     CHARTS: "charts",
     ANALOGUE_GAUGES: "analogue_gauges"
+  },
+
+
+  // WIDGET TYPE
+  DEFAULT_WIDGET_TYPE: {
+    // CHARTS
+    BAR_CHART: "bar_chart",
+    LINE_CHART: "line_chart",
+    PIE_CHART: "pie_chart",
+
+    // ANALOGUE_GAUGES
+    RADIAL_GAUGE: "radial_gauge",
+    LINEAR_GAUGE: "linear_gauge"
   }
 };

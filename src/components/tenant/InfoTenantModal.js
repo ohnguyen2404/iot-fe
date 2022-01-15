@@ -7,7 +7,7 @@ import { updateTenant } from "../../actions/tenants";
 const { Option } = Select;
 
 const InfoTenantModal = (props) => {
-  const { openTenantModal, tenantId, handleOpenModal } = props;
+  const { openTenantModal, tenantId, setOpenInfoModal } = props;
   const [tenantInfo, setTenantInfo] = useState({});
   const [isInfoChanged, setIsInfoChanged] = useState(false);
 
@@ -77,7 +77,7 @@ const InfoTenantModal = (props) => {
                 return;
               }
               message.success("Update tenant successfully!");
-              handleOpenModal(false);
+              setOpenInfoModal(false);
             }
           }
         );
@@ -114,7 +114,7 @@ const InfoTenantModal = (props) => {
       visible={openTenantModal}
       onOk={handleUpdateTenantSubmit}
       okText={"Save"}
-      onCancel={() => handleOpenModal(false)}
+      onCancel={() => setOpenInfoModal(false)}
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{ overflowY: "scroll", height: "600px" }}
