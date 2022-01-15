@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {Redirect} from "react-router";
 import CreateRuleChainModal from "./CreateRuleChainModal";
 import RuleChainListTable from "./RuleChainListTable";
-import OpenRuleNodes from "../rule-node/OpenRuleNodes";
+import RuleNodes from "../rule-node/RuleNodes";
 
 const RuleChains = (props) => {
     const [openCreateRuleChain, setOpenCreateRuleChain] = useState(false);
@@ -26,7 +26,7 @@ const RuleChains = (props) => {
 
     return (
         openRuleNodes.isOpen
-            ? <OpenRuleNodes/>
+            ? <RuleNodes/>
             : <Row gutter={16}>
 
                 <div>

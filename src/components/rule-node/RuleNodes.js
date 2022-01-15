@@ -1,10 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react'
-import ReactFlow, {addEdge, Background, Controls, ReactFlowProvider, removeElements} from "react-flow-renderer";
+import ReactFlow, {addEdge, Background, ReactFlowProvider, removeElements} from "react-flow-renderer";
 import '../react-flow/DragNDrop.css';
 import SideBarReactFlow from "../react-flow/SideBarReactFlow";
 import {RuleChainService} from "../../services";
 import {useSelector} from "react-redux";
 import CreateRuleNodeModal from "./CreateRuleNodeModal";
+import _ from "lodash";
+import {Fab} from "react-tiny-fab";
+import {Icon} from "antd";
+import {findIndex} from "lodash/array";
 
 const edgeStyle = {
     className: 'normal-edge',
@@ -19,33 +23,6 @@ const edgeStyle = {
         strokeWidth: '3.5'
     }
 }
-
-const initialElements = [
-    // {
-    //     id: 'edges-1',
-    //     type: 'input',
-    //     data: {label: 'Input 1'},
-    //     position: {x: 0, y: 50},
-    //     sourcePosition: 'right',
-    // },
-    // {
-    //     id: 'edges-2',
-    //     data: {label: 'Node 2'},
-    //     position: {x: 300, y: 50},
-    //     targetPosition: "left",
-    //     sourcePosition: 'right',
-    // },
-    //
-    // {
-    //     id: 'edges-e1-2',
-    //     source: 'edges-1',
-    //     target: 'edges-2',
-    //     label: 'bezier edge (default)',
-    //
-    //     ...edgeStyle
-    // }
-];
-
 
 const convertToReactFlow = (ruleNode, index) => {
     return {
@@ -63,16 +40,6 @@ const convertToReactFlow = (ruleNode, index) => {
     }
 }
 
-const convertToReactFlowConnection = (relation) => {
-    return {
-        id: `${relation.fromIndex.toString()}-${relation.toIndex.toString()}`,
-        source: relation.fromIndex.toString(),
-        target: relation.toIndex.toString(),
-        label: relation.name,
-        ...edgeStyle
-    }
-}
-
 const convertToRuleNode = (reactFlowNode) => {
     const ruleNode = {
         type: reactFlowNode.data.type,
@@ -87,22 +54,40 @@ const convertToRuleNode = (reactFlowNode) => {
     return ruleNode;
 }
 
-const convertToRelation = (reactFlowConnection) => {
+const convertToRelation = (reactFlowConnection, reactFlowNodes) => {
+    const sourceIndex = reactFlowNodes.map(reactFlowNode => reactFlowNode.id).indexOf(reactFlowConnection.source);
+    const targetIndex = reactFlowNodes.map(reactFlowNode => reactFlowNode.id).indexOf(reactFlowConnection.target);
+
     return {
-        fromIndex: parseInt(reactFlowConnection.source),
-        toIndex: parseInt(reactFlowConnection.target),
+        fromIndex: parseInt(sourceIndex),
+        toIndex: parseInt(targetIndex),
         name: reactFlowConnection.label
     }
 }
 
-const OpenRuleNodes = () => {
+const convertToReactFlowConnection = (relation) => {
+    return {
+        id: `${relation.fromIndex.toString()}-${relation.toIndex.toString()}`,
+        source: relation.fromIndex.toString(),
+        target: relation.toIndex.toString(),
+        label: relation.name,
+        ...edgeStyle
+    }
+}
+
+const clearUndefinedArray = (arr) => arr.filter(e => e !== undefined)
+
+const RuleNodes = () => {
     const {openRuleNodes} = useSelector((state) => state.ruleChains);
     const {ruleChain} = openRuleNodes;
 
     const reactFlowWrapper = useRef(null);
+
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [elements, setElements] = useState([]);
     const [connections, setConnections] = useState([]);
+    const [prevElements, setPrevElements] = useState([]);
+    const [prevConnections, setPrevConnections] = useState([]);
     const [newNode, setNewNode] = useState({
         id: "",
         data: {
@@ -117,35 +102,55 @@ const OpenRuleNodes = () => {
     });
 
     const [openCreateRuleNode, setOpenCreateRuleNode] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
+    const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
 
-    const getId = () => `${elements.length++}`;
+    const getId = () => `rule_node_${elements.length++}`;
 
     useEffect(() => {
         const loadRuleNodes = async () => {
             const {ruleNodes, relations} = await RuleChainService.getRuleNodes(ruleChain.id)
 
-            if (ruleNodes !== null && relations !== null) {
+            if (ruleNodes !== null) {
                 let newElements = ruleNodes.map((ruleNode, index) => {
                     return convertToReactFlow(ruleNode, index)
                 })
 
+                setElements(newElements);
+                setPrevElements(_.cloneDeep(newElements));
+            }
+
+            if (relations !== null) {
                 let newConnections = relations.map(relation => {
                     return convertToReactFlowConnection(relation)
                 });
 
-                setElements(newElements)
                 setConnections(newConnections);
+                setPrevConnections(_.cloneDeep(newConnections));
             }
         }
         loadRuleNodes()
     }, [])
 
+    useEffect(() => {
+        if (isChanged) {
+            setElements((es) => clearUndefinedArray(es.concat(newNode)));
+        }
+    }, [newNode.data])
+
     const onConnect = (params) => {
-        setElements((els) => addEdge({...params, ...edgeStyle}, els));
+        setPrevConnections(_.cloneDeep(connections));
+        console.log(params)
+
+        setConnections((els) => addEdge({...params, ...edgeStyle}, els));
+        handleChange(true)
+
     }
 
     const onElementsRemove = (elementsToRemove) => {
-        setElements((els) => removeElements(elementsToRemove, els));
+        setElements((els) => clearUndefinedArray(removeElements(elementsToRemove, els)));
+        handleChange(true)
+
     }
 
     const onLoad = (_reactFlowInstance) => {
@@ -160,7 +165,7 @@ const OpenRuleNodes = () => {
     const onDrop = (event) => {
         event.preventDefault();
 
-        handleOpenCreateRuleNode(true)
+        handleChange(true)
 
         const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
         const type = event.dataTransfer.getData('application/reactflow');
@@ -173,13 +178,25 @@ const OpenRuleNodes = () => {
         newNode.type = type;
         newNode.position = position;
         setNewNode(newNode);
+
+        handleOpenCreateRuleNode(true);
     };
 
-    useEffect(() => {
-        setElements((es) => es.concat(newNode));
-    }, [newNode.data])
+    function onNodeDragStop(event, node) {
+        const index = findIndex(elements, element => element && element.id === node.id)
+        if (index !== -1) {
+            elements[index] = node;
+            setElements(clearUndefinedArray(elements))
+        }
+        handleChange(true)
+    }
 
     const onElementClick = (event, element) => console.log('click', element);
+
+    const handleChange = (change) => {
+        setIsChanged(change)
+        setBackgroundColorButton(change ? 'red' : '#666')
+    }
 
     const handleOpenCreateRuleNode = (value) => {
         setOpenCreateRuleNode(value);
@@ -187,8 +204,29 @@ const OpenRuleNodes = () => {
 
     const handleCreateRuleNodes = async () => {
         const ruleNodes = elements.map(ruleNode => convertToRuleNode(ruleNode));
-        const relations = connections.map(connection => convertToRelation(connection))
-        await RuleChainService.createRuleNodes({ruleChainId: ruleChain.id, ruleNodes, relations});
+        const relations = connections.map(connection => convertToRelation(connection, elements))
+        await RuleChainService.createRuleNodes({ruleChainId: ruleChain.id, ruleNodes, relations})
+    }
+
+    const handleButtonCheck = () => {
+        if (isChanged) {
+            handleChange(false);
+            handleCreateRuleNodes();
+
+            // update previous node and connections
+            setPrevElements(_.cloneDeep(elements))
+            setPrevConnections(_.cloneDeep(connections))
+        }
+    }
+
+    const handleButtonClose = () => {
+        if (isChanged) {
+            handleChange(false)
+
+            // revert to previous node and connections
+            setElements(clearUndefinedArray(_.cloneDeep(prevElements)))
+            setConnections(clearUndefinedArray(_.cloneDeep(prevConnections)))
+        }
     }
 
     return (
@@ -198,32 +236,45 @@ const OpenRuleNodes = () => {
                 handleOpenCreateRuleNode={handleOpenCreateRuleNode}
                 newNode={newNode}
                 setNewNode={setNewNode}
-                reactFlowWrapper={reactFlowWrapper}
             />
-            <div className={"drag-n-drop"} style={{height: '100vh'}}>
+            <div className={"drag-n-drop"} style={{height: "100vh"}}>
+                <SideBarReactFlow/>
                 <ReactFlowProvider>
                     <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                         <ReactFlow
-                            elements={[...elements, ...connections]}
+                            elements={clearUndefinedArray(elements.concat(connections))}
                             onElementClick={onElementClick}
                             onElementsRemove={onElementsRemove}
                             onConnect={onConnect}
                             onLoad={onLoad}
                             onDrop={onDrop}
                             onDragOver={onDragOver}
+                            onNodeDragStop={onNodeDragStop}
                             snapToGrid={true}
                             key="edges"
+                            style={{position: 'fixed'}}
                         >
-                            {/*<MiniMap/>*/}
-                            <Controls/>
                             <Background/>
                         </ReactFlow>
+                        <Fab
+                            icon={<Icon type="check"/>}
+                            style={{right: 80, bottom: 0}}
+                            event={'click'}
+                            onClick={handleButtonCheck}
+                            mainButtonStyles={{backgroundColor: backgroundColorButton}}
+                        />
+                        <Fab
+                            icon={<Icon type="close"/>}
+                            style={{right: 0, bottom: 0}}
+                            event={'click'}
+                            onClick={handleButtonClose}
+                            mainButtonStyles={{backgroundColor: backgroundColorButton}}
+                        />
                     </div>
-                    <SideBarReactFlow/>
                 </ReactFlowProvider>
             </div>
         </div>
     );
 
 }
-export default OpenRuleNodes
+export default RuleNodes

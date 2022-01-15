@@ -8,7 +8,7 @@ export default () => {
     };
 
     return (
-        <Sider style={{background: "#fff"}} className="sidebar-right d-flex justify-content-center">
+        <Sider style={{background: "#FFFFFF"}} className="d-flex justify-content-center">
             <div className="react-flow__node-input m-b-10" onDragStart={(event) => onDragStart(event, 'input')} draggable>
                 Input Node
             </div>

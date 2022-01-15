@@ -4,7 +4,6 @@ import TextArea from "antd/lib/input/TextArea";
 
 const CreateRuleNodeModal = (props) => {
     const {openCreateRuleNode, handleOpenCreateRuleNode, newNode, setNewNode} = props;
-
     const {getFieldDecorator} = props.form;
 
     const styleButton = {
@@ -21,7 +20,6 @@ const CreateRuleNodeModal = (props) => {
             ],
             async (err, values) => {
                 if (!err) {
-                    console.log("Received values of form: ", values);
                     try {
                         newNode.data = {
                             label: values.name,
@@ -29,8 +27,8 @@ const CreateRuleNodeModal = (props) => {
                             type: "typeTest"
                         }
                         setNewNode(newNode)
-                    } catch (e) {
-                        message.error(e.response.data.message);
+                    } catch (ex) {
+                        message.error(ex.response.data.message);
                         return;
                     }
                     message.success("Create rule node successfully!");

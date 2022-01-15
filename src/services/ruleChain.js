@@ -12,12 +12,12 @@ const getRuleNodes = async (ruleChainId) => {
 
 const createRuleChain = async (values) => {
     values.root = false;
-    const data = RuleChainApi.createRuleChain(values)
+    const data = await RuleChainApi.createRuleChain(values)
     return data.ruleChain || null
 }
 
-const createRuleNodes = async (values) => {
-    return await RuleChainApi.createRuleNodes(values)
+const createRuleNodes = (values) => {
+    return RuleChainApi.createRuleNodes(values)
 }
 
 export default {
