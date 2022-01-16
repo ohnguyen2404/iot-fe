@@ -106,9 +106,8 @@ const DesignLayout = () => {
         {children}
       </GridLayout>
       <Fab
-        text={isEdit && "Save changes"}
+        style={{ right: 0, bottom: 0 }}
         mainButtonStyles={{ backgroundColor: "orange" }}
-        actionButtonStyles={{ backgroundColor: "orange" }}
         icon={isEdit ? <Icon type="check" /> : <Icon type="experiment" />}
         onClick={() => isEdit && handleSaveChanges()}
       >
@@ -118,14 +117,28 @@ const DesignLayout = () => {
           </StyledAction>
         )}
         {!isEdit && (
-          <StyledAction text="Enter edit mode" onClick={() => {
-            setIsEdit(true)
-            message.info("Drag and resize is available now.")
-          }}>
+          <StyledAction
+            text="Enter edit mode"
+            onClick={() => {
+              setIsEdit(true);
+              message.info("Drag and resize is available now.");
+            }}
+          >
             <Icon type="edit" />
           </StyledAction>
         )}
       </Fab>
+      {isEdit && (
+        <Fab
+          style={{ right: 80, bottom: 0 }}
+          mainButtonStyles={{ backgroundColor: "red" }}
+          icon={<Icon type="close" />}
+          onClick={() => {
+            setIsEdit(false);
+            message.warn("Drag and resize is not available now.")
+          }}
+        />
+      )}
     </div>
   );
 };
