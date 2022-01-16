@@ -8,16 +8,21 @@ const getById = async (id) => {
   return await DashboardApi.getById(id);
 };
 
-const create = (data) => {
-  return DashboardApi.create(data);
+const create = async (data) => {
+  return await DashboardApi.create(data);
 };
 
-const update = (id, data) => {
-  return DashboardApi.update(id, data);
+const update = async (id, data) => {
+  console.log('datahere', data);
+  return await DashboardApi.update(id, data);
 };
 
-const remove = (id) => {
-  return DashboardApi.delete(id);
+const updateConfiguration = async (id, data) => {
+  return await DashboardApi.updateConfiguration(id, {configuration: data})
+}
+
+const remove = async (id) => {
+  return await DashboardApi.delete(id);
 };
 
 export default {
@@ -25,5 +30,6 @@ export default {
   getById,
   create,
   update,
+  updateConfiguration,
   remove,
 };

@@ -12,7 +12,6 @@ import {
 } from "antd";
 import DashboardService from "../../services/dashboard";
 import InfoDashboardModal from "./InfoDashboardModal";
-import DesignLayout from "./DesignLayout";
 import { removeDashboard, openDashboard } from "../../actions/dashboards";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -59,7 +58,8 @@ const DashboardListTable = (props) => {
       key: index,
       id: dashboard.id,
       title: dashboard.title,
-      description: dashboard.description
+      description: dashboard.description,
+      configuration: dashboard.configuration
     };
   });
 

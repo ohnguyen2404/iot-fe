@@ -1,15 +1,15 @@
-import { satisfies } from "semver";
 import {
   LOAD_DASHBOARDS,
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
   REMOVE_DASHBOARD,
   OPEN_DASHBOARD,
+  SAVE_CHANGES_DASHBOARD,
 } from "../actions/types";
 
 const initialState = {
   dashboards: [],
-  openDashboard: {
+  openedDashboard: {
     isOpen: false,
     dashboard: {},
   },
@@ -57,8 +57,41 @@ export default function (state = initialState, action) {
     case OPEN_DASHBOARD:
       return {
         ...state,
-        openDashboard: payload,
+        openedDashboard: payload,
       };
+
+    //case SAVE_CHANGES_DASHBOARD:
+    //  return {
+    //    ...state,
+    //    openedDashboard: {
+    //      ...state.openedDashboard,
+    //      dashboard: {
+    //        ...state.openedDashboard.dashboard,
+    //        configuration: {
+    //          ...state.openedDashboard.dashboard.configuration,
+    //          widgets: payload,
+    //        },
+    //      },
+    //    },
+    //  };
+
+    case SAVE_CHANGES_DASHBOARD:
+      return {
+        ...state,
+        dashboards: state.dashboards.map((dashboard) => {
+          if (dashboard.id === payload.dashboardId) {
+            const updatedDashboard = {
+              ...dashboard,
+              configuration: {
+                ...dashboard.configuration,
+                widgets: payload.widgets
+              }
+            };
+            return updatedDashboard;
+          }
+          return dashboard;
+        }),
+      }
 
     default:
       return state;

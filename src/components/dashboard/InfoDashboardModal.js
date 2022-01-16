@@ -53,7 +53,7 @@ const InfoDashboardModal = (props) => {
                 );
                 dispatch(updateDashboard(updatedDashboard));
               } catch (e) {
-                message.error("Update dashboard failed!");
+                message.error(e.response.data.message);
                 return;
               }
               message.success("Update dashboard successfully!");

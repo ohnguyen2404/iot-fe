@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 const CreateDashboardModal = (props) => {
   const dispatch = useDispatch();
-  const { openCreateDashboard, handleOpenCreateDashboard } = props;
+  const { openCreateDashboard, setOpenCreateDashboard } = props;
 
   const { getFieldDecorator } = props.form;
 
@@ -34,7 +34,7 @@ const CreateDashboardModal = (props) => {
           }
           message.success("Create dashboard successfully!");
           props.form.resetFields();
-          handleOpenCreateDashboard(false);
+          setOpenCreateDashboard(false);
         }
       }
     );
@@ -47,7 +47,7 @@ const CreateDashboardModal = (props) => {
       onOk={handleCreateDashboardSubmit} //submit form here
       okText={"Create"}
       okButtonProps={styleButton}
-      onCancel={() => handleOpenCreateDashboard(false)}
+      onCancel={() => setOpenCreateDashboard(false)}
       cancelButtonProps={styleButton}
       centered={true}
       bodyStyle={{ overflowY: "scroll", height: "600px" }}

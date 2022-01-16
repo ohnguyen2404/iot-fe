@@ -6,7 +6,7 @@ import { Col, Row, Card } from "antd";
 
 const Charts = () => {
   const StyledCard = (props) => (
-    <Card title={props.title} bodyStyle={{ height: "300px" }}>
+    <Card {...props} bodyStyle={{ height: "300px" }}>
       {props.children}
     </Card>
   );
