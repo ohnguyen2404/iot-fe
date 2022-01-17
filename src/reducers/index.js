@@ -5,6 +5,7 @@ import telemetries from "./telemetries";
 import customers from "./customers"
 import tenants from "./tenants"
 import widgetsBundles from "./widgetsBundles";
+import widgetTypes from "./widgetTypes";
 import ruleChains from "./ruleChains";
 import dashboards from "./dashboards";
 
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
     customers,
     tenants,
     widgetsBundles,
+    widgetTypes,
     ruleChains,
     dashboards
 })

@@ -15,22 +15,9 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case LOAD_WIDGETS_BUNDLES:
-      const defaultWidgets = [
-        {
-          id: "default-charts",
-          title: "Charts",
-          alias: constant.DEFAULT_WIDGETS_BUNDLE.CHARTS,
-        },
-        {
-          id: "default-analogue-gauges",
-          title: "Analogue Gauges",
-          alias: constant.DEFAULT_WIDGETS_BUNDLE.ANALOGUE_GAUGES,
-        },
-      ];
-
       return {
         ...state,
-        widgetsBundles: [...defaultWidgets, ...payload],
+        widgetsBundles: payload,
       };
 
     case CREATE_WIDGETS_BUNDLE:

@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { Icon, message } from "antd";
 import { Fab, Action } from "react-tiny-fab";
 import "react-tiny-fab/dist/styles.css";
+import AddWidgetModal from "./AddWidgetModal";
 import { get } from "lodash";
 
 const StyledAction = (props) => (
@@ -26,6 +27,7 @@ const StyledDiv = styled.div`
 const DesignLayout = () => {
   const dispatch = useDispatch();
   const [currentLayout, setCurrentLayout] = useState([]);
+  const [openAddWidgetModal, setOpenAddWidgetModal] = useState(false);
   const { openedDashboard } = useSelector((state) => state.dashboards);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -93,6 +95,10 @@ const DesignLayout = () => {
 
   return (
     <div>
+      <AddWidgetModal
+        openAddWidgetModal={openAddWidgetModal}
+        setOpenAddWidgetModal={setOpenAddWidgetModal}
+      />
       <GridLayout
         isDraggable={isEdit}
         isResizable={isEdit}
@@ -112,7 +118,12 @@ const DesignLayout = () => {
         onClick={() => isEdit && handleSaveChanges()}
       >
         {!isEdit && (
-          <StyledAction text="Add new widget">
+          <StyledAction
+            text="Add new widget"
+            onClick={() => {
+              setOpenAddWidgetModal(true);
+            }}
+          >
             <Icon type="plus" />
           </StyledAction>
         )}
@@ -135,7 +146,7 @@ const DesignLayout = () => {
           icon={<Icon type="close" />}
           onClick={() => {
             setIsEdit(false);
-            message.warn("Drag and resize is not available now.")
+            message.warn("Drag and resize is not available now.");
           }}
         />
       )}

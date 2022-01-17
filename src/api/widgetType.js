@@ -2,8 +2,8 @@ import AxiosEntityApi from "./axios/axiosEntityApi";
 import {API_WIDGET_TYPE} from "../config/setting";
 
 export const WidgetTypeApi = {
-  getAll: async (bundleAlias) => {
-    return await AxiosEntityApi.get(`${API_WIDGET_TYPE}s?bundleAlias=${bundleAlias}`)
+  getAll: async () => {
+    return await AxiosEntityApi.get(`${API_WIDGET_TYPE}s`)
   },
   getById: async (id) => {
     return await AxiosEntityApi.get(`${API_WIDGET_TYPE}s/${id}`)
