@@ -34,15 +34,6 @@ const Home = (props) => {
 
   const stompClient = useRef();
   useEffect(() => {
-    dispatch(loadCustomers());
-    dispatch(loadTenants());
-    dispatch(loadDevices());
-    dispatch(loadWidgetsBundles());
-    dispatch(loadWidgetTypes());
-    dispatch(loadRuleChains());
-    dispatch(loadDashboards());
-    dispatch(openRuleNodes({ isOpen: false }));
-
     const connect = () => {
       const url = `${TRANSPORT_API_URL}/ws?token=${getItem("accessToken")}`;
 
@@ -83,35 +74,42 @@ const Home = (props) => {
   }, [user.id]);
 
   const renderTab = () => {
+    console.log('renderTab');
     switch (Number(currentTab)) {
       case 1:
-        dispatch(openRuleNodes({ isOpen: false }));
         return <Main />;
+
       case 2:
-        dispatch(openRuleNodes({ isOpen: false }));
         return <Profile />;
+
       case 3:
-        dispatch(openRuleNodes({ isOpen: false }));
+        dispatch(loadDevices());
         return <Devices />;
+
       case 4:
-        dispatch(openRuleNodes({ isOpen: false }));
+        dispatch(loadTenants());
         return <Tenants />;
+
       case 5:
-        dispatch(openRuleNodes({ isOpen: false }));
+        dispatch(loadCustomers());
         return <Customers />;
+
       case 6:
-        dispatch(openRuleNodes({ isOpen: false }));
+        dispatch(loadWidgetsBundles());
+        dispatch(loadWidgetTypes());
         return <WidgetsBundles />;
+
       case 7:
-        dispatch(openRuleNodes({ isOpen: false }));
+        dispatch(loadDashboards());
         dispatch(openDashboard({ isOpen: false }));
         return <Dashboards />;
+
       case 8:
+        dispatch(loadRuleChains());
         dispatch(openRuleNodes({ isOpen: false }));
         return <RuleChains />;
 
       default:
-        dispatch(openRuleNodes({ isOpen: false }));
         return <Main />;
     }
   };

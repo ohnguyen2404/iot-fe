@@ -14,7 +14,6 @@ const AddWidgetModal = (props) => {
   const { widgetTypes } = useSelector((state) => state.widgetTypes);
   const { openedDashboard } = useSelector((state) => state.dashboards);
 
-  const [curWidgetTypes, setCurWidgetTypes] = useState([]);
   const [isShowWidgetTypes, setIsShowWidgetTypes] = useState(false);
   const [curWidgetsBundle, setCurWidgetsBundle] = useState({});
 
@@ -89,7 +88,6 @@ const AddWidgetModal = (props) => {
           widgets: newWidgets,
         };
         try {
-          const str_widgets = JSON.stringify({ widgets: newWidgets });
           dispatch(saveChangesDashboard(data));
         } catch (e) {
           message.error(e.response.data.message);
