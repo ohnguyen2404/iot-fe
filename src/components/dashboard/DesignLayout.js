@@ -34,7 +34,7 @@ const DesignLayout = () => {
   const dashboardWidgets = get(
     openedDashboard,
     "dashboard.configuration.widgets",
-    {}
+    []
   );
 
   const layout = dashboardWidgets.map((widget) => {

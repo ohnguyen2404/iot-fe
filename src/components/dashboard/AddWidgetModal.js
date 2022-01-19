@@ -69,10 +69,9 @@ const AddWidgetModal = (props) => {
         });
 
         const maxPosY = maxBy(positions, "y");
-
         const newPosition = {
           x: 0,
-          y: maxPosY.y + maxPosY.h,
+          y: maxPosY ? (maxPosY.y + maxPosY.h) : 0,
         };
 
         const itemDescriptor = JSON.parse(item.descriptor);
@@ -91,16 +90,12 @@ const AddWidgetModal = (props) => {
         };
         try {
           const str_widgets = JSON.stringify({ widgets: newWidgets });
-          await DashboardService.updateConfiguration(
-            data.dashboardId,
-            str_widgets
-          );
           dispatch(saveChangesDashboard(data));
         } catch (e) {
           message.error(e.response.data.message);
           return;
         }
-        message.success("Update dashboard successfully");
+        message.success("Add widget successfully");
         handleOpenAddWidgetModal(false);
       },
 
