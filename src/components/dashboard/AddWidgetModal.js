@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { message, Modal, List, Avatar, Card, Icon } from "antd";
+import { get, maxBy } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+import { saveChangesDashboard } from "../../actions/dashboards";
+import DashboardService from "../../services/dashboard";
 
 const AddWidgetModal = (props) => {
-  const { openAddWidgetModal, setOpenAddWidgetModal } = props;
+  const { openAddWidgetModal, handleOpenAddWidgetModal } = props;
   const { confirm } = Modal;
 
   const dispatch = useDispatch();
   const { widgetsBundles } = useSelector((state) => state.widgetsBundles);
   const { widgetTypes } = useSelector((state) => state.widgetTypes);
+  const { openedDashboard } = useSelector((state) => state.dashboards);
 
   const [curWidgetTypes, setCurWidgetTypes] = useState([]);
   const [isShowWidgetTypes, setIsShowWidgetTypes] = useState(false);
@@ -21,9 +25,7 @@ const AddWidgetModal = (props) => {
 
   const dataBundles = widgetsBundles.map((bundle) => {
     return {
-      title: bundle.title,
-      description: bundle.description,
-      alias: bundle.alias,
+      ...bundle,
     };
   });
 
@@ -31,9 +33,7 @@ const AddWidgetModal = (props) => {
   widgetTypes.map((widget) => {
     if (widget.bundleAlias === curWidgetsBundle.alias) {
       dataWidgets.push({
-        name: widget.name,
-        description: widget.description,
-        alias: widget.alias,
+        ...widget,
       });
     }
   });
@@ -53,14 +53,59 @@ const AddWidgetModal = (props) => {
         ...styleButton,
         icon: "check",
       },
-      onOk() {
-        console.log("OK");
+      async onOk() {
+        const curWidgets = get(
+          openedDashboard,
+          "dashboard.configuration.widgets",
+          []
+        );
+
+        const positions = [];
+        curWidgets.forEach((w) => {
+          positions.push({
+            y: w.y,
+            h: w.h,
+          });
+        });
+
+        const maxPosY = maxBy(positions, "y");
+
+        const newPosition = {
+          x: 0,
+          y: maxPosY.y + maxPosY.h,
+        };
+
+        const itemDescriptor = JSON.parse(item.descriptor);
+        const formattedWidget = {
+          typeAlias: item.alias,
+          x: newPosition.x,
+          y: newPosition.y,
+          w: itemDescriptor.sizeX,
+          h: itemDescriptor.sizeY,
+        };
+
+        const newWidgets = [...curWidgets, formattedWidget];
+        const data = {
+          dashboardId: get(openedDashboard, "dashboard.id"),
+          widgets: newWidgets,
+        };
+        try {
+          const str_widgets = JSON.stringify({ widgets: newWidgets });
+          await DashboardService.updateConfiguration(
+            data.dashboardId,
+            str_widgets
+          );
+          dispatch(saveChangesDashboard(data));
+        } catch (e) {
+          message.error(e.response.data.message);
+          return;
+        }
+        message.success("Update dashboard successfully");
+        handleOpenAddWidgetModal(false);
       },
 
       cancelButtonProps: styleButton,
-      onCancel() {
-        console.log("CANCEL");
-      },
+      onCancel() {},
     });
   };
 
@@ -81,7 +126,7 @@ const AddWidgetModal = (props) => {
         )
       }
       visible={openAddWidgetModal}
-      onCancel={() => setOpenAddWidgetModal(false)}
+      onCancel={() => handleOpenAddWidgetModal(false)}
       bodyStyle={{
         backgroundColor: "whitesmoke",
         height: 800,

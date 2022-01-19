@@ -60,21 +60,6 @@ export default function (state = initialState, action) {
         openedDashboard: payload,
       };
 
-    //case SAVE_CHANGES_DASHBOARD:
-    //  return {
-    //    ...state,
-    //    openedDashboard: {
-    //      ...state.openedDashboard,
-    //      dashboard: {
-    //        ...state.openedDashboard.dashboard,
-    //        configuration: {
-    //          ...state.openedDashboard.dashboard.configuration,
-    //          widgets: payload,
-    //        },
-    //      },
-    //    },
-    //  };
-
     case SAVE_CHANGES_DASHBOARD:
       return {
         ...state,
@@ -91,6 +76,16 @@ export default function (state = initialState, action) {
           }
           return dashboard;
         }),
+        openedDashboard: {
+          ...state.openedDashboard,
+          dashboard: {
+            ...state.openedDashboard.dashboard,
+            configuration: {
+              ...state.openedDashboard.dashboard.configuration,
+              widgets: payload.widgets
+            }
+          }
+        }
       }
 
     default:

@@ -47,11 +47,13 @@ const DesignLayout = () => {
     };
   });
 
+  console.log("layouthere", layout);
   const children = React.useMemo(() => {
+    console.log('innnnnnnn');
     return layout.map((val, idx) => {
       return (
         <StyledDiv
-          key={val.typeAlias}
+          key={val.typeAlias + idx}
           data-grid={{ x: val.x, y: val.y, w: val.w, h: val.h }}
         >
           {renderComponent(val.typeAlias)}
@@ -66,8 +68,9 @@ const DesignLayout = () => {
 
   const handleSaveChanges = async () => {
     const formattedLayout = currentLayout.map((l) => {
+      const formattedTypeAlias = l.i.replace(/[0-9]/g, '')
       return {
-        typeAlias: l.i,
+        typeAlias: formattedTypeAlias,
         x: l.x,
         y: l.y,
         w: l.w,
@@ -93,11 +96,16 @@ const DesignLayout = () => {
     setIsEdit(false);
   };
 
+  const handleOpenAddWidgetModal = (value) => {
+    setIsEdit(true)
+    setOpenAddWidgetModal(value)
+  }
+
   return (
     <div>
       <AddWidgetModal
         openAddWidgetModal={openAddWidgetModal}
-        setOpenAddWidgetModal={setOpenAddWidgetModal}
+        handleOpenAddWidgetModal={handleOpenAddWidgetModal}
       />
       <GridLayout
         isDraggable={isEdit}
