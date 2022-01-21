@@ -17,7 +17,7 @@ export const createRuleChain = (ruleChain) => async (dispatch) => {
     if (data) {
         dispatch({
             type: CREATE_RULE_CHAIN,
-            payload: data.ruleChain,
+            payload: data,
         });
     }
     return data;

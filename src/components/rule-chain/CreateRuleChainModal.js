@@ -24,7 +24,7 @@ const CreateRuleChainModal = (props) => {
                 if (!err) {
                     console.log("Received values of form: ", values);
                     try {
-                        dispatch(createRuleChain(values));
+                        await dispatch(createRuleChain(values));
                     } catch (e) {
                         message.error(e.response.data.message);
                         return;
