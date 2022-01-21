@@ -1,5 +1,5 @@
 import {RuleChainService} from "../services";
-import {CREATE_RULE_CHAIN, LOAD_RULE_CHAINS, OPEN_RULE_NODES} from "./types";
+import {CREATE_RULE_CHAIN, LOAD_RULE_CHAINS, LOAD_RULE_NODE_DESCRIPTORS, OPEN_RULE_NODES} from "./types";
 
 export const loadRuleChains = () => async (dispatch) => {
     const data = await RuleChainService.getAll();
@@ -32,3 +32,14 @@ export const openRuleNodes = ({isOpen, ruleChain}) => async (dispatch) => {
         },
     });
 }
+
+export const loadRuleNodeDescriptors = () => async (dispatch) => {
+    const data = await RuleChainService.getRuleNodeDescriptors();
+    if (data) {
+        dispatch({
+            type: LOAD_RULE_NODE_DESCRIPTORS,
+            payload: data,
+        });
+    }
+    return data;
+};

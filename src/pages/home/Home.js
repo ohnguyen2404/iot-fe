@@ -21,7 +21,7 @@ import { loadDashboards, openDashboard } from "../../actions/dashboards";
 import { loadWidgetTypes } from "../../actions/widgetTypes";
 import { getItem } from "../../local-storage";
 import RuleChains from "../../components/rule-chain/RuleChains";
-import { loadRuleChains, openRuleNodes } from "../../actions/ruleChains";
+import {loadRuleChains, loadRuleNodeDescriptors, openRuleNodes} from "../../actions/ruleChains";
 
 const { Header, Sider, Content } = Layout;
 
@@ -106,6 +106,7 @@ const Home = (props) => {
 
       case 8:
         dispatch(loadRuleChains());
+        dispatch(loadRuleNodeDescriptors());
         dispatch(openRuleNodes({ isOpen: false }));
         return <RuleChains />;
 

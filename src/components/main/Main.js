@@ -17,6 +17,7 @@ import {Redirect} from "react-router";
 import TableSelect from "../home/TableSelect";
 
 const Dashboard = (props) => {
+
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
     return <Redirect to="/" />;

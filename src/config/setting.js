@@ -30,4 +30,5 @@ export const API_WIDGET_TYPE = "widget-type";
 export const API_RULE_CHAIN = "rule-chain";
 export const API_RULE_CHAINS = "rule-chains";
 export const API_RULE_NODES = "rule-nodes";
+export const API_RULE_NODE_DESCRIPTORS = "rule-node-descriptors";
 export const API_DASHBOARD = "dashboard";

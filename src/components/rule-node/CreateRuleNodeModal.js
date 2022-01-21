@@ -1,77 +1,81 @@
-import React from "react";
-import {Form, Input, message, Modal} from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import React, {useEffect, useState} from "react";
+import {Form, message, Modal} from "antd";
+import EmptyConfiguration from "./EmptyConfiguration";
+import SaveTsConfiguration from "./SaveTsConfiguration";
 
 const CreateRuleNodeModal = (props) => {
-    const {openCreateRuleNode, handleOpenCreateRuleNode, newNode, setNewNode} = props;
-    const {getFieldDecorator} = props.form;
+    const {openCreateRuleNode, setOpenCreateRuleNode, newNode, setNewNode, ruleNodeDescriptor} = props;
+
+    const [name, setName] = useState(null)
+    const [config, setConfig] = useState(null)
+    const [submitForm, setSubmitForm] = useState(false)
+    const [submitDone, setSubmitDone] = useState(false)
 
     const styleButton = {
         style: {borderRadius: "5px"},
         size: "large",
     };
 
-    const handleCreateRuleNodeSubmit = async (e) => {
+    const handleCreateRuleNodeSubmit = (e) => {
         e.preventDefault();
-        props.form.validateFields(
-            [
-                "name",
-                "configuration"
-            ],
-            async (err, values) => {
-                if (!err) {
-                    try {
-                        newNode.data = {
-                            label: values.name,
-                            configuration: values.configuration,
-                            type: "typeTest"
-                        }
-                        setNewNode(newNode)
-                    } catch (ex) {
-                        message.error(ex.response.data.message);
-                        return;
-                    }
-                    message.success("Create rule node successfully!");
-                    props.form.resetFields();
-                    handleOpenCreateRuleNode(false);
-                }
+
+        setSubmitForm(true)
+    }
+
+    useEffect(() => {
+        if (submitDone) {
+            newNode.data = {
+                label: name,
+                config: config,
+                clazz: ruleNodeDescriptor?.clazz
             }
-        );
-    };
+
+            setNewNode(newNode);
+            setOpenCreateRuleNode(false);
+
+            setSubmitDone(false)
+        }
+    }, [submitDone])
+
+    const handleRenderConfig = () => {
+        const clazzName = ruleNodeDescriptor?.configClazz.split('.').pop();
+        switch (clazzName) {
+            // TODO: Save cases into enum
+            case "EmptyConfiguration":
+                return <EmptyConfiguration setName={setName}
+                                           setConfig={setConfig}
+                                           submitForm={submitForm}
+                                           setSubmitForm={setSubmitForm}
+                                           setSubmitDone={setSubmitDone}
+                                           form={props.form}/>
+            case "SaveTsConfiguration":
+                return <SaveTsConfiguration setName={setName}
+                                            setConfig={setConfig}
+                                            submitForm={submitForm}
+                                            setSubmitForm={setSubmitForm}
+                                            setSubmitDone={setSubmitDone}
+                                            defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                            form={props.form}/>
+        }
+    }
 
     return (
         <Modal
-            title={<h2>Create Rule Node</h2>}
+            title={<h2>Create node: {ruleNodeDescriptor?.name}</h2>}
             visible={openCreateRuleNode}
             onOk={handleCreateRuleNodeSubmit}
             okText={"Create"}
             okButtonProps={styleButton}
-            onCancel={() => handleOpenCreateRuleNode(false)}
+            onCancel={() => setOpenCreateRuleNode(false)}
             cancelButtonProps={styleButton}
             centered={true}
             bodyStyle={{overflowY: "scroll", height: "600px"}}
         >
-            <Form className="create_rule_node_form" layout="horizontal">
-                <Form.Item label="Name" >
-                    {getFieldDecorator("name", {
-                        rules: [
-                            {
-                                required: true,
-                                message: "Please input rule node name!",
-                                whitespace: true,
-                            },
-                        ],
-                    })(<Input/>)}
-                </Form.Item>
-                <Form.Item label="Configuration" className="m-b-10 m-t-15">
-                    {
-                        getFieldDecorator('configuration', {
-                            initialValue: ""
-                        })(
-                            <TextArea/>
-                        )
-                    }
-                </Form.Item>
+
+            <Form className="create_empty_config_node_form" layout="horizontal">
+                {
+                    handleRenderConfig()
+                }
             </Form>
         </Modal>
     );
