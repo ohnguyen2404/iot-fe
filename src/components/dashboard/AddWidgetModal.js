@@ -6,7 +6,7 @@ import { saveChangesDashboard } from "../../actions/dashboards";
 import DashboardService from "../../services/dashboard";
 
 const AddWidgetModal = (props) => {
-  const { openAddWidgetModal, handleOpenAddWidgetModal } = props;
+  const { openAddWidgetModal, handleOpenAddWidgetModal, triggerShouldReload } = props;
   const { confirm } = Modal;
 
   const dispatch = useDispatch();
@@ -95,6 +95,7 @@ const AddWidgetModal = (props) => {
         }
         message.success("Add widget successfully");
         handleOpenAddWidgetModal(false);
+        triggerShouldReload()
       },
 
       cancelButtonProps: styleButton,

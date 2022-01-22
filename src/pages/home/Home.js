@@ -100,6 +100,8 @@ const Home = (props) => {
         return <WidgetsBundles />;
 
       case 7:
+        dispatch(loadWidgetsBundles());
+        dispatch(loadWidgetTypes());
         dispatch(loadDashboards());
         dispatch(openDashboard({ isOpen: false }));
         return <Dashboards />;
