@@ -10,6 +10,11 @@ const getRuleNodes = async (ruleChainId) => {
     return {ruleNodes, relations}
 }
 
+const getRuleNodeDescriptors = async () => {
+    const {ruleNodeDescriptors} = await RuleChainApi.getRuleNodeDescriptors();
+    return ruleNodeDescriptors
+}
+
 const createRuleChain = async (values) => {
     values.root = false;
     const data = await RuleChainApi.createRuleChain(values)
@@ -24,5 +29,6 @@ export default {
     getAll,
     createRuleChain,
     getRuleNodes,
-    createRuleNodes
+    createRuleNodes,
+    getRuleNodeDescriptors
 };

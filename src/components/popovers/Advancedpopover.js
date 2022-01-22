@@ -14,7 +14,7 @@ const buttonWidth = 70;
 class AdvancedPopover extends React.Component {
     render() {
         return (
-            <div className="demo  sm-view">
+            <div className="demo sm-view">
                 <div className="scroll-item">
                     <div style={{textAlign: 'center', whiteSpace: 'nowrap'}}>
                         <Popover

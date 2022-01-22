@@ -43,8 +43,8 @@ const convertToReactFlow = (ruleNode, index) => {
     data: {
       id: ruleNode.id,
       label: ruleNode.name,
-      configuration: ruleNode.configuration,
-      type: ruleNode.type,
+      config: ruleNode.config,
+      clazz: ruleNode.clazz,
     },
     type: "default",
     position: JSON.parse(ruleNode.additionalInfo),
@@ -55,10 +55,10 @@ const convertToReactFlow = (ruleNode, index) => {
 
 const convertToRuleNode = (reactFlowNode) => {
   const ruleNode = {
-    type: reactFlowNode.data.type,
     name: reactFlowNode.data.label,
     additionalInfo: JSON.stringify(reactFlowNode.position),
-    configuration: reactFlowNode.data.configuration,
+    config: reactFlowNode.data.config,
+    clazz: reactFlowNode.data.clazz,
   };
   if (reactFlowNode.data.id) {
     ruleNode.id = reactFlowNode.data.id;
@@ -109,8 +109,8 @@ const RuleNodes = () => {
     id: "",
     data: {
       label: "",
-      configuration: "",
-      type: "",
+      config: "",
+      clazz: "",
     },
     type: "default",
     position: "",
@@ -118,6 +118,7 @@ const RuleNodes = () => {
     sourcePosition: "right",
   });
 
+  const [ruleNodeDescriptor, setRuleNodeDescriptor] = useState(null);
   const [openCreateRuleNode, setOpenCreateRuleNode] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
@@ -125,7 +126,8 @@ const RuleNodes = () => {
   const [curSelectedRelation, setCurSelectedRelation] = useState(null);
   const [curSelectedNode, setCurSelectedNode] = useState(null);
 
-  const getId = () => `rule_node_${elements.length++}`;
+  const getId = () =>
+    window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
   useEffect(() => {
     const loadRuleNodes = async () => {
@@ -156,7 +158,7 @@ const RuleNodes = () => {
 
   useEffect(() => {
     if (isChanged) {
-      setElements((es) => clearUndefinedArray(es.concat(newNode)));
+      setElements((es) => es.concat(_.cloneDeep(newNode)));
     }
   }, [newNode.data]);
 
@@ -169,9 +171,7 @@ const RuleNodes = () => {
   };
 
   const onElementsRemove = (elementsToRemove) => {
-    setElements((els) =>
-      clearUndefinedArray(removeElements(elementsToRemove, els))
-    );
+    setElements((els) => removeElements(elementsToRemove, els));
     const newConnections = connections.filter(
       (connection) =>
         connection.source !== elementsToRemove[0].id &&
@@ -196,7 +196,13 @@ const RuleNodes = () => {
     handleChange(true);
 
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-    const type = event.dataTransfer.getData("application/reactflow");
+    const type = event.dataTransfer.getData("application/type");
+
+    const ruleNodeDescriptorString = event.dataTransfer.getData(
+      "application/ruleNodeDescriptor"
+    );
+    setRuleNodeDescriptor(JSON.parse(ruleNodeDescriptorString));
+
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
@@ -207,7 +213,7 @@ const RuleNodes = () => {
     newNode.position = position;
     setNewNode(newNode);
 
-    handleOpenCreateRuleNode(true);
+    setOpenCreateRuleNode(true);
   };
 
   function onNodeDragStop(event, node) {
@@ -217,7 +223,7 @@ const RuleNodes = () => {
     );
     if (index !== -1) {
       elements[index] = node;
-      setElements(clearUndefinedArray(elements));
+      setElements(elements);
     }
     console.log("onNodeDragStop", node);
     setCurSelectedNode(node);
@@ -253,10 +259,6 @@ const RuleNodes = () => {
     setBackgroundColorButton(change ? "red" : "#666");
   };
 
-  const handleOpenCreateRuleNode = (value) => {
-    setOpenCreateRuleNode(value);
-  };
-
   const handleCreateRuleNodes = async () => {
     const ruleNodes = elements.map((ruleNode) => convertToRuleNode(ruleNode));
     const relations = connections.map((connection) =>
@@ -284,8 +286,8 @@ const RuleNodes = () => {
       handleChange(false);
 
       // revert to previous node and connections
-      setElements(clearUndefinedArray(_.cloneDeep(prevElements)));
-      setConnections(clearUndefinedArray(_.cloneDeep(prevConnections)));
+      setElements(_.cloneDeep(prevElements));
+      setConnections(_.cloneDeep(prevConnections));
     }
   };
 
@@ -318,9 +320,10 @@ const RuleNodes = () => {
     <div>
       <CreateRuleNodeModal
         openCreateRuleNode={openCreateRuleNode}
-        handleOpenCreateRuleNode={handleOpenCreateRuleNode}
+        setOpenCreateRuleNode={setOpenCreateRuleNode}
         newNode={newNode}
         setNewNode={setNewNode}
+        ruleNodeDescriptor={ruleNodeDescriptor}
       />
       {curSelectedRelation && (
         <InfoRelationModal
@@ -335,7 +338,7 @@ const RuleNodes = () => {
         <ReactFlowProvider>
           <div className="reactflow-wrapper" ref={reactFlowWrapper}>
             <ReactFlow
-              elements={clearUndefinedArray(elements.concat(connections))}
+              elements={elements.concat(connections)}
               onElementClick={onElementClick}
               onElementsRemove={onElementsRemove}
               onConnect={onConnect}

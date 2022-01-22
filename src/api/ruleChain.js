@@ -1,5 +1,5 @@
 import AxiosRuleEngineApi from "./axios/axiosRuleEngineApi";
-import {API_RULE_CHAIN, API_RULE_CHAINS, API_RULE_NODES} from "../config/setting";
+import {API_RULE_CHAIN, API_RULE_CHAINS, API_RULE_NODE_DESCRIPTORS, API_RULE_NODES} from "../config/setting";
 
 export const RuleChainApi = {
     getRuleChains: () => {
@@ -21,5 +21,9 @@ export const RuleChainApi = {
 
     getRuleNodes: (ruleChainId) => {
         return AxiosRuleEngineApi.get(`${API_RULE_CHAIN}/${ruleChainId}/${API_RULE_NODES}` )
+    },
+
+    getRuleNodeDescriptors: () => {
+        return AxiosRuleEngineApi.get(`${API_RULE_NODE_DESCRIPTORS}` )
     },
 };
