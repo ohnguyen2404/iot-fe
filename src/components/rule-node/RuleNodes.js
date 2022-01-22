@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 import CreateRuleNodeModal from "./CreateRuleNodeModal";
 import _ from "lodash";
 import {Fab} from "react-tiny-fab";
-import {Icon} from "antd";
+import {Icon, message} from "antd";
 import {findIndex} from "lodash/array";
 
 const edgeStyle = {
@@ -75,7 +75,21 @@ const convertToReactFlowConnection = (relation) => {
     }
 }
 
-const clearUndefinedArray = (arr) => arr.filter(e => e !== undefined)
+const getId = () => window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+
+const inputElement = {
+    id: "inputId",
+    type: 'input',
+    data: {label: 'Input'},
+    position: {x: 30, y: 110},
+    sourcePosition: 'right',
+}
+
+const initConnection = {
+    id: getId(),
+    source: "inputId",
+    ...edgeStyle
+}
 
 const RuleNodes = () => {
     const {openRuleNodes} = useSelector((state) => state.ruleChains);
@@ -84,10 +98,18 @@ const RuleNodes = () => {
     const reactFlowWrapper = useRef(null);
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+    const [inputConnection, setInputConnection] = useState(initConnection);
+
     const [elements, setElements] = useState([]);
-    const [connections, setConnections] = useState([]);
     const [prevElements, setPrevElements] = useState([]);
+
+    const [firstElementIndex, setFirstElementIndex] = useState(-1);
+    const [prevFirstElementIndex, setPrevFirstElementIndex] = useState(-1);
+
+    const [connections, setConnections] = useState([]);
     const [prevConnections, setPrevConnections] = useState([]);
+
     const [newNode, setNewNode] = useState({
         id: "",
         data: {
@@ -106,18 +128,22 @@ const RuleNodes = () => {
     const [isChanged, setIsChanged] = useState(false);
     const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
 
-    const getId = () => window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
     useEffect(() => {
         const loadRuleNodes = async () => {
-            const {ruleNodes, relations} = await RuleChainService.getRuleNodes(ruleChain.id)
+            const {ruleNodes, relations, firstRuleNodeIndex} = await RuleChainService.getRuleNodes(ruleChain.id)
+
+            if (firstRuleNodeIndex !== null && firstRuleNodeIndex !== -1) {
+                setFirstElementIndex(firstRuleNodeIndex)
+                setPrevFirstElementIndex(firstRuleNodeIndex)
+            }
 
             if (ruleNodes !== null) {
                 let newElements = ruleNodes.map((ruleNode, index) => {
                     return convertToReactFlow(ruleNode, index)
                 })
 
-                setElements(newElements);
+                setElements((es) => es.concat(newElements));
                 setPrevElements(_.cloneDeep(newElements));
             }
 
@@ -126,7 +152,7 @@ const RuleNodes = () => {
                     return convertToReactFlowConnection(relation)
                 });
 
-                setConnections(newConnections);
+                setConnections((es) => es.concat(newConnections));
                 setPrevConnections(_.cloneDeep(newConnections));
             }
         }
@@ -139,11 +165,24 @@ const RuleNodes = () => {
         }
     }, [newNode.data])
 
+    useEffect(() => {
+        if (firstElementIndex !== -1) {
+            setInputConnection({
+                ...inputConnection,
+                target: elements.length !== 0 ? elements[firstElementIndex]?.id : `${firstElementIndex}`
+            })
+        }
+    }, [firstElementIndex])
+
     const onConnect = (params) => {
         setPrevConnections(_.cloneDeep(connections));
-        console.log(params)
+        if (params.source === 'inputId') {
+            setPrevFirstElementIndex(firstElementIndex)
+            setFirstElementIndex(elements.map(el => el.id).indexOf(params.target))
 
-        setConnections((els) => addEdge({...params, ...edgeStyle}, els));
+        } else {
+            setConnections((els) => addEdge({...params, ...edgeStyle}, els));
+        }
         handleChange(true)
 
     }
@@ -203,10 +242,22 @@ const RuleNodes = () => {
         setBackgroundColorButton(change ? 'red' : '#666')
     }
 
-    const handleCreateRuleNodes = async () => {
-        const ruleNodes = elements.map(ruleNode => convertToRuleNode(ruleNode));
-        const relations = connections.map(connection => convertToRelation(connection, elements))
-        await RuleChainService.createRuleNodes({ruleChainId: ruleChain.id, ruleNodes, relations})
+    const handleCreateRuleNodes = () => {
+        const ruleNodes = elements
+            .map(ruleNode => convertToRuleNode(ruleNode));
+
+        const relations = connections
+            .map(connection => convertToRelation(connection, elements));
+
+        RuleChainService
+            .createRuleNodes({
+                ruleChainId: ruleChain.id,
+                ruleNodes,
+                relations,
+                firstRuleNodeIndex: firstElementIndex
+            })
+            .then(r => message.success("Save successfully"))
+            .catch(err => message.error("Save unsuccessfully"))
     }
 
     const handleButtonCheck = () => {
@@ -217,6 +268,7 @@ const RuleNodes = () => {
             // update previous node and connections
             setPrevElements(_.cloneDeep(elements))
             setPrevConnections(_.cloneDeep(connections))
+            setPrevFirstElementIndex(_.cloneDeep(firstElementIndex))
         }
     }
 
@@ -227,6 +279,7 @@ const RuleNodes = () => {
             // revert to previous node and connections
             setElements(_.cloneDeep(prevElements))
             setConnections(_.cloneDeep(prevConnections))
+            setFirstElementIndex(_.cloneDeep(prevFirstElementIndex))
         }
     }
 
@@ -244,7 +297,7 @@ const RuleNodes = () => {
                 <ReactFlowProvider>
                     <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                         <ReactFlow
-                            elements={elements.concat(connections)}
+                            elements={elements.concat([inputElement, inputConnection, ...connections])}
                             onElementClick={onElementClick}
                             onElementsRemove={onElementsRemove}
                             onConnect={onConnect}

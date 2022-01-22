@@ -6,8 +6,8 @@ const getAll = async () => {
 }
 
 const getRuleNodes = async (ruleChainId) => {
-    const {ruleNodes, relations} = await RuleChainApi.getRuleNodes(ruleChainId);
-    return {ruleNodes, relations}
+    const {ruleNodes, relations, firstRuleNodeIndex} = await RuleChainApi.getRuleNodes(ruleChainId);
+    return {ruleNodes, relations, firstRuleNodeIndex}
 }
 
 const getRuleNodeDescriptors = async () => {
