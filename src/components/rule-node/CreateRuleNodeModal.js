@@ -50,6 +50,7 @@ const CreateRuleNodeModal = (props) => {
             cancelButtonProps={styleButton}
             centered={true}
             bodyStyle={{overflowY: "scroll", height: "600px"}}
+            destroyOnClose={true}
         >
             <Form className="create_rule_node_form" layout="horizontal">
                 <Form.Item label="Name" >

@@ -1,280 +1,382 @@
-import React, {useEffect, useRef, useState} from 'react'
-import ReactFlow, {addEdge, Background, ReactFlowProvider, removeElements} from "react-flow-renderer";
-import '../react-flow/DragNDrop.css';
+import React, { useEffect, useRef, useState } from "react";
+import ReactFlow, {
+  addEdge,
+  Background,
+  ReactFlowProvider,
+  removeElements,
+} from "react-flow-renderer";
+import "../react-flow/DragNDrop.css";
 import SideBarReactFlow from "../react-flow/SideBarReactFlow";
-import {RuleChainService} from "../../services";
-import {useSelector} from "react-redux";
+import { RuleChainService } from "../../services";
+import { useSelector } from "react-redux";
 import CreateRuleNodeModal from "./CreateRuleNodeModal";
+import InfoRelationModal from "./InfoRelationModal";
 import _ from "lodash";
-import {Fab} from "react-tiny-fab";
-import {Icon} from "antd";
-import {findIndex} from "lodash/array";
+import { Fab } from "react-tiny-fab";
+import { Icon, Modal } from "antd";
+import { findIndex } from "lodash/array";
+
+const { confirm } = Modal;
+
+const styleButton = {
+  style: { borderRadius: "5px" },
+  size: "large",
+};
 
 const edgeStyle = {
-    className: 'normal-edge',
-    arrowHeadType: 'arrow',
+  className: "normal-edge",
+  arrowHeadType: "arrow",
 
-    labelStyle: {fill: '#0D257F', fontWeight: 700},
-    labelBgPadding: [8, 4],
-    labelBgBorderRadius: 6,
-    labelBgStyle: {fill: 'white', border: '2px solid #0D257F'},
+  labelStyle: { fill: "#0D257F", fontWeight: 700 },
+  labelBgPadding: [8, 4],
+  labelBgBorderRadius: 6,
+  labelBgStyle: { fill: "white", border: "2px solid #0D257F" },
 
-    style: {
-        strokeWidth: '3.5'
-    }
-}
+  style: {
+    strokeWidth: "3.5",
+  },
+};
 
 const convertToReactFlow = (ruleNode, index) => {
-    return {
-        id: index.toString(),
-        data: {
-            id: ruleNode.id,
-            label: ruleNode.name,
-            configuration: ruleNode.configuration,
-            type: ruleNode.type
-        },
-        type: 'default',
-        position: JSON.parse(ruleNode.additionalInfo),
-        targetPosition: "left",
-        sourcePosition: 'right',
-    }
-}
+  return {
+    id: index.toString(),
+    data: {
+      id: ruleNode.id,
+      label: ruleNode.name,
+      configuration: ruleNode.configuration,
+      type: ruleNode.type,
+    },
+    type: "default",
+    position: JSON.parse(ruleNode.additionalInfo),
+    targetPosition: "left",
+    sourcePosition: "right",
+  };
+};
 
 const convertToRuleNode = (reactFlowNode) => {
-    const ruleNode = {
-        type: reactFlowNode.data.type,
-        name: reactFlowNode.data.label,
-        additionalInfo: JSON.stringify(reactFlowNode.position),
-        configuration: reactFlowNode.data.configuration
-    }
-    if (reactFlowNode.data.id) {
-        ruleNode.id = reactFlowNode.data.id;
-    }
+  const ruleNode = {
+    type: reactFlowNode.data.type,
+    name: reactFlowNode.data.label,
+    additionalInfo: JSON.stringify(reactFlowNode.position),
+    configuration: reactFlowNode.data.configuration,
+  };
+  if (reactFlowNode.data.id) {
+    ruleNode.id = reactFlowNode.data.id;
+  }
 
-    return ruleNode;
-}
+  return ruleNode;
+};
 
 const convertToRelation = (reactFlowConnection, reactFlowNodes) => {
-    const sourceIndex = reactFlowNodes.map(reactFlowNode => reactFlowNode.id).indexOf(reactFlowConnection.source);
-    const targetIndex = reactFlowNodes.map(reactFlowNode => reactFlowNode.id).indexOf(reactFlowConnection.target);
+  const sourceIndex = reactFlowNodes
+    .map((reactFlowNode) => reactFlowNode.id)
+    .indexOf(reactFlowConnection.source);
+  const targetIndex = reactFlowNodes
+    .map((reactFlowNode) => reactFlowNode.id)
+    .indexOf(reactFlowConnection.target);
 
-    return {
-        fromIndex: parseInt(sourceIndex),
-        toIndex: parseInt(targetIndex),
-        name: reactFlowConnection.label
-    }
-}
+  return {
+    fromIndex: parseInt(sourceIndex),
+    toIndex: parseInt(targetIndex),
+    name: reactFlowConnection.label,
+  };
+};
 
 const convertToReactFlowConnection = (relation) => {
-    return {
-        id: `${relation.fromIndex.toString()}-${relation.toIndex.toString()}`,
-        source: relation.fromIndex.toString(),
-        target: relation.toIndex.toString(),
-        label: relation.name,
-        ...edgeStyle
-    }
-}
+  return {
+    id: `${relation.fromIndex.toString()}-${relation.toIndex.toString()}`,
+    source: relation.fromIndex.toString(),
+    target: relation.toIndex.toString(),
+    label: relation.name,
+    ...edgeStyle,
+  };
+};
 
-const clearUndefinedArray = (arr) => arr.filter(e => e !== undefined)
+const clearUndefinedArray = (arr) => arr.filter((e) => e !== undefined);
 
 const RuleNodes = () => {
-    const {openRuleNodes} = useSelector((state) => state.ruleChains);
-    const {ruleChain} = openRuleNodes;
+  const { openRuleNodes } = useSelector((state) => state.ruleChains);
+  const { ruleChain } = openRuleNodes;
 
-    const reactFlowWrapper = useRef(null);
+  const reactFlowWrapper = useRef(null);
 
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const [elements, setElements] = useState([]);
-    const [connections, setConnections] = useState([]);
-    const [prevElements, setPrevElements] = useState([]);
-    const [prevConnections, setPrevConnections] = useState([]);
-    const [newNode, setNewNode] = useState({
-        id: "",
-        data: {
-            label: "",
-            configuration: "",
-            type: ""
-        },
-        type: 'default',
-        position: "",
-        targetPosition: "left",
-        sourcePosition: 'right',
-    });
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [elements, setElements] = useState([]);
+  const [connections, setConnections] = useState([]);
+  const [prevElements, setPrevElements] = useState([]);
+  const [prevConnections, setPrevConnections] = useState([]);
+  const [newNode, setNewNode] = useState({
+    id: "",
+    data: {
+      label: "",
+      configuration: "",
+      type: "",
+    },
+    type: "default",
+    position: "",
+    targetPosition: "left",
+    sourcePosition: "right",
+  });
 
-    const [openCreateRuleNode, setOpenCreateRuleNode] = useState(false);
-    const [isChanged, setIsChanged] = useState(false);
-    const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
+  const [openCreateRuleNode, setOpenCreateRuleNode] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
+  const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
+  const [openInfoRelation, setOpenInfoRelation] = useState(false);
+  const [curSelectedRelation, setCurSelectedRelation] = useState(null);
+  const [curSelectedNode, setCurSelectedNode] = useState(null);
 
-    const getId = () => `rule_node_${elements.length++}`;
+  const getId = () => `rule_node_${elements.length++}`;
 
-    useEffect(() => {
-        const loadRuleNodes = async () => {
-            const {ruleNodes, relations} = await RuleChainService.getRuleNodes(ruleChain.id)
+  useEffect(() => {
+    const loadRuleNodes = async () => {
+      const { ruleNodes, relations } = await RuleChainService.getRuleNodes(
+        ruleChain.id
+      );
 
-            if (ruleNodes !== null) {
-                let newElements = ruleNodes.map((ruleNode, index) => {
-                    return convertToReactFlow(ruleNode, index)
-                })
-
-                setElements(newElements);
-                setPrevElements(_.cloneDeep(newElements));
-            }
-
-            if (relations !== null) {
-                let newConnections = relations.map(relation => {
-                    return convertToReactFlowConnection(relation)
-                });
-
-                setConnections(newConnections);
-                setPrevConnections(_.cloneDeep(newConnections));
-            }
-        }
-        loadRuleNodes()
-    }, [])
-
-    useEffect(() => {
-        if (isChanged) {
-            setElements((es) => clearUndefinedArray(es.concat(newNode)));
-        }
-    }, [newNode.data])
-
-    const onConnect = (params) => {
-        setPrevConnections(_.cloneDeep(connections));
-        console.log(params)
-
-        setConnections((els) => addEdge({...params, ...edgeStyle}, els));
-        handleChange(true)
-
-    }
-
-    const onElementsRemove = (elementsToRemove) => {
-        setElements((els) => clearUndefinedArray(removeElements(elementsToRemove, els)));
-        handleChange(true)
-
-    }
-
-    const onLoad = (_reactFlowInstance) => {
-        setReactFlowInstance(_reactFlowInstance);
-    }
-
-    const onDragOver = (event) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    };
-
-    const onDrop = (event) => {
-        event.preventDefault();
-
-        handleChange(true)
-
-        const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-        const type = event.dataTransfer.getData('application/reactflow');
-        const position = reactFlowInstance.project({
-            x: event.clientX - reactFlowBounds.left,
-            y: event.clientY - reactFlowBounds.top,
+      if (ruleNodes !== null) {
+        let newElements = ruleNodes.map((ruleNode, index) => {
+          return convertToReactFlow(ruleNode, index);
         });
 
-        newNode.id = getId();
-        newNode.type = type;
-        newNode.position = position;
-        setNewNode(newNode);
+        setElements(newElements);
+        setPrevElements(_.cloneDeep(newElements));
+      }
 
-        handleOpenCreateRuleNode(true);
+      if (relations !== null) {
+        let newConnections = relations.map((relation) => {
+          return convertToReactFlowConnection(relation);
+        });
+
+        setConnections(newConnections);
+        setPrevConnections(_.cloneDeep(newConnections));
+      }
     };
+    loadRuleNodes();
+  }, []);
 
-    function onNodeDragStop(event, node) {
-        const index = findIndex(elements, element => element && element.id === node.id)
-        if (index !== -1) {
-            elements[index] = node;
-            setElements(clearUndefinedArray(elements))
-        }
-        handleChange(true)
+  useEffect(() => {
+    if (isChanged) {
+      setElements((es) => clearUndefinedArray(es.concat(newNode)));
     }
+  }, [newNode.data]);
 
-    const onElementClick = (event, element) => console.log('click', element);
+  const onConnect = (params) => {
+    setPrevConnections(_.cloneDeep(connections));
+    console.log("onConnect", params);
 
-    const handleChange = (change) => {
-        setIsChanged(change)
-        setBackgroundColorButton(change ? 'red' : '#666')
-    }
+    setConnections((els) => addEdge({ ...params, ...edgeStyle }, els));
+    handleChange(true);
+  };
 
-    const handleOpenCreateRuleNode = (value) => {
-        setOpenCreateRuleNode(value);
-    };
-
-    const handleCreateRuleNodes = async () => {
-        const ruleNodes = elements.map(ruleNode => convertToRuleNode(ruleNode));
-        const relations = connections.map(connection => convertToRelation(connection, elements))
-        await RuleChainService.createRuleNodes({ruleChainId: ruleChain.id, ruleNodes, relations})
-    }
-
-    const handleButtonCheck = () => {
-        if (isChanged) {
-            handleChange(false);
-            handleCreateRuleNodes();
-
-            // update previous node and connections
-            setPrevElements(_.cloneDeep(elements))
-            setPrevConnections(_.cloneDeep(connections))
-        }
-    }
-
-    const handleButtonClose = () => {
-        if (isChanged) {
-            handleChange(false)
-
-            // revert to previous node and connections
-            setElements(clearUndefinedArray(_.cloneDeep(prevElements)))
-            setConnections(clearUndefinedArray(_.cloneDeep(prevConnections)))
-        }
-    }
-
-    return (
-        <div>
-            <CreateRuleNodeModal
-                openCreateRuleNode={openCreateRuleNode}
-                handleOpenCreateRuleNode={handleOpenCreateRuleNode}
-                newNode={newNode}
-                setNewNode={setNewNode}
-            />
-            <div className={"drag-n-drop"} style={{height: "100vh"}}>
-                <SideBarReactFlow/>
-                <ReactFlowProvider>
-                    <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-                        <ReactFlow
-                            elements={clearUndefinedArray(elements.concat(connections))}
-                            onElementClick={onElementClick}
-                            onElementsRemove={onElementsRemove}
-                            onConnect={onConnect}
-                            onLoad={onLoad}
-                            onDrop={onDrop}
-                            onDragOver={onDragOver}
-                            onNodeDragStop={onNodeDragStop}
-                            snapToGrid={true}
-                            key="edges"
-                            style={{position: 'fixed'}}
-                        >
-                            <Background/>
-                        </ReactFlow>
-                        <Fab
-                            icon={<Icon type="check"/>}
-                            style={{right: 80, bottom: 0}}
-                            event={'click'}
-                            onClick={handleButtonCheck}
-                            mainButtonStyles={{backgroundColor: backgroundColorButton}}
-                        />
-                        <Fab
-                            icon={<Icon type="close"/>}
-                            style={{right: 0, bottom: 0}}
-                            event={'click'}
-                            onClick={handleButtonClose}
-                            mainButtonStyles={{backgroundColor: backgroundColorButton}}
-                        />
-                    </div>
-                </ReactFlowProvider>
-            </div>
-        </div>
+  const onElementsRemove = (elementsToRemove) => {
+    setElements((els) =>
+      clearUndefinedArray(removeElements(elementsToRemove, els))
     );
+    const newConnections = connections.filter(
+      (connection) =>
+        connection.source !== elementsToRemove[0].id &&
+        connection.target !== elementsToRemove[0].id
+    );
+    setConnections(newConnections);
+    handleChange(true);
+  };
 
-}
-export default RuleNodes
+  const onLoad = (_reactFlowInstance) => {
+    setReactFlowInstance(_reactFlowInstance);
+  };
+
+  const onDragOver = (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  };
+
+  const onDrop = (event) => {
+    event.preventDefault();
+
+    handleChange(true);
+
+    const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+    const type = event.dataTransfer.getData("application/reactflow");
+    const position = reactFlowInstance.project({
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top,
+    });
+
+    newNode.id = getId();
+    newNode.type = type;
+    newNode.position = position;
+    setNewNode(newNode);
+
+    handleOpenCreateRuleNode(true);
+  };
+
+  function onNodeDragStop(event, node) {
+    const index = findIndex(
+      elements,
+      (element) => element && element.id === node.id
+    );
+    if (index !== -1) {
+      elements[index] = node;
+      setElements(clearUndefinedArray(elements));
+    }
+    console.log("onNodeDragStop", node);
+    setCurSelectedNode(node);
+    handleChange(true);
+  }
+
+  const onPaneClick = () => {
+    console.log("click outside");
+    setCurSelectedNode(null);
+    setCurSelectedRelation(null);
+  };
+
+  const onElementClick = (event, element) => {
+    console.log("onElementClick", element);
+    const isRelation = element.source || element.target;
+    const isNode = element.data || element.position;
+
+    if (isRelation) {
+      setCurSelectedNode(null);
+      const selectedRelations = _.find(connections, { id: element.id });
+      setCurSelectedRelation(selectedRelations);
+      setOpenInfoRelation(true);
+    }
+
+    if (isNode) {
+      setCurSelectedRelation(null);
+      setCurSelectedNode(element);
+    }
+  };
+
+  const handleChange = (change) => {
+    setIsChanged(change);
+    setBackgroundColorButton(change ? "red" : "#666");
+  };
+
+  const handleOpenCreateRuleNode = (value) => {
+    setOpenCreateRuleNode(value);
+  };
+
+  const handleCreateRuleNodes = async () => {
+    const ruleNodes = elements.map((ruleNode) => convertToRuleNode(ruleNode));
+    const relations = connections.map((connection) =>
+      convertToRelation(connection, elements)
+    );
+    await RuleChainService.createRuleNodes({
+      ruleChainId: ruleChain.id,
+      ruleNodes,
+      relations,
+    });
+  };
+
+  const handleButtonCheck = () => {
+    if (isChanged) {
+      handleChange(false);
+      handleCreateRuleNodes();
+      // update previous node and connections
+      setPrevElements(_.cloneDeep(elements));
+      setPrevConnections(_.cloneDeep(connections));
+    }
+  };
+
+  const handleButtonClose = () => {
+    if (isChanged) {
+      handleChange(false);
+
+      // revert to previous node and connections
+      setElements(clearUndefinedArray(_.cloneDeep(prevElements)));
+      setConnections(clearUndefinedArray(_.cloneDeep(prevConnections)));
+    }
+  };
+
+  const handleButtonRemove = () => {
+    if (curSelectedNode) {
+      confirm({
+        title: "Are you sure to remove node?",
+        centered: true,
+
+        okText: "Yes",
+        okButtonProps: {
+          ...styleButton,
+          icon: "check",
+        },
+        onOk() {
+          onElementsRemove([curSelectedNode]);
+          setCurSelectedNode(null);
+        },
+
+        cancelButtonProps: styleButton,
+        onCancel() {},
+      });
+    }
+  };
+
+  console.log("elements", elements);
+  console.log("connections", connections);
+
+  return (
+    <div>
+      <CreateRuleNodeModal
+        openCreateRuleNode={openCreateRuleNode}
+        handleOpenCreateRuleNode={handleOpenCreateRuleNode}
+        newNode={newNode}
+        setNewNode={setNewNode}
+      />
+      {curSelectedRelation && (
+        <InfoRelationModal
+          openInfoRelation={openInfoRelation}
+          setOpenInfoRelation={setOpenInfoRelation}
+          curSelectedRelation={curSelectedRelation}
+          handleChange={handleChange}
+        />
+      )}
+      <div className={"drag-n-drop"} style={{ height: "100vh" }}>
+        <SideBarReactFlow />
+        <ReactFlowProvider>
+          <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+            <ReactFlow
+              elements={clearUndefinedArray(elements.concat(connections))}
+              onElementClick={onElementClick}
+              onElementsRemove={onElementsRemove}
+              onConnect={onConnect}
+              onLoad={onLoad}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              onNodeDragStop={onNodeDragStop}
+              onPaneClick={onPaneClick}
+              snapToGrid={true}
+              key="edges"
+              style={{ position: "fixed" }}
+            >
+              <Background />
+            </ReactFlow>
+            {curSelectedNode && (
+              <Fab
+                icon={<Icon type="delete" />}
+                style={{ right: 160, bottom: 0 }}
+                event={"click"}
+                onClick={handleButtonRemove}
+                mainButtonStyles={{ backgroundColor: "red" }}
+              />
+            )}
+            <Fab
+              icon={<Icon type="check" />}
+              style={{ right: 80, bottom: 0 }}
+              event={"click"}
+              onClick={handleButtonCheck}
+              mainButtonStyles={{ backgroundColor: backgroundColorButton }}
+            />
+            <Fab
+              icon={<Icon type="close" />}
+              style={{ right: 0, bottom: 0 }}
+              event={"click"}
+              onClick={handleButtonClose}
+              mainButtonStyles={{ backgroundColor: backgroundColorButton }}
+            />
+          </div>
+        </ReactFlowProvider>
+      </div>
+    </div>
+  );
+};
+export default RuleNodes;

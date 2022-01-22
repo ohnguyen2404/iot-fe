@@ -34,7 +34,7 @@ const HeaderDiv = (props) => {
       className="d-flex align-items-center custom-navigation"
     >
       <Menu.Item key="brand-logo" className="brand-logo">
-        <Link to="/dashboard">
+        <Link to="/">
           <img src={logo} className="m-r-5" alt=""/>
           <span>Ant Dashboard</span>
         </Link>
