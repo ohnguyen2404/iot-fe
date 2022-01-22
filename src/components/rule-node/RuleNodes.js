@@ -1,14 +1,22 @@
-import React, {useEffect, useRef, useState} from 'react'
-import ReactFlow, {addEdge, Background, ReactFlowProvider, removeElements} from "react-flow-renderer";
-import '../react-flow/DragNDrop.css';
+import React, {useEffect, useRef, useState} from "react";
+import ReactFlow, {addEdge, Background, ReactFlowProvider, removeElements,} from "react-flow-renderer";
+import "../react-flow/DragNDrop.css";
 import SideBarReactFlow from "../react-flow/SideBarReactFlow";
 import {RuleChainService} from "../../services";
 import {useSelector} from "react-redux";
 import CreateRuleNodeModal from "./CreateRuleNodeModal";
+import InfoRelationModal from "./InfoRelationModal";
 import _ from "lodash";
 import {Fab} from "react-tiny-fab";
-import {Icon, message} from "antd";
+import {Icon, message, Modal} from "antd";
 import {findIndex} from "lodash/array";
+
+const {confirm} = Modal;
+
+const styleButton = {
+    style: {borderRadius: "5px"},
+    size: "large",
+};
 
 const edgeStyle = {
     className: 'normal-edge',
@@ -128,6 +136,11 @@ const RuleNodes = () => {
     const [isChanged, setIsChanged] = useState(false);
     const [backgroundColorButton, setBackgroundColorButton] = useState("#666");
 
+    const [openInfoRelation, setOpenInfoRelation] = useState(false);
+    const [curSelectedRelation, setCurSelectedRelation] = useState(null);
+    const [curSelectedNode, setCurSelectedNode] = useState(null);
+
+    const getId = () => window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
     useEffect(() => {
         const loadRuleNodes = async () => {
@@ -189,9 +202,14 @@ const RuleNodes = () => {
 
     const onElementsRemove = (elementsToRemove) => {
         setElements((els) => removeElements(elementsToRemove, els));
-        handleChange(true)
-
-    }
+        const newConnections = connections.filter(
+            (connection) =>
+                connection.source !== elementsToRemove[0].id &&
+                connection.target !== elementsToRemove[0].id
+        );
+        setConnections(newConnections);
+        handleChange(true);
+    };
 
     const onLoad = (_reactFlowInstance) => {
         setReactFlowInstance(_reactFlowInstance);
@@ -227,20 +245,47 @@ const RuleNodes = () => {
     };
 
     function onNodeDragStop(event, node) {
-        const index = findIndex(elements, element => element && element.id === node.id)
+        const index = findIndex(
+            elements,
+            (element) => element && element.id === node.id
+        );
         if (index !== -1) {
             elements[index] = node;
-            setElements(elements)
+            setElements(elements);
         }
-        handleChange(true)
+        console.log("onNodeDragStop", node);
+        setCurSelectedNode(node);
+        handleChange(true);
     }
 
-    const onElementClick = (event, element) => console.log('click', element);
+    const onPaneClick = () => {
+        console.log("click outside");
+        setCurSelectedNode(null);
+        setCurSelectedRelation(null);
+    };
+
+    const onElementClick = (event, element) => {
+        console.log("onElementClick", element);
+        const isRelation = element.source || element.target;
+        const isNode = element.data || element.position;
+
+        if (isRelation) {
+            setCurSelectedNode(null);
+            const selectedRelations = _.find(connections, {id: element.id});
+            setCurSelectedRelation(selectedRelations);
+            setOpenInfoRelation(true);
+        }
+
+        if (isNode) {
+            setCurSelectedRelation(null);
+            setCurSelectedNode(element);
+        }
+    };
 
     const handleChange = (change) => {
-        setIsChanged(change)
-        setBackgroundColorButton(change ? 'red' : '#666')
-    }
+        setIsChanged(change);
+        setBackgroundColorButton(change ? "red" : "#666");
+    };
 
     const handleCreateRuleNodes = () => {
         const ruleNodes = elements
@@ -277,11 +322,34 @@ const RuleNodes = () => {
             handleChange(false)
 
             // revert to previous node and connections
-            setElements(_.cloneDeep(prevElements))
-            setConnections(_.cloneDeep(prevConnections))
+            setElements(_.cloneDeep(prevElements));
+            setConnections(_.cloneDeep(prevConnections));
             setFirstElementIndex(_.cloneDeep(prevFirstElementIndex))
         }
-    }
+    };
+
+    const handleButtonRemove = () => {
+        if (curSelectedNode) {
+            confirm({
+                title: "Are you sure to remove node?",
+                centered: true,
+
+                okText: "Yes",
+                okButtonProps: {
+                    ...styleButton,
+                    icon: "check",
+                },
+                onOk() {
+                    onElementsRemove([curSelectedNode]);
+                    setCurSelectedNode(null);
+                },
+
+                cancelButtonProps: styleButton,
+                onCancel() {
+                },
+            });
+        }
+    };
 
     return (
         <div>
@@ -292,6 +360,14 @@ const RuleNodes = () => {
                 setNewNode={setNewNode}
                 ruleNodeDescriptor={ruleNodeDescriptor}
             />
+            {curSelectedRelation && (
+                <InfoRelationModal
+                    openInfoRelation={openInfoRelation}
+                    setOpenInfoRelation={setOpenInfoRelation}
+                    curSelectedRelation={curSelectedRelation}
+                    handleChange={handleChange}
+                />
+            )}
             <div className={"drag-n-drop"} style={{height: "100vh"}}>
                 <SideBarReactFlow/>
                 <ReactFlowProvider>
@@ -305,23 +381,33 @@ const RuleNodes = () => {
                             onDrop={onDrop}
                             onDragOver={onDragOver}
                             onNodeDragStop={onNodeDragStop}
+                            onPaneClick={onPaneClick}
                             snapToGrid={true}
                             key="edges"
-                            style={{position: 'fixed'}}
+                            style={{position: "fixed"}}
                         >
                             <Background/>
                         </ReactFlow>
+                        {curSelectedNode && (
+                            <Fab
+                                icon={<Icon type="delete"/>}
+                                style={{right: 160, bottom: 0}}
+                                event={"click"}
+                                onClick={handleButtonRemove}
+                                mainButtonStyles={{backgroundColor: "red"}}
+                            />
+                        )}
                         <Fab
                             icon={<Icon type="check"/>}
                             style={{right: 80, bottom: 0}}
-                            event={'click'}
+                            event={"click"}
                             onClick={handleButtonCheck}
                             mainButtonStyles={{backgroundColor: backgroundColorButton}}
                         />
                         <Fab
                             icon={<Icon type="close"/>}
                             style={{right: 0, bottom: 0}}
-                            event={'click'}
+                            event={"click"}
                             onClick={handleButtonClose}
                             mainButtonStyles={{backgroundColor: backgroundColorButton}}
                         />
@@ -330,6 +416,5 @@ const RuleNodes = () => {
             </div>
         </div>
     );
-
-}
-export default RuleNodes
+};
+export default RuleNodes;

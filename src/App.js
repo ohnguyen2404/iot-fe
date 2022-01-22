@@ -21,7 +21,7 @@ function App() {
                             <div
                                 className="d-flex flex-column align-items-center justify-content-center">
                                 <h2>Page not found</h2>
-                                <Link to="/dashboard">back to dashboard</Link>
+                                <Link to="/">back to dashboard</Link>
                             </div>
                         </div>
                     </Card>

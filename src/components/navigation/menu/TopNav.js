@@ -46,7 +46,7 @@ class TopNav extends React.Component {
                     </Menu.ItemGroup>
                 </SubMenu>
                 <Menu.Item key="alipay">
-                    <Link to="/dashboard">
+                    <Link to="/">
                         Navigation Four Link
                     </Link>
                 </Menu.Item>
