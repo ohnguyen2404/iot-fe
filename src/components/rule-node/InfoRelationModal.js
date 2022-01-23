@@ -1,96 +1,119 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, message, Modal } from "antd";
+import React, {useEffect, useState} from "react"
+import {Form, Input, message, Modal, TreeSelect} from "antd"
+import {get, find, isEmpty} from "lodash"
+import {useSelector} from "react-redux"
+
+const convertStringToArray = (string) => {
+    if (!string) return []
+    const arr_str = string.replace(/[\[\]']+/g, "") // remove '[' and ']'
+    return arr_str.split(", ")
+}
+
+const styleButton = {
+    style: {borderRadius: "5px"},
+    size: "large",
+}
 
 const InfoRelationModal = (props) => {
-  const { openInfoRelation, curSelectedRelation, setOpenInfoRelation, handleChange} = props;
-  const [isInfoChanged, setIsInfoChanged] = useState(false);
+    const {openInfoRelation, curSelectedRelation, setOpenInfoRelation, handleChange} = props
+    const {ruleNodeDescriptors} = useSelector((state) => state.ruleChains)
 
-  const { getFieldDecorator } = props.form;
-  const { confirm } = Modal;
-  const styleButton = {
-    style: { borderRadius: "5px" },
-    size: "large",
-  };
+    const {confirm} = Modal
 
-  const handleUpdateRelationSubmit = async (e) => {
-    e.preventDefault();
-    confirm({
-      title: "Are you sure to save Relation information?",
-      centered: true,
+    const [isInfoChanged, setIsInfoChanged] = useState(false)
+    const descriptors = find(ruleNodeDescriptors, {
+        clazz: curSelectedRelation.clazz,
+    })
+    const relationNames = get(descriptors, "relationNames", "")
+    console.log("curSelectedRelation", curSelectedRelation)
 
-      okText: "Yes",
-      okButtonProps: {
-        ...styleButton,
-        icon: "check",
-      },
-      onOk() {
-        props.form.validateFields(
-          ["name"],
-          async (err, values) => {
-            if (!err) {
-              console.log("Received values of form: ", values);
-              try {
-                curSelectedRelation.label = values.name
-                handleChange(true)
-              } catch (e) {
-                message.error("Can't edit relation information.");
-                return;
-              }
-              setOpenInfoRelation(false);
-            }
-          }
-        );
-      },
+    const arrRelations = convertStringToArray(relationNames)
+    const [treeValue, setTreeValue] = useState([])
 
-      cancelButtonProps: styleButton,
-      onCancel() {},
-    });
-  };
+    const treeData = arrRelations.map((r, idx) => {
+        return {
+            title: r,
+            value: r,
+            key: idx,
+        }
+    })
+    const relationLabels = curSelectedRelation.label ? curSelectedRelation.label.split("/") : []
 
-  const handleInfoChange = (e) => {
-    const values = props.form.getFieldsValue();
-    console.log("values", values);
-    if (
-      values.name !== curSelectedRelation.label
-    ) {
-      setIsInfoChanged(true);
-    } else {
-      setIsInfoChanged(false);
+    useEffect(() => {
+        setTreeValue(relationLabels)
+    }, [])
+
+    const handleUpdateRelationSubmit = async (e) => {
+        e.preventDefault()
+        confirm({
+            title: "Are you sure to save Relation information?",
+            centered: true,
+
+            okText: "Yes",
+            okButtonProps: {
+                ...styleButton,
+                icon: "check",
+            },
+            onOk() {
+                props.form.validateFields(["name"], async (err, values) => {
+                    if (!err) {
+                        console.log("Received values of form: ", values)
+                        try {
+                            const relationsLabel = treeValue.join("/")
+                            curSelectedRelation.label = relationsLabel
+                            handleChange(true)
+                        } catch (e) {
+                            message.error("Can't edit relation information.")
+                            return
+                        }
+                        setOpenInfoRelation(false)
+                    }
+                })
+            },
+
+            cancelButtonProps: styleButton,
+            onCancel() {},
+        })
     }
-  };
 
-  return (
-    <Modal
-      title={<h2>Relation Information</h2>}
-      visible={openInfoRelation}
-      onOk={handleUpdateRelationSubmit}
-      okText={"Save"}
-      onCancel={() => setOpenInfoRelation(false)}
-      cancelButtonProps={styleButton}
-      centered={true}
-      okButtonProps={{ disabled: !isInfoChanged, ...styleButton }}
-      destroyOnClose={true}
-    >
-      <Form
-        className="info_relation_form"
-        layout="vertical"
-        onChange={handleInfoChange}
-      >
-        <Form.Item label="Name">
-          {getFieldDecorator("name", {
-            rules: [
-              {
-                required: true,
-                message: "Please input name!",
-                whitespace: true,
-              },
-            ],
-            initialValue: curSelectedRelation.label,
-          })(<Input />)}
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-};
+    const onChange = (value) => {
+        setTreeValue(value)
+        if (!isEmpty(value)) {
+            setIsInfoChanged(true)
+        } else {
+            setIsInfoChanged(false)
+        }
+    }
 
-export default Form.create({ name: "info_relation_form" })(InfoRelationModal);
+    const treeProps = {
+        treeData,
+        value: treeValue,
+        onChange: onChange,
+        searchPlaceholder: "Please select",
+        style: {
+            width: "100%",
+        },
+        dropdownStyle: {maxHeight: 220, overflow: "auto"},
+        allowClear: true,
+        multiple: true,
+        size: "large",
+    }
+
+    return (
+        <Modal
+            title={<h2>Relation Information</h2>}
+            visible={openInfoRelation}
+            onOk={handleUpdateRelationSubmit}
+            okText={"Save"}
+            onCancel={() => setOpenInfoRelation(false)}
+            cancelButtonProps={styleButton}
+            centered={true}
+            okButtonProps={{disabled: !isInfoChanged, ...styleButton}}
+            destroyOnClose={true}
+        >
+            <TreeSelect {...treeProps} />
+        </Modal>
+    )
+}
+
+export default Form.create({name: "info_relation_form"})(InfoRelationModal)
