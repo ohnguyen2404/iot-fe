@@ -74,7 +74,6 @@ const Home = (props) => {
   }, [user.id]);
 
   const renderTab = () => {
-    console.log('renderTab');
     switch (Number(currentTab)) {
       case 1:
         return <Main />;
@@ -83,6 +82,7 @@ const Home = (props) => {
         return <Profile />;
 
       case 3:
+        dispatch(loadRuleNodeDescriptors());
         dispatch(loadDevices());
         return <Devices />;
 

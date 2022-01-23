@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, message, Modal, Tabs } from "antd";
+import { Button, Form, Input, message, Modal, Tabs, Cascader } from "antd";
 
 import constant from "../../helpers/constants";
 import { DeviceService } from "../../services";
@@ -18,10 +18,16 @@ import DeviceLineChart from "../device-charts/DeviceLineChart";
 import DeviceBarChart from "../device-charts/DeviceBarChart";
 import GaugesTelemetry from "../device-charts/GaugesTelemetry";
 
+const styleButton = {
+  style: { borderRadius: "5px" },
+  size: "large",
+};
+
 const { TabPane } = Tabs;
 
 const InfoDeviceModal = (props) => {
   const { devices } = useSelector((state) => state.devices);
+  const { ruleChains } = useSelector((state) => state.ruleChains);
 
   const dispatch = useDispatch();
 
@@ -34,14 +40,12 @@ const InfoDeviceModal = (props) => {
   const [openManageCredentialsModal, setOpenManageCredentialsModal] =
     useState(false);
 
-  const handleOpenCredentialsModal = (value) => {
-    setOpenManageCredentialsModal(value);
-  };
-
-  const styleButton = {
-    style: { borderRadius: "5px" },
-    size: "large",
-  };
+  const ruleChainsData = ruleChains.map((rc) => {
+    return {
+      value: rc.id,
+      label: rc.name,
+    };
+  });
 
   useEffect(() => {
     const loadDevice = async () => {
@@ -57,7 +61,6 @@ const InfoDeviceModal = (props) => {
 
   const handleInfoChange = (e) => {
     const values = props.form.getFieldsValue();
-    console.log("values", values);
     if (values.name !== deviceInfo.name || values.label !== deviceInfo.label) {
       setIsInfoChanged(true);
     } else {
@@ -65,16 +68,17 @@ const InfoDeviceModal = (props) => {
     }
   };
 
-  const handleCreateDeviceSubmit = async (e) => {
+  const handleUpdateDeviceSubmit = async (e) => {
     e.preventDefault();
-    const fields = ["name", "label"];
+    const fields = ["name", "label", "ruleChainId"];
     props.form.validateFields(fields, async (err, values) => {
       if (!err) {
         try {
-          const { name, label } = values;
+          const { name, label, ruleChainId } = values;
           const requestBody = {
             name,
             label,
+            ruleChainId: ruleChainId ? ruleChainId[0] : undefined,
           };
           const updatedDevice = await DeviceService.update(
             deviceId,
@@ -100,6 +104,7 @@ const InfoDeviceModal = (props) => {
     deviceInfo,
     "deviceCredentials.credentialsValue"
   );
+  const _ruleChainId = get(deviceInfo, "ruleChainId");
 
   let clipBoardText, clipBoardLabel;
   const isTypeAccessToken =
@@ -123,12 +128,12 @@ const InfoDeviceModal = (props) => {
       <ManageCredentials
         deviceId={deviceId}
         openManageCredentialsModal={openManageCredentialsModal}
-        handleOpenCredentialsModal={handleOpenCredentialsModal}
+        setOpenManageCredentialsModal={setOpenManageCredentialsModal}
       />
       <Modal
         title={<h2>Device Information</h2>}
         visible={openInfoModal}
-        onOk={handleCreateDeviceSubmit} //submit form here
+        onOk={handleUpdateDeviceSubmit} //submit form here
         okText={"Save"}
         okButtonProps={{ disabled: !isInfoChanged, ...styleButton }}
         onCancel={() => setOpenInfoModal(false)}
@@ -141,7 +146,7 @@ const InfoDeviceModal = (props) => {
           <Button
             icon="safety-certificate"
             type="primary"
-            onClick={() => handleOpenCredentialsModal(true)}
+            onClick={() => setOpenManageCredentialsModal(true)}
           >
             Manage Credentials
           </Button>
@@ -162,9 +167,7 @@ const InfoDeviceModal = (props) => {
           layout="vertical"
           onChange={handleInfoChange}
         >
-          <Tabs
-            defaultActiveKey="1"
-          >
+          <Tabs defaultActiveKey="1">
             <TabPane tab="Device Details" key="1">
               <Form.Item label="Name">
                 {getFieldDecorator("name", {
@@ -182,6 +185,16 @@ const InfoDeviceModal = (props) => {
                 {getFieldDecorator("label", {
                   initialValue: _deviceLabel,
                 })(<Input />)}
+              </Form.Item>
+              <Form.Item label="Credentials Type">
+                {getFieldDecorator("ruleChainId", {
+                  initialValue: [_ruleChainId],
+                })(
+                  <Cascader
+                    options={ruleChainsData}
+                    onChange={() => setIsInfoChanged(true)}
+                  />
+                )}
               </Form.Item>
             </TabPane>
             <TabPane tab="Latest telemetry" key="2">

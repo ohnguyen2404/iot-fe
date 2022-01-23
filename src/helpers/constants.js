@@ -31,5 +31,11 @@ export default {
     // ANALOGUE_GAUGES
     RADIAL_GAUGE: "radial_gauge",
     LINEAR_GAUGE: "linear_gauge"
+  },
+
+  // DEFAULT_NODE_DESCRIPTORS_CLAZZ
+  DEFAULT_CLAZZ: {
+    MESSAGE_TYPE_SWITCH: "msg_type_switch",
+    SAVE_TIMESERIES: "save_ts"
   }
 };
