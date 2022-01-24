@@ -240,12 +240,25 @@ const RuleNodes = () => {
     }
 
     const onElementsRemove = (elementsToRemove) => {
+        const removedElementIndex = elements.map((e) => e.id).indexOf(elementsToRemove[0].id)
+
+        setPrevFirstElementIndex(firstElementIndex)
+
+        if (removedElementIndex === firstElementIndex) {
+            setFirstElementIndex(-1)
+        }
+
+        if (firstElementIndex > removedElementIndex) {
+            setFirstElementIndex(firstElementIndex - 1)
+        }
+
         setElements((els) => removeElements(elementsToRemove, els))
         const newConnections = connections.filter(
             (connection) =>
                 connection.source !== elementsToRemove[0].id &&
                 connection.target !== elementsToRemove[0].id
         )
+        setPrevConnections(_.cloneDeep(connections))
         setConnections(newConnections)
         handleChange(true)
     }
@@ -303,7 +316,7 @@ const RuleNodes = () => {
     }
 
     const onElementClick = (event, element) => {
-        console.log("onElementClick", element)
+        //console.log("onElementClick", element)
         const isRelation = element.source || element.target
         const isNode = element.data || element.position
 
@@ -311,9 +324,11 @@ const RuleNodes = () => {
             setCurSelectedNode(null)
             const selectedRelations = _.find(connections, {id: element.id})
             const sourceNode = _.find(elements, {id: element.source})
-            selectedRelations.clazz = _.get(sourceNode, "data.clazz", "")
-            setCurSelectedRelation(selectedRelations)
-            setOpenInfoRelation(true)
+            if (sourceNode) {
+                selectedRelations.clazz = _.get(sourceNode, "data.clazz", "")
+                setCurSelectedRelation(selectedRelations)
+                setOpenInfoRelation(true)
+            }
         }
 
         if (isNode) {
@@ -333,8 +348,6 @@ const RuleNodes = () => {
         const relations = _.flattenDeep(
             connections.map((connection) => convertToRelation(connection, elements))
         )
-
-        console.log("relations save", relations)
 
         RuleChainService.createRuleNodes({
             ruleChainId: ruleChain.id,
@@ -409,11 +422,15 @@ const RuleNodes = () => {
                 />
             )}
             <div className={"drag-n-drop"} style={{height: "100vh"}}>
-                <SideBarReactFlow/>
+                <SideBarReactFlow />
                 <ReactFlowProvider>
                     <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                         <ReactFlow
-                            elements={elements.concat([inputElement, inputConnection, ...connections])}
+                            elements={elements.concat([
+                                inputElement,
+                                inputConnection,
+                                ...connections,
+                            ])}
                             onElementClick={onElementClick}
                             onElementsRemove={onElementsRemove}
                             onConnect={onConnect}

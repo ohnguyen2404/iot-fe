@@ -41,7 +41,7 @@ const InfoRelationModal = (props) => {
 
     useEffect(() => {
         setTreeValue(relationLabels)
-    }, [])
+    }, [curSelectedRelation])
 
     const handleUpdateRelationSubmit = async (e) => {
         e.preventDefault()

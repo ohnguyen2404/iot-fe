@@ -15,7 +15,6 @@ export const RuleChainApi = {
     },
 
     createRuleNodes: (data) => {
-        console.log(data)
         return AxiosRuleEngineApi.post(`${API_RULE_CHAIN}/${API_RULE_NODES}`, data)
     },
 
