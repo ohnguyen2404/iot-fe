@@ -1,13 +1,13 @@
 import React from "react"
-import Home from "../../components/home/Home"
+import Profile from "../../components/profile/Profile"
 import LayoutEntity from "../../components/layout/LayoutEntity"
 
-const HomePage = () => {
+const ProfilePage = () => {
     return (
         <LayoutEntity>
-            <Home />
+            <Profile />
         </LayoutEntity>
     )
 }
 
-export default HomePage
+export default ProfilePage

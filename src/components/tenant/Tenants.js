@@ -5,7 +5,7 @@ import { Redirect } from "react-router";
 import CreateTenantModal from "./CreateTenantModal";
 import TenantListTable from "./TenantListTable";
 
-const Customers = (props) => {
+const Tenants = (props) => {
   const [openCreateTenant, setOpenCreateTenant] = useState(false);
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
@@ -52,4 +52,4 @@ const Customers = (props) => {
   );
 };
 
-export default Customers;
+export default Tenants;
