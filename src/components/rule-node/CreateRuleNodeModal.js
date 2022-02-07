@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Form, message, Modal} from "antd";
+import {Form, Modal} from "antd";
 import EmptyConfiguration from "./EmptyConfiguration";
 import SaveTsConfiguration from "./SaveTsConfiguration";
+import DebugConfiguration from "./DebugConfiguration";
 
 const CreateRuleNodeModal = (props) => {
     const {openCreateRuleNode, setOpenCreateRuleNode, newNode, setNewNode, ruleNodeDescriptor} = props;
@@ -56,6 +57,14 @@ const CreateRuleNodeModal = (props) => {
                                             setSubmitDone={setSubmitDone}
                                             defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
                                             form={props.form}/>
+            case "DebugConfiguration":
+                return <DebugConfiguration setName={setName}
+                                           setConfig={setConfig}
+                                           submitForm={submitForm}
+                                           setSubmitForm={setSubmitForm}
+                                           setSubmitDone={setSubmitDone}
+                                           defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                           form={props.form}/>
         }
     }
 

@@ -148,7 +148,12 @@
   },
   "babel": {
     "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
       "react-app"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-react-jsx"
     ]
   },
   "devDependencies": {
