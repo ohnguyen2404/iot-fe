@@ -60,19 +60,20 @@ function App() {
             const socket = new SockJS(url)
             stompClient.current = Stomp.over(socket)
             stompClient.current.debug = null
-            stompClient.current.connect("", "", onConnected, onError)
+            stompClient.current.connect({}, onConnected, onError)
         }
 
         function onConnected() {
             // Subscribe to the Public Topic
             console.log("Connected to WebSocket")
-            stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onTelemetryReceived)
+            stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onMessageReceived)
             stompClient.current.subscribe(`/topic/debug-${user.id}`, onDebugReceived)
             stompClient.current.reconnect_relay = 10000
         }
 
-        const onTelemetryReceived = (payload) => {
+        const onMessageReceived = (payload) => {
             const message = JSON.parse(payload.body)
+            console.log(message)
             const newTelemetries = message.kvs.map((kv) => {
                 return {
                     entityId: message.entityId,

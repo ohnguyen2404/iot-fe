@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Form, Input, message} from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import CodeEditor from "../code-editor/CodeEditor";
 
 const DebugConfiguration = (props) => {
     const {
@@ -13,20 +13,21 @@ const DebugConfiguration = (props) => {
         defaultConfig
     } = props;
 
+    const [script, setScript] = useState(defaultConfig.script)
+
     const {getFieldDecorator} = form;
     useEffect(() => {
         if (submitForm) {
             form.validateFields(
                 [
-                    "name",
-                    "script"
+                    "name"
                 ],
                 (err, values) => {
                     if (!err) {
                         setName(values.name);
                         setConfig(
                             JSON.stringify({
-                                script: values.script
+                                script: script
                             })
                         );
 
@@ -41,7 +42,6 @@ const DebugConfiguration = (props) => {
         }
     }, [submitForm])
 
-
     return (
         <>
             <Form.Item label="Name">
@@ -55,20 +55,22 @@ const DebugConfiguration = (props) => {
                     ],
                 })(<Input/>)}
             </Form.Item>
-            <Form.Item label="function debug(msg, msgType) {" className="m-b-10 m-t-15" colon={false}>
-                {
-                    getFieldDecorator('script', {
-                        initialValue: defaultConfig.script
-                    })(
-                        <TextArea
-                            rows={4}
-                        />
-                    )
-                }
+            {/*<Form.Item label="function debug(msg, msgType) {" className="m-b-10 m-t-15" colon={false}>*/}
+            {/*    {*/}
+            {/*        getFieldDecorator('script', {*/}
+            {/*            initialValue: defaultConfig.script*/}
+            {/*        })(*/}
+            {/*            <TextArea*/}
+            {/*                rows={4}*/}
+            {/*            />*/}
+            {/*        )*/}
+            {/*    }*/}
 
-            </Form.Item>
-            }
-
+            {/*</Form.Item>*/}
+            {/*}*/}
+            <h4>function debug(msg, msgType) {`{`}</h4>
+            <CodeEditor script={script} setScript={setScript}/>
+            <h4>}</h4>
         </>
     );
 };
