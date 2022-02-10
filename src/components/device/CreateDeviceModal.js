@@ -163,7 +163,6 @@ const CreateDeviceModal = (props) => {
               )(
                 <Cascader
                   options={ruleChainsData}
-                  onChange={handleSelectCredentialsType}
                 />
               )}
             </Form.Item>
