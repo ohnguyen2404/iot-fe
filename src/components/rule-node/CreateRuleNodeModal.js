@@ -3,6 +3,7 @@ import {Form, Modal} from "antd";
 import EmptyConfiguration from "./EmptyConfiguration";
 import SaveTsConfiguration from "./SaveTsConfiguration";
 import DebugConfiguration from "./DebugConfiguration";
+import SendEmailConfiguration from "./SendEmailConfiguration";
 
 const CreateRuleNodeModal = (props) => {
     const {openCreateRuleNode, setOpenCreateRuleNode, newNode, setNewNode, ruleNodeDescriptor} = props;
@@ -65,6 +66,14 @@ const CreateRuleNodeModal = (props) => {
                                            setSubmitDone={setSubmitDone}
                                            defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
                                            form={props.form}/>
+            case "SendEmailConfiguration":
+                return <SendEmailConfiguration setName={setName}
+                                               setConfig={setConfig}
+                                               submitForm={submitForm}
+                                               setSubmitForm={setSubmitForm}
+                                               setSubmitDone={setSubmitDone}
+                                               defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                               form={props.form}/>
         }
     }
 
