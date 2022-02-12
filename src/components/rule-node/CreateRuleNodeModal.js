@@ -4,6 +4,9 @@ import EmptyConfiguration from "./EmptyConfiguration";
 import SaveTsConfiguration from "./SaveTsConfiguration";
 import DebugConfiguration from "./DebugConfiguration";
 import SendEmailConfiguration from "./SendEmailConfiguration";
+import FunctionConfiguration from "./FunctionConfiguration";
+import FilterConfiguration from "./FilterConfiguration";
+import CreateAlarmConfiguration from "./CreateAlarmConfiguration";
 
 const CreateRuleNodeModal = (props) => {
     const {openCreateRuleNode, setOpenCreateRuleNode, newNode, setNewNode, ruleNodeDescriptor} = props;
@@ -74,6 +77,30 @@ const CreateRuleNodeModal = (props) => {
                                                setSubmitDone={setSubmitDone}
                                                defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
                                                form={props.form}/>
+            case "FunctionConfiguration":
+                return <FunctionConfiguration setName={setName}
+                                              setConfig={setConfig}
+                                              submitForm={submitForm}
+                                              setSubmitForm={setSubmitForm}
+                                              setSubmitDone={setSubmitDone}
+                                              defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                              form={props.form}/>
+            case "FilterConfiguration":
+                return <FilterConfiguration setName={setName}
+                                            setConfig={setConfig}
+                                            submitForm={submitForm}
+                                            setSubmitForm={setSubmitForm}
+                                            setSubmitDone={setSubmitDone}
+                                            defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                            form={props.form}/>
+            case "CreateAlarmConfiguration":
+                return <CreateAlarmConfiguration setName={setName}
+                                                 setConfig={setConfig}
+                                                 submitForm={submitForm}
+                                                 setSubmitForm={setSubmitForm}
+                                                 setSubmitDone={setSubmitDone}
+                                                 defaultConfig={JSON.parse(ruleNodeDescriptor?.defaultConfig)}
+                                                 form={props.form}/>
         }
     }
 

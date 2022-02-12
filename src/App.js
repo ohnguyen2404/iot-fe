@@ -83,8 +83,7 @@ function App() {
         }
 
         const onDebugReceived = (payload) => {
-            const message = JSON.parse(payload.body)
-            console.log(message)
+            console.log(payload.body)
         }
 
         const onError = (err) => {
@@ -94,7 +93,7 @@ function App() {
         }
 
         if (user && isLoggedIn) {
-            //connect()
+            connect()
         }
     }, [isLoggedIn])
 

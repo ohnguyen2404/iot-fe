@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Form, Input, message} from "antd";
 import CodeEditor from "../code-editor/CodeEditor";
 
-const DebugConfiguration = (props) => {
+const FilterConfiguration = (props) => {
     const {
         setName,
         setConfig,
@@ -55,25 +55,12 @@ const DebugConfiguration = (props) => {
                     ],
                 })(<Input/>)}
             </Form.Item>
-            {/*<Form.Item label="function debug(msg, msgType) {" className="m-b-10 m-t-15" colon={false}>*/}
-            {/*    {*/}
-            {/*        getFieldDecorator('script', {*/}
-            {/*            initialValue: defaultConfig.script*/}
-            {/*        })(*/}
-            {/*            <TextArea*/}
-            {/*                rows={4}*/}
-            {/*            />*/}
-            {/*        )*/}
-            {/*    }*/}
-
-            {/*</Form.Item>*/}
-            {/*}*/}
-            <h4>function debug(msg, metaData, msgType) {`{`}</h4>
+            <h4>function filter(msg, metaData, msgType) {`{`}</h4>
             <CodeEditor script={script} setScript={setScript}/>
             <h4>}</h4>
         </>
     );
 };
 
-export default DebugConfiguration
+export default FilterConfiguration
 
