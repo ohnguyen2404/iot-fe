@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {Button, Form, Input, message, Modal, Tabs, Cascader} from "antd"
+import {Button, Form, Input, message, Modal, Tabs, Cascader, TreeSelect} from "antd"
 
 import constant from "../../helpers/constants"
 import {DeviceService} from "../../services"
@@ -23,18 +23,23 @@ const styleButton = {
 const {TabPane} = Tabs
 
 const InfoDeviceModal = (props) => {
-    const {devices} = useSelector((state) => state.devices)
-    const {ruleChains} = useSelector((state) => state.ruleChains)
-
-    const dispatch = useDispatch()
-
     const {openInfoModal, setOpenInfoModal, deviceId} = props
     const {getFieldDecorator} = props.form
+
+    const {devices} = useSelector((state) => state.devices)
+    const {ruleChains} = useSelector((state) => state.ruleChains)
+    const {tenants} = useSelector((state) => state.tenants)
+    const {customers} = useSelector((state) => state.customers)
+
+    const dispatch = useDispatch()
 
     const [deviceInfo, setDeviceInfo] = useState({})
     const [isInfoChanged, setIsInfoChanged] = useState(false)
 
     const [openManageCredentialsModal, setOpenManageCredentialsModal] = useState(false)
+
+    const [assignedTenants, setAssignedTenants] = useState([])
+    const [assignedCustomers, setAssignedCustomers] = useState([])
 
     const ruleChainsData = ruleChains.map((rc) => {
         return {
@@ -43,13 +48,38 @@ const InfoDeviceModal = (props) => {
         }
     })
 
+    const tenantsData = tenants.map((t, idx) => {
+        return {
+            title: t.email,
+            value: t.id,
+            key: idx,
+        }
+    })
+
+    const customersData = customers.map((c, idx) => {
+        return {
+            title: c.email,
+            value: c.id,
+            key: idx,
+        }
+    })
+
     useEffect(() => {
         const loadDevice = async () => {
             if (deviceId) {
                 const device = find(devices, {id: deviceId})
+
+                const assignedCustomerIds = get(device, "deviceCustomers", []).map(
+                    (c) => c.customerId
+                )
+                const assignedTenantIds = get(device, "deviceTenants", []).map((t) => t.tenantId)
+
+                setAssignedCustomers(assignedCustomerIds)
+                setAssignedTenants(assignedTenantIds)
+
                 setDeviceInfo(device)
-                dispatch(loadTelemetryByDeviceId(deviceId))
-                dispatch(loadLatestTelemetryByDeviceId(deviceId))
+                //dispatch(loadTelemetryByDeviceId(deviceId))
+                //dispatch(loadLatestTelemetryByDeviceId(deviceId))
             }
         }
         loadDevice()
@@ -75,8 +105,24 @@ const InfoDeviceModal = (props) => {
                         name,
                         label,
                         ruleChainId: ruleChainId ? ruleChainId[0] : undefined,
+                        assignedCustomers,
+                        assignedTenants,
                     }
+                    console.log("requestBody", requestBody)
+
                     const updatedDevice = await DeviceService.update(deviceId, requestBody)
+
+                    updatedDevice.deviceCustomers = assignedCustomers.map((c) => {
+                        return {
+                            customerId: c,
+                        }
+                    })
+                    updatedDevice.deviceTenants = assignedTenants.map((t) => {
+                        return {
+                            tenantId: t,
+                        }
+                    })
+
                     dispatch(updateDevice(updatedDevice))
                 } catch (e) {
                     message.error(e.response.data.message)
@@ -95,7 +141,7 @@ const InfoDeviceModal = (props) => {
     const _credentialsId = get(deviceInfo, "deviceCredentials.credentialsId")
     const _credentialsValue = get(deviceInfo, "deviceCredentials.credentialsValue")
     const _ruleChainId = get(deviceInfo, "ruleChainId")
-    
+
     let clipBoardText, clipBoardLabel
     const isTypeAccessToken = _credentialsType === constant.DEVICE_CREDENTIALS_TYPE_ACCESS_TOKEN
     const isTypeX509 = _credentialsType === constant.DEVICE_CREDENTIALS_TYPE_X_509
@@ -108,6 +154,45 @@ const InfoDeviceModal = (props) => {
     if (isTypeMqttBasic) {
         clipBoardLabel = "Copy MQTT credentials"
         clipBoardText = _credentialsValue
+    }
+
+    const onAssignTenant = (value) => {
+        setIsInfoChanged(true)
+        setAssignedTenants(value)
+    }
+
+    const onAssignCustomer = (value) => {
+        setIsInfoChanged(true)
+        setAssignedCustomers(value)
+    }
+
+    //Props for TreeSelect
+    const tenantTreeProps = {
+        treeData: tenantsData,
+        value: assignedTenants,
+        onChange: onAssignTenant,
+        searchPlaceholder: "Assign tenant to this device",
+        style: {
+            width: "100%",
+        },
+        dropdownStyle: {maxHeight: 220, overflow: "auto"},
+        allowClear: true,
+        multiple: true,
+        size: "large",
+    }
+
+    const customerTreeProps = {
+        treeData: customersData,
+        value: assignedCustomers,
+        onChange: onAssignCustomer,
+        searchPlaceholder: "Assign customer to this device",
+        style: {
+            width: "100%",
+        },
+        dropdownStyle: {maxHeight: 220, overflow: "auto"},
+        allowClear: true,
+        multiple: true,
+        size: "large",
     }
 
     return (
@@ -178,6 +263,12 @@ const InfoDeviceModal = (props) => {
                                         onChange={() => setIsInfoChanged(true)}
                                     />
                                 )}
+                            </Form.Item>
+                            <Form.Item label="Assigned Tenants">
+                                <TreeSelect {...tenantTreeProps} />
+                            </Form.Item>
+                            <Form.Item label="Assigned Customers">
+                                <TreeSelect {...customerTreeProps} />
                             </Form.Item>
                         </TabPane>
                         <TabPane tab="Latest telemetry" key="2">

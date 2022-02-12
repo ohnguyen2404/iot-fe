@@ -94,7 +94,7 @@ function App() {
         }
 
         if (user && isLoggedIn) {
-            connect()
+            //connect()
         }
     }, [isLoggedIn])
 
