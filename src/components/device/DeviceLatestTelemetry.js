@@ -4,7 +4,7 @@ import moment from "moment";
 import {useSelector} from "react-redux";
 import {uniqBy} from "lodash";
 
-const LatestTelemetry = (props) => {
+const DeviceLatestTelemetry = (props) => {
   const { latestTelemetries } = useSelector((state) => state.telemetries);
   const unique_kvs = uniqBy(latestTelemetries, "key");
   let dataArray = [];
@@ -44,4 +44,4 @@ const LatestTelemetry = (props) => {
   );
 };
 
-export default LatestTelemetry;
+export default DeviceLatestTelemetry;

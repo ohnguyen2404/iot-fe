@@ -7,6 +7,7 @@ import WidgetsBundleService from "./widgetsBundle"
 import WidgetTypeService from "./widgetType"
 import RuleChainService from "./ruleChain"
 import DashboardService from "./dashboard"
+import AlarmService from "./alarm"
 
 export {
     AuthService,
@@ -17,5 +18,6 @@ export {
     WidgetsBundleService,
     WidgetTypeService,
     RuleChainService,
-    DashboardService
+    DashboardService,
+    AlarmService
 }

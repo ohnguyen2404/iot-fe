@@ -8,6 +8,7 @@ import widgetsBundles from "./widgetsBundles";
 import widgetTypes from "./widgetTypes";
 import ruleChains from "./ruleChains";
 import dashboards from "./dashboards";
+import alarms from "./alarms";
 
 import {LOGOUT} from "../actions/types";
 
@@ -20,7 +21,8 @@ const appReducer = combineReducers({
     widgetsBundles,
     widgetTypes,
     ruleChains,
-    dashboards
+    dashboards,
+    alarms
 })
 
 const rootReducer = (state, action) => {

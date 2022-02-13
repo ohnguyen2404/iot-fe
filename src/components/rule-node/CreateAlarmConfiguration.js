@@ -89,11 +89,11 @@ const CreateAlarmConfiguration = (props) => {
                     })(
                         <Select
                         >
-                            <Option value="CRITICAL">CRITICAL</Option>
-                            <Option value="MAJOR">MAJOR</Option>
-                            <Option value="MINOR">MINOR</Option>
-                            <Option value="WARNING">WARNING</Option>
-                            <Option value="INDETERMINATE">INDETERMINATE</Option>
+                            <Option value="CRITICAL">Critical</Option>
+                            <Option value="MAJOR">Major</Option>
+                            <Option value="MINOR">Minor</Option>
+                            <Option value="WARNING">Warning</Option>
+                            <Option value="INDETERMINATE">Indeterminate</Option>
                         </Select>
                     )
                 }

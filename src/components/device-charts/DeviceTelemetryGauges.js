@@ -5,7 +5,7 @@ import * as CanvasGauges from "canvas-gauges"
 
 const {LinearGauge, RadialGauge} = CanvasGauges
 
-const GaugesTelemetry = (props) => {
+const DeviceTelemetryGauges = (props) => {
     const {latestTelemetries} = useSelector((state) => state.telemetries);
     const latestTelemetry = head(latestTelemetries)
 
@@ -129,4 +129,4 @@ const GaugesTelemetry = (props) => {
     );
 };
 
-export default GaugesTelemetry;
+export default DeviceTelemetryGauges;

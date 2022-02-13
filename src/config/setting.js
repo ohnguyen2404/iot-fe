@@ -32,3 +32,4 @@ export const API_RULE_CHAINS = "rule-chains";
 export const API_RULE_NODES = "rule-nodes";
 export const API_RULE_NODE_DESCRIPTORS = "rule-node-descriptors";
 export const API_DASHBOARD = "dashboard";
+export const API_ALARM = "alarm";

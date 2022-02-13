@@ -80,15 +80,13 @@ const convertToRelation = (reactFlowConnection, reactFlowNodes) => {
     }
 
     if (!_.isEmpty(arrMultiLabelsRelation)) {
-        const res = arrMultiLabelsRelation.map((label) => {
+        return  arrMultiLabelsRelation.map((label) => {
             return {
                 fromIndex: parseInt(sourceIndex),
                 toIndex: parseInt(targetIndex),
                 name: label,
             }
         })
-
-        return res
     }
 
     return {

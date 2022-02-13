@@ -217,7 +217,6 @@ class TableSelect extends React.Component {
                 size="default"
                 value={state.size}
                 onChange={this.handleSizeChange}
-                size="small"
               >
                 <Radio.Button value="default" size="small">
                   Default

@@ -10,10 +10,12 @@ import {loadLatestTelemetryByDeviceId, loadTelemetryByDeviceId} from "../../acti
 
 import Clipboard from "../clipboard/clipboard"
 import ManageCredentials from "../device-credentials/ManageCredentials"
-import LatestTelemetry from "./LatestTelemetry"
+import DeviceLatestTelemetry from "./DeviceLatestTelemetry"
 import DeviceLineChart from "../device-charts/DeviceLineChart"
 import DeviceBarChart from "../device-charts/DeviceBarChart"
-import GaugesTelemetry from "../device-charts/GaugesTelemetry"
+import DeviceTelemetryGauges from "../device-charts/DeviceTelemetryGauges"
+import {loadAlarmsByDeviceId} from "../../actions/alarms";
+import DeviceAlarm from "./DeviceAlarm";
 
 const styleButton = {
     style: {borderRadius: "5px"},
@@ -78,8 +80,9 @@ const InfoDeviceModal = (props) => {
                 setAssignedTenants(assignedTenantIds)
 
                 setDeviceInfo(device)
-                //dispatch(loadTelemetryByDeviceId(deviceId))
-                //dispatch(loadLatestTelemetryByDeviceId(deviceId))
+                dispatch(loadTelemetryByDeviceId(deviceId))
+                dispatch(loadLatestTelemetryByDeviceId(deviceId))
+                dispatch(loadAlarmsByDeviceId(deviceId))
             }
         }
         loadDevice()
@@ -272,16 +275,19 @@ const InfoDeviceModal = (props) => {
                             </Form.Item>
                         </TabPane>
                         <TabPane tab="Latest telemetry" key="2">
-                            {deviceId && <LatestTelemetry />}
+                            {deviceId && <DeviceLatestTelemetry />}
                         </TabPane>
-                        <TabPane tab="Line Chart" key="3">
+                        <TabPane tab="Alarm" key="3">
+                            {deviceId && <DeviceAlarm/>}
+                        </TabPane>
+                        <TabPane tab="Line Chart" key="4">
                             {deviceId && <DeviceLineChart />}
                         </TabPane>
-                        <TabPane tab="Bar Chart" key="4">
+                        <TabPane tab="Bar Chart" key="5">
                             {deviceId && <DeviceBarChart />}
                         </TabPane>
-                        <TabPane tab="Gauges" key="5">
-                            {deviceId && <GaugesTelemetry />}
+                        <TabPane tab="Gauges" key="6">
+                            {deviceId && <DeviceTelemetryGauges />}
                         </TabPane>
                     </Tabs>
                 </Form>

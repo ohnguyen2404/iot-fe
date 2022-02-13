@@ -22,6 +22,7 @@ import RuleChainsPage from "./pages/rule-chains/rule-chains"
 import WidgetsBundlesPage from "./pages/widgets-bundles/widgets-bundles"
 
 import {updateTelemetries} from "./actions/telemetry"
+import {updateAlarms} from "./actions/alarms";
 
 function App() {
     const dispatch = useDispatch()
@@ -68,6 +69,7 @@ function App() {
             console.log("Connected to WebSocket")
             stompClient.current.subscribe(`/topic/telemetry-${user.id}`, onTelemetryReceived)
             stompClient.current.subscribe(`/topic/debug-${user.id}`, onDebugReceived)
+            stompClient.current.subscribe(`/topic/alarm-${user.id}`, onAlarmReceived)
             stompClient.current.reconnect_relay = 10000
         }
 
@@ -84,6 +86,11 @@ function App() {
 
         const onDebugReceived = (payload) => {
             console.log(payload.body)
+        }
+
+        const onAlarmReceived = (payload) => {
+            const newAlarm = JSON.parse(payload.body)
+            dispatch(updateAlarms(newAlarm))
         }
 
         const onError = (err) => {
